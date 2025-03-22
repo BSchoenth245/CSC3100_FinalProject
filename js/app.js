@@ -4,7 +4,7 @@ $("#btnLogin").on('click',function(){
 
     // Captures necessary Login data
     let strUsername = document.querySelector('#txtLogUser').value
-    const strPassword = $('#txtLogPass').val()
+    const strPassword = $('#txtLogPassword').val()
     let blnError = false
     let strMessage = ""
 
