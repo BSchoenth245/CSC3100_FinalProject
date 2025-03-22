@@ -51,12 +51,12 @@ function ViewLogPass() {
 }
 
 $('#btnSwapLogin').on('click',function(){
-    $('#frmLogin').slideUp(function(){
-        $('#frmRegistration').slideDown()
+    $('#Login').slideUp(function(){
+        $('#Register').slideDown()
     })
 })
 $('#btnSwapRegister').on('click',function(){
-    $('#frmRegistration').fadeOut(function(){
-        $('#frmLogin').fadeIn()
+    $('#Register').fadeOut(function(){
+        $('#Login').fadeIn()
     })
 })
