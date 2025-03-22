@@ -49,3 +49,14 @@ function ViewLogPass() {
         x.type = "password";
     }
 }
+
+$('#btnSwapLogin').on('click',function(){
+    $('#frmLogin').slideUp(function(){
+        $('#frmRegistration').slideDown()
+    })
+})
+$('#btnSwapRegister').on('click',function(){
+    $('#frmRegistration').fadeOut(function(){
+        $('#frmLogin').fadeIn()
+    })
+})
