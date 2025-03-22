@@ -50,13 +50,27 @@ function ViewLogPass() {
     }
 }
 
-$('#btnSwapLogin').on('click',function(){
-    $('#Login').slideUp(function(){
-        $('#Register').slideDown()
-    })
-})
-$('#btnSwapRegister').on('click',function(){
-    $('#Register').fadeOut(function(){
-        $('#Login').fadeIn()
-    })
-})
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to DOM elements
+    const logBtn = document.getElementById('btnSwapLogin');
+    const contentContainer = document.getElementById('Register');
+    
+    // Add event listeners to buttons
+    logBtn.addEventListener('click', function() {
+        fetch('Components/Registration.html');
+    });
+        fetch(pagePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(html => {
+                contentContainer.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error loading page:', error);
+                contentContainer.innerHTML = '<p>Error loading page. Please try again.</p>';
+            });
+});
