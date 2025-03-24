@@ -1,3 +1,11 @@
+// document.addEventListener("DOMContentLoaded", function() {
+//     fetch('Components/Login.html')
+//     .then(response => response.text())
+//     .then(html => {
+//         document.querySelector('#Content').innerHTML += html
+//     })
+// })
+
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -50,27 +58,22 @@ function ViewLogPass() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+//document.addEventListener('DOMContentLoaded', function() {
     // Get references to DOM elements
-    const logBtn = document.getElementById('btnSwapLogin');
-    const contentContainer = document.getElementById('Register');
     
     // Add event listeners to buttons
-    logBtn.addEventListener('click', function() {
-        fetch('Components/Registration.html');
+   document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+        fetch('Components/Registration.html')
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('#Content').innerHTML += html;
+            document.querySelector('#Login').style.display = 'none';
+            document.querySelector('#Register').style.display = 'block';
+        })
     });
-        fetch(pagePath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(html => {
-                contentContainer.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error loading page:', error);
-                contentContainer.innerHTML = '<p>Error loading page. Please try again.</p>';
-            });
-});
+
+    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+        document.querySelector('#Register').style.display = 'none';
+        document.querySelector('#Login').style.display = 'block';
+    });
+//});
