@@ -9,6 +9,7 @@
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
     // Captures necessary Login data
     let strUsername = document.querySelector('#txtLogUser').value
@@ -22,7 +23,7 @@ $("#btnLogin").on('click',function(){
         blnError = true
         strMessage+='<p class ="mb-0 mt-0">Username must be an email address</p>'
     }
-    if(strPassword.length < 8){
+    if(!regPass.test(strPassword)){
         blnError = true
         strMessage+="<p>Password cannot be blank</p>"
     }
@@ -58,22 +59,17 @@ function ViewLogPass() {
     }
 }
 
-//document.addEventListener('DOMContentLoaded', function() {
+// document.addEventListener('DOMContentLoaded', function() {
     // Get references to DOM elements
     
     // Add event listeners to buttons
    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-        fetch('Components/Registration.html')
-        .then(response => response.text())
-        .then(html => {
-            document.querySelector('#Content').innerHTML += html;
             document.querySelector('#Login').style.display = 'none';
             document.querySelector('#Register').style.display = 'block';
         })
-    });
 
     document.querySelector('#btnSwapRegister').addEventListener('click', function() {
         document.querySelector('#Register').style.display = 'none';
         document.querySelector('#Login').style.display = 'block';
     });
-//});
+// });
