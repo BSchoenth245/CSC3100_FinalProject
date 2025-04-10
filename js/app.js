@@ -30,6 +30,11 @@ $("#btnLogin").on('click',function(){
     // Success message
     
     else{
+        Swal.fire({
+            title: "Congrats!",
+            html:  "You're logged in!",
+            icon: "success"
+        })
         const url = document.querySelector("#btnLogin a").getAttribute("data-href") || 
                     document.querySelector("#btnLogin a").getAttribute("href");
             window.location.href = url;
