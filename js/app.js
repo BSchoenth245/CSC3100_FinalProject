@@ -28,6 +28,9 @@ $("#btnLogin").on('click',function(){
         })
     }
     // Success message
+    window.addEventListener("load", function() {
+          window.open(this.getAttribute("data-href"), "_blank")
+      })
     // else{
     //     document.querySelector('#Login').style.display = 'none';
     //     document.querySelector('#dashboard').style.display = 'block';
@@ -108,13 +111,13 @@ function ViewLogPass() {
     // Get references to DOM elements
     
     // Add event listeners to buttons
-   document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-            document.querySelector('#Login').style.display = 'none';
-            document.querySelector('#Register').style.display = 'block';
-        })
+//    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+//             document.querySelector('#Login').style.display = 'none';
+//             document.querySelector('#Register').style.display = 'block';
+//         })
 
-    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    });
+//     document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+//         document.querySelector('#Register').style.display = 'none';
+//         document.querySelector('#Login').style.display = 'block';
+//     });
 // });
