@@ -34,7 +34,7 @@ $("#btnLogin").on('click',function(){
             html:  "You're logged in!",
             icon: "success"
         })
-        const url = document.getElementById("btnLogin").getAttribute("href");
+        const url = document.getElementById("btnLogin").getAttribute("data-href");
         if (url) {
             window.location.href = url;
         }
@@ -97,6 +97,10 @@ $("#btnRegister").on('click',function(){
             html:  "You're logged in!",
             icon: "success"
         })
+        const url = document.getElementById("btnRegister").getAttribute("data-href");
+        if (url) {
+            window.location.href = url;
+        }
     }
 
 })
