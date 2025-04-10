@@ -28,7 +28,6 @@ $("#btnLogin").on('click',function(){
         })
     }
     // Success message
-    
     else{
         Swal.fire({
             title: "Congrats!",
@@ -38,9 +37,11 @@ $("#btnLogin").on('click',function(){
         const url = document.querySelector("#btnLogin a").getAttribute("data-href") || 
                     document.querySelector("#btnLogin a").getAttribute("href");
             window.location.href = url;
+    }
+    // Success message     
     //     document.querySelector('#Login').style.display = 'none';
     //     document.querySelector('#dashboard').style.display = 'block';
-    }
+    
 })
 
 $("#btnRegister").on('click',function(){
