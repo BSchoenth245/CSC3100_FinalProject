@@ -1,11 +1,3 @@
-// document.addEventListener("DOMContentLoaded", function() {
-//     fetch('Components/Login.html')
-//     .then(response => response.text())
-//     .then(html => {
-//         document.querySelector('#Content').innerHTML += html
-//     })
-// })
-
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
