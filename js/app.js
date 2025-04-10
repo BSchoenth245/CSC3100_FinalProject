@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Only redirect if we're on the index page
+    if (window.location.pathname === '/CSC3100_FinalProject/' || 
+        window.location.pathname === '/CSC3100_FinalProject/index.html') {
+        window.location.href = '/CSC3100_FinalProject/Content/login.html';
+    }
+});
+
+
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -29,8 +38,7 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        document.querySelector('#Login').style.display = 'none';
-        document.querySelector('#dashboard').style.display = 'block';
+        window.location.href = 'Dashboard.html';
     }
 })
 
@@ -81,13 +89,14 @@ $("#btnRegister").on('click',function(){
     }
     // Success message
     else{
-        Swal.fire({
-            title: "Congrats!",
-            html:  "You're logged in!",
-            icon: "success"
-        })
-    }
-
+        // Clear registration inputs and redirect to login page
+    document.querySelector('#txtRegUsername').value = '';
+    document.querySelector('#txtFirstName').value = '';
+    document.querySelector('#txtLastName').value = '';
+    document.querySelector('#txtRegPassword').value = '';
+    document.querySelector('#txtConfirmPassword').value = '';
+    window.location.href = 'login.html';
+}
 })
 
 // Reveals/hides password on the login page
@@ -104,9 +113,6 @@ function ViewLogPass() {
     }
 }
 
-// document.addEventListener('DOMContentLoaded', function() {
-    // Get references to DOM elements
-    
     // Add event listeners to buttons
    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
             document.querySelector('#Login').style.display = 'none';
