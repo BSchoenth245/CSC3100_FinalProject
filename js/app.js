@@ -28,13 +28,14 @@ $("#btnLogin").on('click',function(){
         })
     }
     // Success message
-    window.addEventListener("load", function() {
-          window.open(this.getAttribute("data-href"), "_blank")
-      })
-    // else{
+    
+    else{
+        window.addEventListener("load", function() {
+            window.location.href = this.getAttribute("data-href");
+        })
     //     document.querySelector('#Login').style.display = 'none';
     //     document.querySelector('#dashboard').style.display = 'block';
-    // }
+    }
 })
 
 $("#btnRegister").on('click',function(){
