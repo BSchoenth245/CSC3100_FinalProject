@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Only redirect if we're on the index page
-    if (window.location.pathname === '/CSC3100_FinalProject/' || 
-        window.location.pathname === '/CSC3100_FinalProject/index.html') {
-        window.location.href = '/CSC3100_FinalProject/Content/login.html';
-    }
+    window.addEventListener('load', function() {
+        const currentPath = window.location.pathname;
+        // Add console log to debug
+        console.log('Current path:', currentPath);
+        
+        if (currentPath.includes('/CSC3100_FinalProject/') || 
+            currentPath.endsWith('index.html')) {
+            // Add small delay to ensure CSS is applied
+            setTimeout(() => {
+                window.location.href = './Content/login.html';
+            }, 100);
+        }
+    });
 });
 
 
