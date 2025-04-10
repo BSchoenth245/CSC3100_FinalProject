@@ -30,9 +30,9 @@ $("#btnLogin").on('click',function(){
     // Success message
     
     else{
-        window.addEventListener("load", function() {
-            window.location.href = this.getAttribute("data-href");
-        })
+        const url = document.querySelector("#btnLogin a").getAttribute("data-href") || 
+                    document.querySelector("#btnLogin a").getAttribute("href");
+            window.location.href = url;
     //     document.querySelector('#Login').style.display = 'none';
     //     document.querySelector('#dashboard').style.display = 'block';
     }
