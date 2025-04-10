@@ -34,9 +34,10 @@ $("#btnLogin").on('click',function(){
             html:  "You're logged in!",
             icon: "success"
         })
-        const url = document.querySelector("#btnLogin a").getAttribute("data-href") || 
-                    document.querySelector("#btnLogin a").getAttribute("href");
+        const url = document.getElementById("btnLogin").getAttribute("data-href");
+        if (url) {
             window.location.href = url;
+        }
     }
     // Success message     
     //     document.querySelector('#Login').style.display = 'none';
