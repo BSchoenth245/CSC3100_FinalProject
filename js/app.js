@@ -28,10 +28,10 @@ $("#btnLogin").on('click',function(){
         })
     }
     // Success message
-    else{
-        document.querySelector('#Login').style.display = 'none';
-        document.querySelector('#dashboard').style.display = 'block';
-    }
+    // else{
+    //     document.querySelector('#Login').style.display = 'none';
+    //     document.querySelector('#dashboard').style.display = 'block';
+    // }
 })
 
 $("#btnRegister").on('click',function(){
