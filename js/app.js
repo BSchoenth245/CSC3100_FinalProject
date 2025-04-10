@@ -37,11 +37,8 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        Swal.fire({
-            title: "Congrats!",
-            html:  "You're logged in!",
-            icon: "success"
-        })
+        document.querySelector('#Login').style.display = 'none';
+        document.querySelector('#dashboard').style.display = 'block';
     }
 })
 
