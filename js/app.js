@@ -1,19 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    window.addEventListener('load', function() {
-        const currentPath = window.location.pathname;
-        // Add console log to debug
-        console.log('Current path:', currentPath);
-        
-        if (currentPath.includes('/CSC3100_FinalProject/') || 
-            currentPath.endsWith('index.html')) {
-            // Add small delay to ensure CSS is applied
-            setTimeout(() => {
-                window.location.href = './Content/login.html';
-            }, 100);
-        }
-    });
-});
-
 
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
@@ -46,7 +30,8 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        window.location.href = 'Dashboard.html';
+        document.querySelector('#Login').style.display = 'none';
+        document.querySelector('#Dashboard').style.display = 'block';
     }
 })
 
@@ -97,14 +82,23 @@ $("#btnRegister").on('click',function(){
     }
     // Success message
     else{
+
+        Swal.fire({
+            title: "Success",
+            html: "Registration complete",
+            icon: "success"
+        })
+
         // Clear registration inputs and redirect to login page
     document.querySelector('#txtRegUsername').value = '';
     document.querySelector('#txtFirstName').value = '';
     document.querySelector('#txtLastName').value = '';
     document.querySelector('#txtRegPassword').value = '';
     document.querySelector('#txtConfirmPassword').value = '';
-    window.location.href = 'login.html';
-}
+    
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+}   
 })
 
 // Reveals/hides password on the login page
@@ -122,13 +116,13 @@ function ViewLogPass() {
 }
 
     // Add event listeners to buttons
-//    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-//             document.querySelector('#Login').style.display = 'none';
-//             document.querySelector('#Register').style.display = 'block';
-//         })
+   document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+            document.querySelector('#Login').style.display = 'none';
+            document.querySelector('#Register').style.display = 'block';
+        })
 
-//     document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-//         document.querySelector('#Register').style.display = 'none';
-//         document.querySelector('#Login').style.display = 'block';
-//     });
-// });
+    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+        document.querySelector('#Register').style.display = 'none';
+        document.querySelector('#Login').style.display = 'block';
+    });
+    
