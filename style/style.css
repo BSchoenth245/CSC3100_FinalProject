@@ -113,11 +113,11 @@ form button:focus{
     outline: none;
     background-color: var(--text-color);
 }
-a{
+#btnSwapRegister{
     text-decoration: none;
     color: var(--accent-color);
 }
-a:hover{
+#btnSwapRegister:hover{
     text-decoration: underline;
 }
 @media(max-width: 1100px){
