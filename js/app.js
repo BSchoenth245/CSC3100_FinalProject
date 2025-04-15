@@ -54,23 +54,23 @@ $("#btnRegister").on('click',function(){
     // Input validation for login
     if(strFirst.trim().length < 1){
         blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank</p>'            
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
     }
     if(strLast.trim().length < 1){
         blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank</p>'            
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
     }
     if(!regEmail.test(strUsername)){
         blnError = true
-        strMessage+='<p class ="mb-0 mt-0">Username must be an email address</p>'
+        strMessage+='<p class ="mb-0 mt-0">Username must be an email address. </p>'
     }
     if(strPassword.length < 8){
         blnError = true
-        strMessage+="<p>Password cannot be blank</p>"
+        strMessage+="<p>Password cannot be blank. </p>"
     }
     if(strConPassword != strPassword){
         blnError = true
-        strMessage+="<p>Passwords must match</p>"
+        strMessage+="<p>Passwords must match.</p>"
     }
     // Error message
     if(blnError == true){
@@ -114,6 +114,21 @@ function ViewLogPass() {
         x.type = "password";
     }
 }
+
+$(document).on('keypress', function(e) {
+    if (e.which === 13) { // Enter key code
+        if (Swal.isVisible()) {
+            // If SweetAlert is open, let the default SweetAlert Enter key handling work
+            return;
+        } else if ($('#Login').is(':visible')) {
+            // Only trigger login button if SweetAlert is not open
+            $('#btnLogin').click();
+        } else if ($('#Register').is(':visible')) {
+            // Only trigger register button if SweetAlert is not open
+            $('#btnRegister').click();
+        }
+    }
+});
 
     // Add event listeners to buttons
    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
