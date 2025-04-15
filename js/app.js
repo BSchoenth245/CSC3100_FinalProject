@@ -115,6 +115,13 @@ function ViewLogPass() {
     }
 }
 
+// Add event listener for enter key press on login inputs
+$('#txtLogUser, #txtLogPassword').on('keypress', function(e) {
+    if (e.which === 13) { // 13 is the enter key code
+        $('#btnLogin').click();
+    }
+});
+
     // Add event listeners to buttons
    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
             document.querySelector('#Login').style.display = 'none';
@@ -126,3 +133,25 @@ function ViewLogPass() {
         document.querySelector('#Login').style.display = 'block';
     });
     
+$(document).ready(function() {
+    // Hide all tab content except the first one initially
+    $('.tab-content:not(:first)').hide();
+
+    // Handle tab clicks
+    $('.nav-tabs a').click(function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all tabs
+        $('.nav-tabs li').removeClass('active');
+        // Add active class to current tab
+        $(this).parent('li').addClass('active');
+        
+        // Get the target content id from href
+        var tabContentId = $(this).attr('href');
+        
+        // Hide all tab content
+        $('.tab-content').hide();
+        // Show the selected tab content
+        $(tabContentId).fadeIn();
+    });
+});
