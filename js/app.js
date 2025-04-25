@@ -18,7 +18,7 @@ $("#btnLogin").on('click',function(){
     }
     if(strPassword.length < 8){
         blnError = true
-        strMessage+="<p>Password cannot be blank</p>"
+        strMessage+="<p>Password must be at least 8 characters</p>"
     }
     // Error message
     if(blnError == true){
