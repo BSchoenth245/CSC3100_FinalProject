@@ -73,6 +73,80 @@
             </p>
         </div>
     </div>
+
+    <!-- This is the student dashboard section from john and Emersons project -->
+    <!-- NOTE: This section uses Bootstrap for layout, forms, buttons, and margins. Planned for full CSS replacement. -->
+    <!-- This is the student dashboard section from John and Emerson's project -->
+<!-- BOOTSTRAP USED HERE: Replace card layout and spacing (col-12, col-md-6, col-lg-4, mt-5, mb-5) -->
+<div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentDashboard" style="display:none;">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4">Student Dashboard</h1>
+        
+        <div id="joinGroupSection">
+            <h5>Join a Group</h5>
+            <!-- BOOTSTRAP USED HERE: Replace form-control and spacing (mb-2) -->
+            <input id="txtGroupKey" type="text" class="form-control mb-2" placeholder="Enter group key" />
+            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-success, col-12) -->
+            <button class="btn btn-success col-12" type="button" id="btnJoinGroup">Join Group</button>
+            <div id="joinGroupMsg" class="mt-2"></div>
+        </div>
+
+        <!-- Feedback Section -->
+        <!-- BOOTSTRAP USED HERE: Replace margin-bottom spacing (mb-2) -->
+        <div id="divAddFeedback" class="mb-2" style="display: none;">
+            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
+            <button class="btn btn-danger col-12" type="button" id="btnAddFeedback" aria-label="AddFeedback">Submit Feedback on Group Member</button>
+        </div>
+
+        <div id="divTakeSurvey" class="mb-2" style="display: none;">
+            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
+            <button class="btn btn-danger col-12" type="button" id="btnTakeSurvey" aria-label="Take Survey">Take Course Survey</button>
+        </div>
+
+        <!-- Leave Group Section -->
+        <div id="leaveGroupSection" style="display: none;">
+            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
+            <button class="btn btn-danger col-12" type="button" id="btnLeaveGroup" style="background-color:red;">Leave Group</button>
+            <div id="leaveGroupMsg" class="mt-2"></div>
+        </div>
+
+        <!-- Group Member Info -->
+        <div id="groupMembersSection" class="mt-3" style="display: none;">
+            <h5>Group Members</h5>
+            <!-- BOOTSTRAP USED HERE: Replace list styling (list-group) -->
+            <ul class="list-group" id="groupMemberList">
+                <!-- List items will be inserted here dynamically -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Survey Container -->
+<!-- BOOTSTRAP USED HERE: Replace card layout and spacing (card, col-12, col-md-6, col-lg-4, mt-5, mb-5) -->
+<div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentSurvey" style="display:none;">
+    <!-- Survey will be dynamically added here -->
+</div>
+
+<!-- Feedback Submission Section -->
+<!-- BOOTSTRAP USED HERE: Replace card layout and spacing -->
+<div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divFeedbackForm" style="display:none;">
+    <div class="card-body">
+        <h1>Student Feedback Form</h1>
+        
+        <!-- BOOTSTRAP USED HERE: Replace list-group, form-control, margin-top -->
+        <select class="list-group form-control mt-5" id="selGroupMember" aria-label="Select a group member to give feedback on"></select>
+        
+        <!-- BOOTSTRAP USED HERE: Replace form-control, margin-top -->
+        <textarea class="form-control mt-3" id="txtFeedback" rows="4" placeholder="Enter your feedback here..."></textarea>
+
+        <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-primary, col-12, margin-top) -->
+        <button class="btn btn-primary col-12 mt-3" type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit Feedback</button>
+
+        <!-- BOOTSTRAP USED HERE: Replace button styling (btn-link, col-12, margin-top) -->
+        <button class="btn btn-link col-12 mt-2" type="button" id="btnBackToDashboard" aria-label="Go Back to Dashboard">Back to Dashboard</button>
+    </div>
+</div>
+
     <div id="Dashboard" style="display: none;">
         <div class="wrapper" id="dashboard">
             <div class="tabs">
