@@ -24,7 +24,7 @@ app.post('/registration', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, intSalt)
 
         const sql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime) 
-                     VALUES (?,?,?,?,?,?,?)`
+                    VALUES (?,?,?,?,?,?,?)`
         
         db.run(sql, [userId, firstName, lastName, email, hashedPassword, currentTime, null], (err) => {
             if (err) {
@@ -40,6 +40,99 @@ app.post('/registration', async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 })
+
+app.post('/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      // Use a promise-based approach with proper error handling
+      const getUserByEmail = () => {
+        return new Promise((resolve, reject) => {
+          const sql = `SELECT UserID, Password FROM tblUsers WHERE Email = ?`;
+          db.get(sql, [email], (err, row) => {
+            if (err) reject(err);
+            else resolve(row);
+          });
+        });
+      };
+  
+      // Get user from database
+      const user = await getUserByEmail();
+      
+      // Check if user exists
+      if (!user) {
+        return res.status(404).json({ error: "Invalid email or password." });
+      }
+      
+      // Verify password
+      const match = await bcrypt.compare(password, user.Password);
+      if (!match) {
+        return res.status(401).json({ error: "Invalid email or password" });
+      }
+      
+      // If we reach here, login is successful
+      const currentTime = new Date().toISOString();
+      const SessionID = uuidv4();
+      const strStatus = "Active";
+      
+      // Execute both database operations in a single transaction
+      await new Promise((resolve, reject) => {
+        // Begin transaction
+        db.serialize(() => {
+          db.run('BEGIN TRANSACTION');
+          
+          // Update last login time
+          db.run(
+            `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
+            [currentTime, user.UserID],
+            function(err) {
+              if (err) {
+                db.run('ROLLBACK');
+                return reject(err);
+              }
+            }
+          );
+          
+          // Insert session record
+          db.run(
+            `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
+             VALUES (?, ?, ?, ?, ?)`,
+            [SessionID, user.UserID, currentTime, currentTime, strStatus],
+            function(err) {
+              if (err) {
+                db.run('ROLLBACK');
+                return reject(err);
+              }
+            }
+          );
+          
+          // Commit transaction
+          db.run('COMMIT', (err) => {
+            if (err) {
+              db.run('ROLLBACK');
+              return reject(err);
+            }
+            resolve();
+          });
+        });
+      });
+      
+      // Send successful response
+      return res.status(200).json({
+        message: "Login successful",
+        sessionId: SessionID,
+        userId: user.UserID
+      });
+      
+    } catch (err) {
+      console.error('Login error:', err);
+      return res.status(500).json({ 
+        error: "Database error during login",
+        details: err.message 
+      });
+    }
+  });
+
 
 app.listen(HTTP_PORT, () => {
     console.log(`Server running on port ${HTTP_PORT}`)
