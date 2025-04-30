@@ -87,7 +87,6 @@ app.post('/login', async (req, res) => {
             [currentTime, user.UserID],
             function(err) {
               if (err) {
-                db.run('ROLLBACK');
                 return reject(err);
               }
             }
@@ -100,20 +99,10 @@ app.post('/login', async (req, res) => {
             [SessionID, user.UserID, currentTime, currentTime, strStatus],
             function(err) {
               if (err) {
-                db.run('ROLLBACK');
                 return reject(err);
               }
             }
           );
-          
-          // Commit transaction
-          db.run('COMMIT', (err) => {
-            if (err) {
-              db.run('ROLLBACK');
-              return reject(err);
-            }
-            resolve();
-          });
         });
       });
       
@@ -151,6 +140,42 @@ app.post('/login', async (req, res) => {
         })
       })
     }catch{
+      err => {
+        res.status(500).json({ error: err.message })
+      }
+    }
+  })
+
+  app.post('/creategroup', async (req, res) => {
+    try{
+      const { GroupName, CourseName, CourseSection } = req.body
+      const GroupID = uuidv4()
+
+      const comSelect = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseSection = ?`
+      const comInsert = `INSERT INTO tblCourseGroups (GroupID, GroupName, CourseID)
+      VALUES (?, ?, ?)`
+
+      db.get(comSelect, [CourseName, CourseSection], (err, row) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        if(!row) {
+          res.status(400).json({ error: "Course not found" })
+          return
+        }
+        db.run(comInsert, [GroupID, GroupName, row.CourseID], (err) => {
+          if (err) {
+            res.status(400).json({ error: err.message })
+            return
+          }
+          res.status(201).json({
+            GroupID: GroupID,
+            message: "Group created successfully"
+          })
+        })
+        })
+      }catch{
       err => {
         res.status(500).json({ error: err.message })
       }
