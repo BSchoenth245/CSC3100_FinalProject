@@ -133,6 +133,30 @@ app.post('/login', async (req, res) => {
     }
   });
 
+  app.post('/createcourse', async (req, res) => {
+    try{
+      const { CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate } = req.body
+      const CourseID = uuidv4()
+      const comInsert = `INSERT INTO tblCourses (CourseID, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`
+
+      db.run(comInsert, [CourseID, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CourseID: CourseID,
+          message: "Course created successfully"
+        })
+      })
+    }catch{
+      err => {
+        res.status(500).json({ error: err.message })
+      }
+    }
+  })
+
 
 app.listen(HTTP_PORT, () => {
     console.log(`Server running on port ${HTTP_PORT}`)
