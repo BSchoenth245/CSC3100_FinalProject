@@ -169,17 +169,14 @@ function toggleMembers(button) {
     // Get the parent card first
     const card = button.closest('.group-card');
     
-    // Find the member list only within this specific card
+    // Find the member list within this specific card
     const memberList = card.querySelector('.member-list');
-    const collapseIcon = card.querySelector('.collapse-icon');
     
-    // Toggle only this specific list and icon
-    if (memberList) {
-        memberList.classList.toggle('collapsed');
-    }
-    if (collapseIcon) {
-        collapseIcon.classList.toggle('active');
-    }
+    // Toggle both the list and the button itself
+    memberList.classList.toggle('collapsed');
+    button.classList.toggle('active'); // Changed from collapseIcon to button
 }
+
+
 
 

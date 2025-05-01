@@ -461,6 +461,7 @@ div:has(#txtCourseName) > label {
 }
 
 .collapse-icon {
+    display: inline-block;
     transition: transform 0.3s ease;
 }
 
