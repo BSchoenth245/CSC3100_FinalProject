@@ -150,10 +150,11 @@ app.post('/login', async (req, res) => {
     try{
       const { GroupName, CourseName, CourseSection } = req.body
       const GroupID = uuidv4()
+      const groupCode = uuidv4().substring(0, 6)
 
       const comSelect = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseSection = ?`
-      const comInsert = `INSERT INTO tblCourseGroups (GroupID, GroupName, CourseID)
-      VALUES (?, ?, ?)`
+      const comInsert = `INSERT INTO tblCourseGroups (GroupID, GroupName, CourseID, groupCode)
+      VALUES (?, ?, ?, ?)`
 
       db.get(comSelect, [CourseName, CourseSection], (err, row) => {
         if (err) {
@@ -164,7 +165,7 @@ app.post('/login', async (req, res) => {
           res.status(400).json({ error: "Course not found" })
           return
         }
-        db.run(comInsert, [GroupID, GroupName, row.CourseID], (err) => {
+        db.run(comInsert, [GroupID, GroupName, row.CourseID, groupCode], (err) => {
           if (err) {
             res.status(400).json({ error: err.message })
             return
@@ -181,6 +182,53 @@ app.post('/login', async (req, res) => {
       }
     }
   })
+
+  app.post('/joingroup', async (req, res) => {
+    try {
+        const { GroupName, UserEmail, groupCode } = req.body
+        const memberID = uuidv4() // Generate member ID
+
+        // First get the UserID
+        const userSql = `SELECT UserID FROM tblUsers WHERE Email = ?`
+        
+        db.get(userSql, [UserEmail], (err, userRow) => {
+            if (err) {
+                return res.status(400).json({ error: err.message })
+            }
+            if (!userRow) {
+                return res.status(404).json({ error: "User not found" })
+            }
+
+            // Then verify the group exists and check the group code
+            const groupSql = `SELECT GroupID, groupCode FROM tblCourseGroups WHERE GroupName = ? AND groupCode = ?`
+            
+            db.get(groupSql, [GroupName, groupCode], (err, groupRow) => {
+                if (err) {
+                    return res.status(400).json({ error: err.message })
+                }
+                if (!groupRow) {
+                    return res.status(404).json({ error: "Group not found or invalid group code" })
+                }
+
+                // Finally, add the user to the group with memberID
+                const insertSql = `INSERT INTO tblGroupMembers (MemberID, UserID, GroupID) 
+                                  VALUES (?, ?, ?)`
+                
+                db.run(insertSql, [memberID, userRow.UserID, groupRow.GroupID], (err) => {
+                    if (err) {
+                        return res.status(400).json({ error: err.message })
+                    }
+                    res.status(201).json({
+                        message: "Successfully joined group",
+                        memberID: memberID
+                    })
+                })
+            })
+        })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
 
 
 app.listen(HTTP_PORT, () => {
