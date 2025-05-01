@@ -73,83 +73,102 @@
             </p>
         </div>
     </div>
-
-    <!-- This is the student dashboard section from john and Emersons project -->
-    <!-- NOTE: This section uses Bootstrap for layout, forms, buttons, and margins. Planned for full CSS replacement. -->
-    <!-- This is the student dashboard section from John and Emerson's project -->
-<!-- BOOTSTRAP USED HERE: Replace card layout and spacing (col-12, col-md-6, col-lg-4, mt-5, mb-5) -->
-<div class="card" id="divStudentDashboard" style="display:none;">
-    <div class="card-body">
-        <h1 class="card">Student Dashboard</h1>
-        <!-- Feedback Section -->
-        <!-- BOOTSTRAP USED HERE: Replace margin-bottom spacing (mb-2) -->
-        <div id="divAddFeedback" class="mb-2" style="display: none;">
-            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
-            <button class="btn btn-danger col-12" type="button" id="btnAddFeedback" aria-label="AddFeedback">Submit Feedback on Group Member</button>
-        </div>
-
-        <div id="divTakeSurvey" class="mb-2" style="display: none;">
-            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
-            <button class="btn btn-danger col-12" type="button" id="btnTakeSurvey" aria-label="Take Survey">Take Course Survey</button>
-        </div>
-
-        <!-- Leave Group Section -->
-        <div id="leaveGroupSection" style="display: none;">
-            <!-- BOOTSTRAP USED HERE: Replace button styling (btn, btn-danger, col-12) -->
-            <button class="btn btn-danger col-12" type="button" id="btnLeaveGroup" style="background-color:red;">Leave Group</button>
-            <div id="leaveGroupMsg" class="mt-2"></div>
-        </div>
-
-        <!-- Group Member Info -->
-        <div id="groupMembersSection" class="mt-3" style="display: none;">
-            <h5>Group Members</h5>
-            <!-- BOOTSTRAP USED HERE: Replace list styling (list-group) -->
-            <ul class="list-group" id="groupMemberList">
-                <!-- List items will be inserted here dynamically -->
-            </ul>
-        </div>
-    </div>
-</div>
-
 <!-- Survey Container -->
 <!-- BOOTSTRAP USED HERE: Replace card layout and spacing (card, col-12, col-md-6, col-lg-4, mt-5, mb-5) -->
 <div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentSurvey" style="display:none;">
     <!-- Survey will be dynamically added here -->
 </div>
-
-<!-- Feedback Submission Section -->
-<!-- BOOTSTRAP USED HERE: Replace card layout and spacing -->
-<div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divFeedbackForm" style="display:none;">
-    
-</div>
-
     <div id="Dashboard" style="display: none;">
         <div class="wrapper" id="dashboard">
             <div class="tabs">
                 <ul class="nav-tabs">
                     <li class="active"><a href="#Groups">Groups</a></li>
-                    <li><a href="#addNewGroup">Add New Group</a></li>
+                    <li><a href="#addNewGroup">Add Group</a></li>
                     <li><a href="#Comments">Comments</a></li>
-                    <li><a href="#addNewComments">Add New Comment</a></li>
-
+                    <li><a href="#addNewComments">Add Comment</a></li>
                 </ul>
             </div>
             <div class="content-area">
                 <div id="Groups" class="tab-content active">
-                    <!-- Dashboard tab content -->
                     <h2>View Active Groups</h2>
                     <div class="dashboard-stats">
-                        <!-- Add your dashboard widgets, stats, or content here -->
-
+                            <!-- First Group Card -->
+                            <div class="group-card">
+                                <div class="group-header">
+                                    <h3>Team Awesome</h3>
+                                    <span class="group-code">Code: XYZ789</span>
+                                </div>
+                                <div class="group-info">
+                                    <p><strong>Course:</strong> <span class="courseName">CSC3100</span></p>
+                                    <p><strong>Section:</strong> <span class="courseSection">001</span></p>
+                                    <div class="members-section">
+                                        <button class="collapse-btn" onclick="toggleMembers(this)">
+                                            <strong>Members</strong>
+                                            <span class="collapse-icon">▼</span>
+                                        </button>
+                                        <ul class="member-list collapsed">
+                                            <li>John Smith</li>
+                                            <li>Sarah Johnson</li>
+                                            <li>Mike Wilson</li>
+                                            <li>Emily Davis</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-actions">
+                                        <button type="button" id="btn-take-survey">Take Survey</button>
+                                        <button type="button" id="btn-leave-group">Leave Group</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Second Group Card (with same button structure) -->
+                            <div class="group-card">
+                                <div class="group-header">
+                                    <h3>Database Masters</h3>
+                                    <span class="group-code">Code: ABC123</span>
+                                </div>
+                                <div class="group-info">
+                                    <p><strong>Course:</strong> <span class="courseName">CSC4150</span></p>
+                                    <p><strong>Section:</strong> <span class="courseSection">002</span></p>
+                                    <div class="members-section">
+                                        <button class="collapse-btn" onclick="toggleMembers(this)">
+                                            <strong>Members</strong>
+                                            <span class="collapse-icon">▼</span>
+                                        </button>
+                                        <ul class="member-list collapsed">
+                                            <li>Alex Turner</li>
+                                            <li>Jessica Lee</li>
+                                            <li>David Chen</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-actions">
+                                        <button type="button" id="btn-take-survey">Take Survey</button>
+                                        <button type="button" id="btn-leave-group">Leave Group</button>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
                 
+                
+                
                 <div id="addNewGroup" class="tab-content">
                     <!-- Dashboard tab content -->
-                    <h2>Add New Groups Here</h2>
-                    <div class="dashboard-stats">
+                     <!-- 
+                    
+
+
+
+                        THE COMMENTED SECITON IS IMPORTANT 
+                            it is the join group section the buttons for which appears on screen haven't been added yet
+                            so it was commented out so i could work on the create group section
+                    
+
+
+
+                     -->
+                    <!-- <h2>Add New Groups Here</h2>
+                    <div class="dashboard-stats"> -->
                         <!-- Add your dashboard widgets, stats, or content here -->
-                            <div id="joinGroupSection">
+                            <!-- <div id="joinGroupSection">
                                 <h3>Join a Group</h3>
                                 <form>
                                     <div>
@@ -162,6 +181,28 @@
                                 </form> 
                             </div>
                        
+                    </div> -->
+                    <h2>Create New Group</h2>
+                    <div class="dashboard-stats">
+                        <div id="createGroupSection">
+                            <form>
+                                <div>
+                                    <label for="txtGroupName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Z"/></svg>
+                                    </label>
+                                    <input type="text" id="txtGroupName" placeholder="Enter Group Name"/>
+                                </div>
+                                <div>
+                                    <label for="txtCourseName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z"/></svg>
+                                    </label>
+                                    <input type="text" id="txtCourseName" placeholder="Enter Course Name"/>
+                                    <h3 class="dash-separator">-</h3>
+                                    <input type="text" id="txtCourseSection" name="courseSection"placeholder="Section"/>
+                                </div>
+                                <button type="button">Create Group</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 
