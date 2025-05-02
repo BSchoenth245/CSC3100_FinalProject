@@ -185,37 +185,115 @@ app.post('/login', async (req, res) => {
   app.post('/joingroup', async (req, res) => {
     try {
         const { GroupName, groupCode } = req.body
-        const memberID = uuidv4() // Generate member ID
+        
+        if (!GroupName || !groupCode) {
+            return res.status(400).json({ 
+                error: "GroupName and groupCode are required" 
+            })
+        }
 
-            // Then verify the group exists and check the group code
-            const groupSql = `SELECT GroupID, groupCode FROM tblCourseGroups WHERE GroupName = ? AND groupCode = ?`
-            
-            db.get(groupSql, [GroupName, groupCode], (err, groupRow) => {
+        const memberID = uuidv4()
+
+        // First verify the group exists and get CourseID
+        const groupSql = `
+            SELECT GroupID, CourseID, groupCode 
+            FROM tblCourseGroups 
+            WHERE GroupName = ? AND groupCode = ?`
+
+        db.get(groupSql, [GroupName, groupCode], (err, groupRow) => {
+            if (err) {
+                return res.status(500).json({ error: err.message })
+            }
+            if (!groupRow) {
+                return res.status(404).json({ 
+                    error: "Group not found or invalid group code" 
+                })
+            }
+
+            // Check if user is already in the group
+            const checkMemberSql = `
+                SELECT COUNT(*) as memberCount 
+                FROM tblGroupMembers 
+                WHERE GroupID = ? AND UserID = ?`
+
+            db.get(checkMemberSql, [groupRow.GroupID, currentUser], (err, memberRow) => {
                 if (err) {
-                    return res.status(400).json({ error: err.message })
+                    return res.status(500).json({ error: err.message })
                 }
-                if (!groupRow) {
-                    return res.status(404).json({ error: "Group not found or invalid group code" })
+                if (memberRow.memberCount > 0) {
+                    return res.status(409).json({ 
+                        error: "User is already a member of this group" 
+                    })
                 }
 
-                // Finally, add the user to the group with memberID
-                const insertSql = `INSERT INTO tblGroupMembers (MemberID, UserID, GroupID) 
-                                  VALUES (?, ?, ?)`
-                
-                db.run(insertSql, [memberID, currentUser, groupRow.GroupID], (err) => {
+                // Check if user needs to be enrolled in the course
+                const enrollmentSql = `
+                    SELECT COUNT(*) as enrollCount 
+                    FROM tblEnrollements 
+                    WHERE CourseID = ? AND UserID = ?`
+
+                db.get(enrollmentSql, [groupRow.CourseID, currentUser], (err, enrollRow) => {
                     if (err) {
-                        return res.status(400).json({ error: err.message })
+                        return res.status(500).json({ error: err.message })
                     }
-                    res.status(201).json({
-                        message: "Successfully joined group",
-                        memberID: memberID
-                    })
+
+                    // If not enrolled, add enrollment first
+                    if (enrollRow.enrollCount === 0) {
+                        const enrollID = uuidv4()
+                        const addEnrollSql = `
+                            INSERT INTO tblEnrollements (EnrollmentID, CourseID, UserID)
+                            VALUES (?, ?, ?)`
+
+                        db.run(addEnrollSql, [enrollID, groupRow.CourseID, currentUser], (err) => {
+                            if (err) {
+                                return res.status(500).json({ error: err.message })
+                            }
+                            
+                            // Now add the group membership
+                            const insertSql = `
+                                INSERT INTO tblGroupMembers (MemberID, UserID, GroupID) 
+                                VALUES (?, ?, ?)`
+
+                            db.run(insertSql, [memberID, currentUser, groupRow.GroupID], (err) => {
+                                if (err) {
+                                    return res.status(500).json({ error: err.message })
+                                }
+                                return res.status(201).json({
+                                    message: "Successfully joined group and enrolled in course",
+                                    memberID: memberID,
+                                    enrollmentID: enrollID
+                                })
+                            })
+                        })
+                    } else {
+                        // Already enrolled, just add group membership
+                        const insertSql = `
+                            INSERT INTO tblGroupMembers (MemberID, UserID, GroupID) 
+                            VALUES (?, ?, ?)`
+
+                        db.run(insertSql, [memberID, currentUser, groupRow.GroupID], (err) => {
+                            if (err) {
+                                return res.status(500).json({ error: err.message })
+                            }
+                            return res.status(201).json({
+                                message: "Successfully joined group",
+                                memberID: memberID
+                            })
+                        })
+                    }
                 })
             })
-        }catch (err) {
-          res.status(500).json({ error: err.message })
-      }
-    })  
+        })
+    } catch (err) {
+        console.error('Error in joingroup:', err)
+        return res.status(500).json({ 
+            error: "Internal server error",
+            details: err.message 
+        })
+    }
+})
+
+  
     
 
 app.post('/addSocial', (req, res) => {
@@ -233,6 +311,9 @@ app.post('/addSocial', (req, res) => {
     })
   })
 })
+
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server running on port ${HTTP_PORT}`)
 })
