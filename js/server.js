@@ -293,11 +293,8 @@ app.post('/login', async (req, res) => {
     }
 })
 
-  
-    
-
 app.post('/addSocial', (req, res) => {
-  const { SocialType, Username } = req.body
+  const { SocialType, Username, isPrivate } = req.body
   const SocialID = uuidv4()
   const insertSql = `INSERT INTO tblSocials VALUES (?,?,?,?)`
   db.run(insertSql, [SocialID, SocialType, Username, currentUser], (err) => {
@@ -312,7 +309,60 @@ app.post('/addSocial', (req, res) => {
   })
 })
 
+app.post('/addComment', (req, res) => {
+  const { GroupName, Comment, isPrivate } = req.body
+  const CommentID = uuidv4()
+  const currentTime = new Date().toISOString()
 
+  const CommentSQL = `INSERT INTO tblComments Values (?,?,?,?,?,?)`
+  const GroupSQL = `SELECT GroupID FROM tblCourseGroups WHERE GroupName = ?`
+  const MemberSQL = `SELECT GroupID FROM tblGroupMembers WHERE UserID = ?`
+
+  db.get(GroupSQL, [GroupName], (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message })
+      return
+    }
+    if(!row) {
+      res.status(400).json({ error: "Group not found" })
+      return
+    }
+    db.get(MemberSQL, [currentUser], (err, row) => {
+      if (err) {
+        res.status(400).json({ error: err.message })
+        return
+      }
+      if(!row) {
+        res.status(400).json({ error: "User not found" })
+        return
+      }
+      if(isPrivate == 'Public'){
+      db.run(CommentSQL, [CommentID, row.GroupID, currentUser, Comment, currentTime, 0], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CommentID: CommentID,
+          message: "Comment added successfully"
+        })
+      })
+    }
+    else{
+      db.run(CommentSQL, [CommentID, row.GroupID, currentUser, Comment, currentTime, 1], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CommentID: CommentID,
+          message: "Comment added successfully"
+        })
+      })
+    }
+    })
+  })
+})
 
 app.listen(HTTP_PORT, () => {
     console.log(`Server running on port ${HTTP_PORT}`)
