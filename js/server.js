@@ -8,6 +8,7 @@ const intSalt = 10;
 const dbSource = "groupApp.db"
 const HTTP_PORT = 8000
 const db = new sqlite3.Database(dbSource)
+const currentUser = 'test'
  
 var app = express()
 app.use(cors())
@@ -77,50 +78,48 @@ app.post('/login', async (req, res) => {
       
       // Execute both database operations in a single transaction
       await new Promise((resolve, reject) => {
-        // Begin transaction
         db.serialize(() => {
           db.run('BEGIN TRANSACTION');
           
-          // Update last login time
           db.run(
             `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
             [currentTime, user.UserID],
             function(err) {
               if (err) {
+                db.run('ROLLBACK');
                 return reject(err);
               }
             }
           );
           
-          // Insert session record
           db.run(
             `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
              VALUES (?, ?, ?, ?, ?)`,
             [SessionID, user.UserID, currentTime, currentTime, strStatus],
             function(err) {
               if (err) {
+                db.run('ROLLBACK');
                 return reject(err);
               }
+              db.run('COMMIT');
+              resolve();
             }
           );
         });
       });
-      
       // Send successful response
       return res.status(200).json({
         message: "Login successful",
-        sessionId: SessionID,
         userId: user.UserID
       });
       
     } catch (err) {
       console.error('Login error:', err);
       return res.status(500).json({ 
-        error: "Database error during login",
-        details: err.message 
-      });
-    }
-  });
+        details: err.message
+    })
+  }
+});
 
   app.post('/createcourse', async (req, res) => {
     try{
@@ -185,19 +184,8 @@ app.post('/login', async (req, res) => {
 
   app.post('/joingroup', async (req, res) => {
     try {
-        const { GroupName, UserEmail, groupCode } = req.body
+        const { GroupName, groupCode } = req.body
         const memberID = uuidv4() // Generate member ID
-
-        // First get the UserID
-        const userSql = `SELECT UserID FROM tblUsers WHERE Email = ?`
-        
-        db.get(userSql, [UserEmail], (err, userRow) => {
-            if (err) {
-                return res.status(400).json({ error: err.message })
-            }
-            if (!userRow) {
-                return res.status(404).json({ error: "User not found" })
-            }
 
             // Then verify the group exists and check the group code
             const groupSql = `SELECT GroupID, groupCode FROM tblCourseGroups WHERE GroupName = ? AND groupCode = ?`
@@ -214,7 +202,7 @@ app.post('/login', async (req, res) => {
                 const insertSql = `INSERT INTO tblGroupMembers (MemberID, UserID, GroupID) 
                                   VALUES (?, ?, ?)`
                 
-                db.run(insertSql, [memberID, userRow.UserID, groupRow.GroupID], (err) => {
+                db.run(insertSql, [memberID, currentUser, groupRow.GroupID], (err) => {
                     if (err) {
                         return res.status(400).json({ error: err.message })
                     }
@@ -224,13 +212,27 @@ app.post('/login', async (req, res) => {
                     })
                 })
             })
-        })
-    } catch (err) {
-        res.status(500).json({ error: err.message })
+        }catch (err) {
+          res.status(500).json({ error: err.message })
+      }
+    })  
+    
+
+app.post('/addSocial', (req, res) => {
+  const { SocialType, Username } = req.body
+  const SocialID = uuidv4()
+  const insertSql = `INSERT INTO tblSocials VALUES (?,?,?,?)`
+  db.run(insertSql, [SocialID, SocialType, Username, currentUser], (err) => {
+    if (err) {
+      res.status(400).json({ error: err.message })
+      return
     }
+    res.status(201).json({
+      SocialID: SocialID,
+      message: "Social added successfully"
+    })
+  })
 })
-
-
 app.listen(HTTP_PORT, () => {
     console.log(`Server running on port ${HTTP_PORT}`)
 })
