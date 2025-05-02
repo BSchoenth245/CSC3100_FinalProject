@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/dashboard.css">
+    <link rel="stylesheet" href="./style/responsive.css">
 </head>
 
 <body>
@@ -113,6 +115,9 @@
                     <li><a href="#Comments">Comments</a></li>
                     <li><a href="#addNewComments">Add Comment</a></li>
                 </ul>
+                <ul class="profile-tab-container">
+                    <li><a href="#Profile">Profile</a></li>
+                </ul>
             </div>
             <div class="content-area">
                 <div id="Groups" class="tab-content active">
@@ -173,8 +178,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 <div id="addNewGroup" class="tab-content">
                     <!-- Dashboard tab content -->
@@ -268,15 +271,15 @@
                             <h3>Student Feedback Form</h3>
                             <form>
                                 <div>
-                                    <label for="selGroupMember">
+                                    <label for="selGroup">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                                             width="24px" fill="#e3e3e3">
                                             <path
                                                 d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z" />
                                         </svg>
                                     </label>
-                                    <select id="selGroupMember" aria-label="Select a group member to give feedback on">
-                                        <option value="">Select Group Member</option>
+                                    <select id="selGroup" aria-label="Select a group to give feedback on">
+                                        <option value="">Select Group</option>
                                     </select>
                                 </div>
                                 <div>
@@ -289,6 +292,16 @@
                                     </label>
                                     <textarea id="txtFeedback" rows="4"
                                         placeholder="Enter your feedback here..."></textarea>
+                                </div>
+                                <div class="visibility-options">
+                                    <div class="radio-group">
+                                        <!-- <label for="radioPublic">Public</label> -->
+                                        <input type="radio" id="radioPublic" name="commentVisibility" value="public" checked>
+                                        
+                                        <!-- <label for="radioPrivate">Private</label> -->
+                                        <input type="radio" id="radioPrivate" name="commentVisibility" value="private">
+                                        
+                                    </div>
                                 </div>
                                 <button type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit
                                     Feedback</button>

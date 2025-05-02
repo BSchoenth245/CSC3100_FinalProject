@@ -181,12 +181,12 @@ $(document).ready(function() {
     // Hide all tab content except the first one initially
     $('.tab-content:not(:first)').hide();
 
-    // Handle tab clicks
-    $('.nav-tabs a').click(function(e) {
+    // Handle tab clicks for both regular tabs and profile tab
+    $('.nav-tabs a, .profile-tab-container a').click(function(e) {
         e.preventDefault();
         
-        // Remove active class from all tabs
-        $('.nav-tabs li').removeClass('active');
+        // Remove active class from all tabs (both containers)
+        $('.nav-tabs li, .profile-tab-container li').removeClass('active');
         // Add active class to current tab
         $(this).parent('li').addClass('active');
         
@@ -198,6 +198,7 @@ $(document).ready(function() {
         // Show the selected tab content
         $(tabContentId).fadeIn();
     });
+
 });
 
 // function to create user by sending a fetch to the server.js file sending the username and password in the body
