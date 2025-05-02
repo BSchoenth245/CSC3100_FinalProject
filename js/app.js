@@ -1,4 +1,3 @@
-
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -30,9 +29,27 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        document.querySelector('#Login').style.display = 'none';
-        document.querySelector('#Dashboard').style.display = 'block';
+        // loginUser(strUsername, strPassword).then(data => {
+        //     if (data.error) {
+        //         Swal.fire({
+        //             title: "There's a problem!",
+        //             text: data.error,
+        //             icon: "error"
+        //         })
+        //     } else if (!data.error) {
+        //         Swal.fire({
+        //             title: "Success",
+        //             text: data.message,
+        //             icon: "success"
+        //         })
+                 document.querySelector('#Login').style.display = 'none';
+                 document.querySelector('#Dashboard').style.display = 'block'
+        //     }
+        // })
+
+        // Clear password input
     }
+    document.querySelector('#txtLogPassword').value = ''
 })
 
 $("#btnRegister").on('click',function(){
@@ -58,7 +75,7 @@ $("#btnRegister").on('click',function(){
     }
     if(strLast.trim().length < 1){
         blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'
     }
     if(!regEmail.test(strUsername)){
         blnError = true
@@ -80,13 +97,24 @@ $("#btnRegister").on('click',function(){
             icon: "error"
         })
     }
-    // Success message
     else{
-
-        Swal.fire({
-            title: "Success",
-            html: "Registration complete",
-            icon: "success"
+        checkEmailExists(email).then(data => {
+            if (data.exists) {
+                Swal.fire({
+                    title: "There's a problem!",
+                    text: "Email already exists!",
+                    icon: "error"
+                })
+            } else if (!data.exists) {
+                // If email does not exist in the database already, proceed with registration
+                registerUser(strUsername, strPassword, strFirst, strLast)
+                //success message
+                Swal.fire({
+                    title: "Success",
+                    html: "Registration complete",
+                    icon: "success"
+                })
+            }
         })
 
         // Clear registration inputs and redirect to login page
@@ -100,6 +128,14 @@ $("#btnRegister").on('click',function(){
     document.querySelector('#Login').style.display = 'block';
 }   
 })
+
+function checkEmailExists(strEmail) {
+    return fetch('/checkemail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({strEmail})
+    }).then(response => response.json());
+  }
 
 // Reveals/hides password on the login page
 function ViewLogPass() {
@@ -164,6 +200,79 @@ $(document).ready(function() {
     });
 });
 
+// function to create user by sending a fetch to the server.js file sending the username and password in the body
+// ensuring the correct content type and catching errors
+function createUser(strUsername, strPassword) {
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ strUsername, strPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        Swal.fire({
+            title: "Success",
+            text: data.message,
+            icon: "success"
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+function registerUser(strUsername, strPassword, strFirst, strLast) {
+
+    fetch('/registration', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+function loginUser(strUsername, strPassword) {
+    return fetch('/login', { // Add 'return' here
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: strUsername, password: strPassword })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse and return JSON data
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+        throw error; // Re-throw the error so the caller can handle it
+    });
+}
+
 // Adding the collapse menu logic
 function toggleMembers(button) {
     // Get the parent card first
@@ -177,6 +286,28 @@ function toggleMembers(button) {
     button.classList.toggle('active'); // Changed from collapseIcon to button
 }
 
+document.querySelector('#btnCreateGroup').addEventListener('click', function() {
+    blnError = false
+    strMessage = ""
 
+    if (document.querySelector('#txtGroupName').value.trim().length < 1) {
+        blnError = true
+        strMessage += '<p class="mb-0 mt-0">Group Name Cannot Be Blank. <br></p>'            
+    }
+    if (document.querySelector('#txtCourseName').value.trim().length < 1) {
+        blnError = true
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>'
+    }
+    if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
+        blnError = true
+        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. </p>'
+    }
 
-
+    if (blnError) {
+        Swal.fire({
+            title: "Oh no, you have an error!",
+            html: strMessage,
+            icon: "error"
+        })
+    }
+})
