@@ -14,6 +14,12 @@ const intSalt = 10;
   app.use(cors())
   app.use(express.json())
 
+    /*
+
+    Login and registration endpoints
+
+    */
+
   app.post('/registration', async (req, res) => {
       try {
           // Get request data
@@ -136,6 +142,20 @@ const intSalt = 10;
       })
     }
   });
+
+    /*
+
+    Login and registration endpoint
+
+    */
+
+//-------------------------------------------------------------------------------
+
+    /*
+
+    Group and course endpoints
+
+    */
 
   app.post('/createcourse', async (req, res) => {
     try {
@@ -305,6 +325,85 @@ const intSalt = 10;
     }
   })
 
+  app.get('/groups', (req, res) => {
+    console.log('Groups endpoint called');
+    console.log('Current user:', currentUser);
+    
+    // Check if currentUser is defined
+    if (!currentUser) {
+      return res.status(400).json({ error: "User not authenticated" });
+    }
+  
+    const sqlGroups = `SELECT DISTINCT GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
+                      FROM tblGroupMembers 
+                      LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
+                      LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
+                      WHERE UserID = ?`
+    
+    console.log('Executing SQL:', sqlGroups);
+    console.log('With parameter:', currentUser);
+    
+    // Use db.all to get multiple rows
+    db.all(sqlGroups, [currentUser], (err, rows) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(400).json({ error: err.message });
+      }
+      
+      console.log('Query results:', rows);
+      
+      // Check if any groups were found
+      if (!rows || rows.length === 0) {
+        return res.status(200).json({ 
+          message: "No groups found for this user",
+          groups: []
+        });
+      }
+      
+      const response = {
+        message: "Groups retrieved successfully",
+        count: rows.length,
+        groups: rows
+      };
+      
+      console.log('Sending response:', response);
+      return res.status(200).json(response);
+    });
+  });
+
+  app.get('/members', (req,res) => {
+    const membersSQL = `SELECT * FROM tblGroupMembers
+                        left join tblCourseGroups on tblGroupMembers.GroupID = tblCourseGroups.GroupID WHERE UserID = ?`
+    db.all(membersSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No members found" })
+      }
+      return res.status(200).json({
+        message: "Members retrieved successfully",
+        count: rows.length,
+        members: rows
+      })
+    })
+  })
+
+    /*
+
+    Group and course endpoints
+
+    */
+
+//-------------------------------------------------------------------------------
+
+    /*
+
+    Socials and comments endpoints
+
+    */
+
+
   app.post('/addSocial', async (req, res) => {
     try {
       const { SocialType, Username, isPrivate } = req.body
@@ -324,6 +423,19 @@ const intSalt = 10;
     } catch (err) {
       res.status(500).json({ error: err.message })
     }
+  })
+
+    app.patch('/updateSocial', (req, res) => {
+    const { SocialType, Username } = req.body
+    const updateSQL = `UPDATE tblSocials SET SocialType = ?, Username = ? WHERE UserID = ?`
+    db.run(updateSQL, [SocialType, Username, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Social updated successfully"
+      })
+    })
   })
 
   app.post('/addComment', async (req, res) => {
@@ -384,6 +496,39 @@ const intSalt = 10;
     }
   })
 
+  app.get('/comments', (req, res) => {
+    const commentsSQL = `SELECT * FROM tblComments
+                        left join tblGroupMembers on tblComments.GroupID = tblGroupMembers.GroupID WHERE UserID = ?`
+    db.all(commentsSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No comments found" })
+      }
+      return res.status(200).json({
+        message: "Comments retrieved successfully",
+        count: rows.length,
+        comments: rows
+      })
+    })
+  })
+
+    /*
+
+    Socials and comments endpoints
+
+
+    */
+
+//-------------------------------------------------------------------------------
+
+    /*
+
+    User Management endpoints
+
+    */
+
   app.post('/UserInfo', async (req, res) => {
     try {
       const { UserEmail } = req.body
@@ -437,88 +582,6 @@ const intSalt = 10;
     }
   })
 
-  app.get('/groups', (req, res) => {
-    console.log('Groups endpoint called');
-    console.log('Current user:', currentUser);
-    
-    // Check if currentUser is defined
-    if (!currentUser) {
-      return res.status(400).json({ error: "User not authenticated" });
-    }
-  
-    const sqlGroups = `SELECT DISTINCT GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
-                      FROM tblGroupMembers 
-                      LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
-                      LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
-                      WHERE UserID = ?`
-    
-    console.log('Executing SQL:', sqlGroups);
-    console.log('With parameter:', currentUser);
-    
-    // Use db.all to get multiple rows
-    db.all(sqlGroups, [currentUser], (err, rows) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(400).json({ error: err.message });
-      }
-      
-      console.log('Query results:', rows);
-      
-      // Check if any groups were found
-      if (!rows || rows.length === 0) {
-        return res.status(200).json({ 
-          message: "No groups found for this user",
-          groups: []
-        });
-      }
-      
-      const response = {
-        message: "Groups retrieved successfully",
-        count: rows.length,
-        groups: rows
-      };
-      
-      console.log('Sending response:', response);
-      return res.status(200).json(response);
-    });
-  });
-  
-  app.get('/members', (req,res) => {
-    const membersSQL = `SELECT * FROM tblGroupMembers
-                        left join tblCourseGroups on tblGroupMembers.GroupID = tblCourseGroups.GroupID WHERE UserID = ?`
-    db.all(membersSQL, [currentUser], (err, rows) => {
-      if (err) {
-        return res.status(400).json({ error: err.message })
-      }
-      if (!rows) {
-        return res.status(404).json({ error: "No members found" })
-      }
-      return res.status(200).json({
-        message: "Members retrieved successfully",
-        count: rows.length,
-        members: rows
-      })
-    })
-  })
-
-  app.get('/comments', (req, res) => {
-    const commentsSQL = `SELECT * FROM tblComments
-                        left join tblGroupMembers on tblComments.GroupID = tblGroupMembers.GroupID WHERE UserID = ?`
-    db.all(commentsSQL, [currentUser], (err, rows) => {
-      if (err) {
-        return res.status(400).json({ error: err.message })
-      }
-      if (!rows) {
-        return res.status(404).json({ error: "No comments found" })
-      }
-      return res.status(200).json({
-        message: "Comments retrieved successfully",
-        count: rows.length,
-        comments: rows
-      })
-    })
-  })
-
   app.patch('/updateUser', (req, res) => {
     const { Fname, Lname, Email, Password } = req.body
     const CryptPass = bcrypt.hashSync(Password, intSalt)
@@ -533,18 +596,13 @@ const intSalt = 10;
     })
   })
 
-  app.patch('/updateSocial', (req, res) => {
-    const { SocialType, Username } = req.body
-    const updateSQL = `UPDATE tblSocials SET SocialType = ?, Username = ? WHERE UserID = ?`
-    db.run(updateSQL, [SocialType, Username, currentUser], (err) => {
-      if (err) {
-        return res.status(400).json({ error: err.message })
-      }
-      return res.status(200).json({
-        message: "Social updated successfully"
-      })
-    })
-  })
+    /*
+
+    User Management endpoints
+
+    */
+
+
 
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
