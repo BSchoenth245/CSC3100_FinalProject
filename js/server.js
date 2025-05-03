@@ -519,6 +519,20 @@ const intSalt = 10;
     })
   })
 
+  app.patch('/updateUser', (req, res) => {
+    const { Fname, Lname, Email, Password } = req.body
+    const CryptPass = bcrypt.hashSync(Password, intSalt)
+    const updateSQL = `UPDATE tblUsers SET Fname = ?, Lname = ?, Email = ?, Password = ? WHERE UserID = ?`
+    db.run(updateSQL, [Fname, Lname, Email, CryptPass, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "User updated successfully"
+      })
+    })
+  })
+
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
   })
