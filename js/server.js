@@ -446,7 +446,7 @@ const intSalt = 10;
       return res.status(400).json({ error: "User not authenticated" });
     }
   
-    const sqlGroups = `SELECT DISTINCT GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
+    const sqlGroups = `SELECT DISTINCT GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
                       FROM tblGroupMembers 
                       LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
                       LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
@@ -483,7 +483,23 @@ const intSalt = 10;
     });
   });
   
-  
+  app.get('/members', (req,res) => {
+    const membersSQL = `SELECT * FROM tblGroupMembers
+                        left join tblCourseGroups on tblGroupMembers.GroupID = tblCourseGroups.GroupID WHERE UserID = ?`
+    db.all(membersSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No members found" })
+      }
+      return res.status(200).json({
+        message: "Members retrieved successfully",
+        count: rows.length,
+        members: rows
+      })
+    })
+  })
 
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
