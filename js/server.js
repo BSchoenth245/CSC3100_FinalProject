@@ -421,6 +421,54 @@ const intSalt = 10;
     }
   })
 
+  app.get('/groups', (req, res) => {
+    console.log('Groups endpoint called');
+    console.log('Current user:', currentUser);
+    
+    // Check if currentUser is defined
+    if (!currentUser) {
+      return res.status(400).json({ error: "User not authenticated" });
+    }
+  
+    const sqlGroups = `SELECT DISTINCT GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
+                      FROM tblGroupMembers 
+                      LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
+                      LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
+                      WHERE UserID = ?`
+    
+    console.log('Executing SQL:', sqlGroups);
+    console.log('With parameter:', currentUser);
+    
+    // Use db.all to get multiple rows
+    db.all(sqlGroups, [currentUser], (err, rows) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(400).json({ error: err.message });
+      }
+      
+      console.log('Query results:', rows);
+      
+      // Check if any groups were found
+      if (!rows || rows.length === 0) {
+        return res.status(200).json({ 
+          message: "No groups found for this user",
+          groups: []
+        });
+      }
+      
+      const response = {
+        message: "Groups retrieved successfully",
+        count: rows.length,
+        groups: rows
+      };
+      
+      console.log('Sending response:', response);
+      return res.status(200).json(response);
+    });
+  });
+  
+  
+
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
   })
