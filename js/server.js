@@ -501,6 +501,24 @@ const intSalt = 10;
     })
   })
 
+  app.get('/comments', (req, res) => {
+    const commentsSQL = `SELECT * FROM tblComments
+                        left join tblGroupMembers on tblComments.GroupID = tblGroupMembers.GroupID WHERE UserID = ?`
+    db.all(commentsSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No comments found" })
+      }
+      return res.status(200).json({
+        message: "Comments retrieved successfully",
+        count: rows.length,
+        comments: rows
+      })
+    })
+  })
+
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
   })
