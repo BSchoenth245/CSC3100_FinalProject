@@ -23,27 +23,40 @@ const intSalt = 10;
   app.post('/registration', async (req, res) => {
       try {
           // Get request data
-          const { firstName, lastName, email, password } = req.body
-          const userId = uuidv4()
+          const { firstName, lastName, email, password, isFaculty } = req.body
+          const UserID = uuidv4()
           const currentTime = new Date().toISOString()
           
           // Hash password
           const hashedPassword = await bcrypt.hash(password, intSalt)
+          const InsertSql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime, isFaculty) 
+                      VALUES (?,?,?,?,?,?,?,?)`
 
-          const sql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime) 
-                      VALUES (?,?,?,?,?,?,?)`
-          
-          db.run(sql, [userId, firstName, lastName, email, hashedPassword, currentTime, null], (err) => {
+          if(isFaculty == 'Student'){
+            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 0], (err) => {
               if (err) {
-                  res.status(400).json({ error: err.message })
-                  return
+                res.status(400).json({ error: err.message })
+                return
               }
               res.status(201).json({
-                  userId: userId,
-                  message: "User created successfully"
+                CommentID: CommentID,
+                message: "Comment added successfully"
               })
-          })
-      } catch (err) {
+            })
+          } else {
+            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 1], (err) => {
+              if (err) {
+                res.status(400).json({ error: err.message })
+                return
+              }
+              res.status(201).json({
+                CommentID: CommentID,
+                message: "Comment added successfully"
+              })
+            })
+          }
+        }
+      catch (err) {
           res.status(500).json({ error: err.message })
       }
   })

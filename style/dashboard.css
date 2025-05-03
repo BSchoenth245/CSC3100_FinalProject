@@ -415,3 +415,91 @@ div:has(#txtCourseName) > label {
     border-color: var(--accent-color);
     color: var(--text-color);
 }
+/* Toggle Switch Styles */
+.toggle-container {
+    position: relative;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 100px;
+    position: relative;
+    padding: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 100px;
+    height: 36px;
+    border-radius: 45px;
+    transition: 0.3s;
+    background-color: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-icon {
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+.toggle-icon svg {
+    margin-right: 5px;
+    fill: currentColor;
+}
+
+.toggle-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* When toggle is checked (public) */
+.toggle-input:checked + .toggle-label .toggle-slider {
+    transform: translateX(0);
+}
+
+.toggle-input:checked + .toggle-label .public-icon {
+    color: white;
+}
+
+.toggle-input:checked + .toggle-label .private-icon {
+    color: var(--text-color);
+}
+
+/* When toggle is not checked (private) */
+.toggle-input:not(:checked) + .toggle-label .toggle-slider {
+    transform: translateX(116px);
+}
+
+.toggle-input:not(:checked) + .toggle-label .public-icon {
+    color: var(--text-color);
+}
+
+.toggle-input:not(:checked) + .toggle-label .private-icon {
+    color: white;
+}
+
+/* Focus styles for accessibility */
+.toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 1px var(--accent-color);
+}

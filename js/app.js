@@ -286,6 +286,17 @@ function toggleMembers(button) {
     memberList.classList.toggle('collapsed');
     button.classList.toggle('active'); // Changed from collapseIcon to button
 }
+// Add this to your app.js file
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleSwitch = document.getElementById('commentVisibilityToggle');
+    const hiddenInput = document.getElementById('commentVisibilityValue');
+    
+    if (toggleSwitch && hiddenInput) {
+        toggleSwitch.addEventListener('change', function() {
+            hiddenInput.value = this.checked ? 'public' : 'private';
+        });
+    }
+});
 
 document.querySelector('#btnCreateGroup').addEventListener('click', function() {
     blnError = false

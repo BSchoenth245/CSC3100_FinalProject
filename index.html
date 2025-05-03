@@ -247,20 +247,19 @@
                 <div id="Comments" class="tab-content">
                     <!-- Settings tab content -->
                     <h2>View Comments Here</h2>
-                    <!-- <div class="settings-options"-->
+                    <div class="settings-options"-->
                     <!-- Settings options here -->
                     <!-- this was an example created for our view comment tab-->
-                    <!-- <form>
-                            <div class="group card">
-                                <div class="group-header">
-                                    <h3>Posted by: <strong>Brock The Rock</strong></h3>
-                                    <span class="group-code"> Submitted on: April 20, 2025 at 4:20 PM </span>
-                                </div>
-                                    <p>"I think the boys did their best, but like next time I think we should just lock in."</p>
-                                </div>
+                    <form>
+                        <div class="group card">
+                            <div class="group-header">
+                                <h3><strong>Brock The Rock</strong></h3>
+                                <span class="group-code"> Submitted on: April 20, 2025 at 4:20 PM </span>
                             </div>
-                        </form>
-                    </div> -->
+                                <p>"I think the boys did their best, but like next time I think we should just lock in."</p>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <div id="addNewComments" class="tab-content">
@@ -294,15 +293,26 @@
                                         placeholder="Enter your feedback here..."></textarea>
                                 </div>
                                 <div class="visibility-options">
-                                    <div class="radio-group">
-                                        <!-- <label for="radioPublic">Public</label> -->
-                                        <input type="radio" id="radioPublic" name="commentVisibility" value="public" checked>
-                                        
-                                        <!-- <label for="radioPrivate">Private</label> -->
-                                        <input type="radio" id="radioPrivate" name="commentVisibility" value="private">
-                                        
+                                    <div class="toggle-container">
+                                        <input type="checkbox" id="commentVisibilityToggle" class="toggle-input" checked>
+                                        <label for="commentVisibilityToggle" class="toggle-label">
+                                            <span class="toggle-icon public-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px">
+                                                    <path d="M480-360q75 0 127.5-52.5T660-540q0-75-52.5-127.5T480-720q-75 0-127.5 52.5T300-540q0 75 52.5 127.5T480-360Zm0-80q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM480-200q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Z"/>
+                                                </svg>
+                                                <span class="toggle-text">Public</span>
+                                            </span>
+                                            <span class="toggle-icon private-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px">
+                                                    <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/>
+                                                </svg>
+                                                <span class="toggle-text">Private</span>
+                                            </span>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <input type="hidden" name="commentVisibility" id="commentVisibilityValue" value="public">
                                     </div>
-                                </div>
+                                </div>                                
                                 <button type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit
                                     Feedback</button>
                             </form>
