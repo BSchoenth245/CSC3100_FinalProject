@@ -42,6 +42,22 @@ const intSalt = 10;
       }
   })
 
+  app.post('/checkemail', async (req, res) => {
+      const strEmail = req.body
+      const strCommand = `SELECT COUNT(*) as count FROM tblUsers WHERE Email = ?`
+      db.get(strCommand, [strEmail], (err, row) => {
+          if (err) {
+              res.status(400).json({ error: err.message })
+              return
+          }
+          if (row.count === 1) {
+              res.status(200).json({ exists: false })
+          } else {
+              res.status(200).json({ exists: true })
+          }
+      })
+  })
+
   app.post('/login', async (req, res) => {
       try {
         const { email, password } = req.body;
