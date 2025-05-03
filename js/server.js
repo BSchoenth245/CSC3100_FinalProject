@@ -533,6 +533,19 @@ const intSalt = 10;
     })
   })
 
+  app.patch('/updateSocial', (req, res) => {
+    const { SocialType, Username } = req.body
+    const updateSQL = `UPDATE tblSocials SET SocialType = ?, Username = ? WHERE UserID = ?`
+    db.run(updateSQL, [SocialType, Username, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Social updated successfully"
+      })
+    })
+  })
+
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
   })
