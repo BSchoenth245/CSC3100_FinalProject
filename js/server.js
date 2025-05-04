@@ -453,7 +453,44 @@ app.delete('/deleteCourse', async (req, res) => {
     });
   });
 
-  app.get('/members', (req,res) => {
+  app.delete('/deleteGroup', (req,res) => {
+    const { GroupName, CourseName, CourseNumber, CourseSection } = req.body
+    
+    // Get GroupID from course details
+    const getGroupSQL = `SELECT GroupID FROM tblCourseGroups 
+                        LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
+                        WHERE GroupName = ? AND CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+    db.get(getGroupSQL, [GroupName, CourseName, CourseNumber, CourseSection], (err, row) => {
+        if (err) {
+            return res.status(400).json({ error: err.message })
+        }
+        if (!row) {
+            return res.status(404).json({ error: "Group not found" })
+        }
+
+        // Delete group members first
+        const deleteMembersSQL = `DELETE FROM tblGroupMembers WHERE GroupID = ?`
+        db.run(deleteMembersSQL, [row.GroupID], (err) => {
+            if (err) {
+                return res.status(400).json({ error: err.message })
+            }
+
+            // Then delete the group
+            const deleteGroupSQL = `DELETE FROM tblCourseGroups WHERE GroupID = ?`
+            db.run(deleteGroupSQL, [row.GroupID], (err) => {
+                if (err) {
+                    return res.status(400).json({ error: err.message })
+                }
+                return res.status(200).json({
+                    GroupID: row.GroupID,
+                    message: "Group and members deleted successfully"
+                })
+            })
+        })
+    })
+})
+
+app.get('/members', (req,res) => {
     const membersSQL = `SELECT * FROM tblGroupMembers
                         left join tblCourseGroups on tblGroupMembers.GroupID = tblCourseGroups.GroupID WHERE UserID = ?`
     db.all(membersSQL, [currentUser], (err, rows) => {
@@ -506,6 +543,7 @@ app.delete('/deleteCourse', async (req, res) => {
       res.status(500).json({ error: err.message })
     }
   })
+
   app.get('/socials', (req, res) => {
     const socialsSQL = `SELECT * FROM tblSocials WHERE UserID = ?`
     db.all(socialsSQL, [currentUser], (err, rows) => {
