@@ -658,6 +658,48 @@ const intSalt = 10;
 
     */
 
+//====================================================================================
+
+    /*
+
+    Assessment Related Endpoint
+
+    */
+
+app.post("/AddAssessment", (req, res) => {
+  const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
+  const AssessmentID = uuidv4()
+
+  const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
+  const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+
+  db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    if (!rows) {
+      return res.status(404).json({ error: "Course not found" })
+    }
+    db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(201).json({
+        AssessmentID: AssessmentID,
+        message: "Assessment added successfully"
+      })
+    })
+  })
+
+
+})
+
+    /*
+
+    Assessment Related Endpoint
+
+    */
+
 
 
   app.listen(HTTP_PORT, () => {
