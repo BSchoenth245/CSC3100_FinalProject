@@ -190,6 +190,27 @@ const intSalt = 10;
       res.status(500).json({ error: err.message })
     }
   })
+  app.patch('/updatecourse', async (req, res) => {
+    try {
+      const { CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate, CourseID} = req.body
+      const comUpdate = `UPDATE tblCourses
+      SET CourseName = ?, CourseNumber = ?, CourseSection = ?, CourseTerm = ?, StartDate = ?, EndDate = ?
+      WHERE CourseID = ?`
+
+      db.run(comUpdate, [CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate, CourseID], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CourseID: CourseID,
+          message: "Course updated successfully"
+        })
+      })
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  })
 
   app.post('/creategroup', async (req, res) => {
     try {
@@ -748,8 +769,6 @@ app.post('/addAssessmentQuestion', (req,res) => {
       })
     })
   })
-
-
 
     /*
 
