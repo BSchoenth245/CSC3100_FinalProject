@@ -263,9 +263,8 @@ app.delete('/deleteCourse', async (req, res) => {
 
   app.post('/creategroup', async (req, res) => {
     try {
-      const { GroupName, CourseName, CourseSection } = req.body
+      const { GroupName, CourseName, CourseSection, groupCode } = req.body
       const GroupID = uuidv4()
-      const groupCode = uuidv4().substring(0, 6)
 
       const comSelect = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseSection = ?`
       const comInsert = `INSERT INTO tblCourseGroups (GroupID, GroupName, CourseID, groupCode)
@@ -946,16 +945,30 @@ app.get('/members', (req,res) => {
   })
 
   app.patch('/updateAssessmentQuestion', (req, res) => {
-    const { QType, Options, Narrative, QNumber, OGQNumber } = req.body
+    const { QType, Options, Narrative, QNumber, OGQNumber, AssessmentName } = req.body
 
     const updateSQL = `UPDATE tblAssessmentQuestions SET QuestionType = ?, Options = ?, QuestionNarrative = ?, QuestionNumber = ? WHERE QuestionNumber = ? AND AssessmentID =
                           (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
-    db.run(updateSQL, [QType, Options, Narrative, QNumber, OGQNumber, currentUser], (err) => {
+    db.run(updateSQL, [QType, Options, Narrative, QNumber, OGQNumber, AssessmentName, currentUser], (err) => {
       if (err) {
         return res.status(400).json({ error: err.message })
       }
       return res.status(200).json({
         message: "Question updated successfully"
+      })
+    })
+  })
+
+  app.delete('/deleteAssessmentQuestion', (req, res) => {
+    const { QNumber, AssessmentName } = req.body
+    const deleteSQL = `DELETE FROM tblAssessmentQuestions WHERE QuestionNumber = ? AND AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.run(deleteSQL, [QNumber, AssessmentName, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Question deleted successfully"
       })
     })
   })
@@ -985,6 +998,26 @@ app.get('/members', (req,res) => {
           ResponseID: ResponseID,
           message: "Response added successfully"
         })
+      })
+    })
+  })
+
+  app.post('/getAssessmentResponses', (req, res) => {
+    const { AssessmentName } = req.body
+    const Responsesql = `SELECT * FROM tblAssessmentResponses WHERE QuestionID IN
+                          (SELECT QuestionID FROM tblAssessmentQuestions WHERE AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?))`
+    db.all(Responsesql, [AssessmentName, currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Response not found" })
+      }
+      return res.status(200).json({
+        message: "Responses retrieved successfully",
+        count: rows.length,
+        responses: rows
       })
     })
   })
