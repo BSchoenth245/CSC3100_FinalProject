@@ -376,13 +376,39 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         const courseTerm = `${courseSeason} ${courseYear}`;
         
         // Create course with the collected data
-        createCourse(
-            document.querySelector('#txtCourseName').value,
-            document.querySelector('#txtCourseSection').value,
-            courseTerm,
-            startDate,
-            endDate
-        );
+        // createCourse(
+        //     document.querySelector('#txtCourseName').value,
+        //     document.querySelector('#txtCourseSection').value,
+        //     courseTerm,
+        //     startDate,
+        //     endDate
+        // );
+
+        // #TODO: delete this when the backend is ready
+        Swal.fire({
+            title: "Success!",
+            text: "Course created successfully.",
+            icon: "success"
+        });
+        
+        // Optionally insert card into DOM here
+        const courseName = document.querySelector('#txtCourseName').value;
+        const section = document.querySelector('#txtCourseSection').value;
+        const term = `${document.querySelector('#selCourseSeason').value} ${document.querySelector('#txtCourseYear').value}`;
+        //const endDate = document.querySelector('#dateEndDate').value;
+        
+        const cardHTML = `
+          <div class="group-card">
+            <div class="group-header">
+              <h3>${courseName}</h3>
+              <p>Section: ${section}</p>
+              <p>Term: ${term}</p>
+              <p>End Date: ${endDate}</p>
+            </div>
+          </div>
+        `;
+        
+        document.querySelector('#groupsList').insertAdjacentHTML('beforeend', cardHTML);
     }
 });
 
@@ -414,14 +440,43 @@ function createCourse(courseName, courseSection, courseTerm, startDate, endDate)
             text: "Course created successfully",
             icon: "success"
         });
-        
-        // Clear the form
+
+        //// #TODO: delete this when the backend is ready Create a new group card UI element dynamically (demo only) need to change all of this to get it talking with the backend
+    const groupCard = document.createElement('div');
+    groupCard.className = 'group-card';
+    groupCard.innerHTML = `
+        <div class="group-header">
+            <h3>${courseName}</h3>
+            <span class="group-code">Code: TBD</span>
+        </div>
+        <div class="group-info">
+            <p><strong>Course:</strong> <span class="courseName">${courseName}</span></p>
+            <p><strong>Section:</strong> <span class="courseSection">${courseSection}</span></p>
+            <div class="members-section">
+                <button class="collapse-btn" onclick="toggleMembers(this)">
+                    <strong>Members</strong>
+                    <span class="collapse-icon">▼</span>
+                </button>
+                <ul class="member-list collapsed">
+                    <li>You (creator)</li>
+                </ul>
+            </div>
+            <div class="card-actions">
+                <button type="button">Take Survey</button>
+                <button type="button">Leave Group</button>
+            </div>
+        </div>
+    `;
+    document.querySelector('#Groups .dashboard-stats').appendChild(groupCard);
+
+        // Reset form fields
         document.querySelector('#txtCourseName').value = '';
         document.querySelector('#txtCourseSection').value = '';
-        document.querySelector('#selCourseSeason').value = ''; // Clear season
-        document.querySelector('#txtCourseYear').value = '';   // Clear year
+        document.querySelector('#selCourseSeason').value = '';
+        document.querySelector('#txtCourseYear').value = '';
         document.querySelector('#dateEndDate').value = '';
     })
+
     .catch(error => {
         Swal.fire({
             title: "Error",
@@ -599,3 +654,133 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         icon: "success"
     });
 });
+
+// Functionality to the "Add Group" and group tabs
+document.addEventListener('DOMContentLoaded', function () {
+    const createGroupBtn = document.querySelector('#createGroupSection button');
+
+    if (createGroupBtn) {
+        createGroupBtn.addEventListener('click', function () {
+            const groupName = document.querySelector('#txtGroupName').value.trim();
+            const courseOption = document.querySelector('#selCourseName');
+            const selectedCourse = courseOption.options[courseOption.selectedIndex];
+            const courseText = selectedCourse.text;
+            const courseValue = selectedCourse.value;
+
+            let blnError = false;
+            let strMessage = '';
+
+            if (groupName === '') {
+                blnError = true;
+                strMessage += '<p class="mb-0 mt-0">Group Name cannot be blank.</p>';
+            }
+
+            if (courseValue === '') {
+                blnError = true;
+                strMessage += '<p class="mb-0 mt-0">Please select a course.</p>';
+            }
+
+            if (blnError) {
+                Swal.fire({
+                    title: 'Oops!',
+                    html: strMessage,
+                    icon: 'error'
+                });
+                return;
+            }
+
+            // Extract course and section from courseText (e.g., "CSC3100-001 - Web Development")
+            const [courseCode, courseSection] = courseText.split(' - ')[0].split('-');
+
+            // Build group card HTML
+            const groupHTML = `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>${groupName}</h3>
+                        <span class="group-code">Code: ${generateGroupCode()}</span>
+                    </div>
+                    <div class="group-info">
+                        <p><strong>Course:</strong> <span class="courseName">${courseCode}</span></p>
+                        <p><strong>Section:</strong> <span class="courseSection">${courseSection}</span></p>
+                        <div class="members-section">
+                            <button class="collapse-btn" onclick="toggleMembers(this)">
+                                <strong>Members</strong>
+                                <span class="collapse-icon">▼</span>
+                            </button>
+                            <ul class="member-list collapsed">
+                                <li>Group creator placeholder</li>
+                            </ul>
+                        </div>
+                        <div class="card-actions">
+                            <button type="button">Take Survey</button>
+                            <button type="button">Leave Group</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Insert into the Groups section
+            document.querySelector('#Groups .dashboard-stats').insertAdjacentHTML('beforeend', groupHTML);
+
+            // Clear form fields
+            document.querySelector('#txtGroupName').value = '';
+            document.querySelector('#selCourseName').value = '';
+        });
+    }
+});
+
+// Utility function to generate a random group code (like ABC123)
+function generateGroupCode() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    let code = '';
+    for (let i = 0; i < 3; i++) {
+        code += letters[Math.floor(Math.random() * letters.length)];
+    }
+    for (let i = 0; i < 3; i++) {
+        code += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+    return code;
+}
+
+// this function will load the courses from the server and display them in the dashboard
+// it will be called when the page loads and when the user clicks on the "Load Courses" button
+// TODO:
+function loadCourses() {
+    fetch('/courses') // ⬅️ adjust this if your endpoint is different
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Failed to fetch courses');
+        }
+        return response.json();
+    })
+    .then(courses => {
+        const container = document.querySelector('#groupsList');
+        container.innerHTML = ''; // clear any existing cards
+        
+        courses.forEach(course => {
+        const cardHTML = `
+            <div class="group-card">
+            <div class="group-header">
+                <h3>${course.name}</h3>
+                <p>Section: ${course.section}</p>
+                <p>Term: ${course.term}</p>
+                <p>End Date: ${course.endDate}</p>
+            </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    })
+    .catch(error => {
+        console.error('Error loading courses:', error);
+        Swal.fire('Error', 'Could not load courses', 'error');
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadCourses();
+  });
+  
+
+
+
