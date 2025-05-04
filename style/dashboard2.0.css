@@ -1,34 +1,23 @@
+
 /* 
 
 Main Dashdoard styles 
 
 */
 #Dashboard .wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 80vh; 
+    position: fixed; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 80vh;
     border-radius: 10px 10px 0 0;
     background-color: rgba(255, 255, 255, 0.9);
 }
 
 #Dashboard .nav-tabs {
-    position: absolute;
-    top: -55px; 
-    left: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 2px;
-    z-index: 1;
+    position: absolute; top: -55px; left: 20px;
+    list-style: none; padding: 0; margin: 0;
+    display: flex; gap: 2px; z-index: 1;
 }
 
-#Dashboard .nav-tabs li {
-    margin-bottom: -1px;
-}
+#Dashboard .nav-tabs li { margin-bottom: -1px; }
 
 #Dashboard .nav-tabs a {
     display: inline-block;
@@ -58,18 +47,14 @@ Main Dashdoard styles
     margin-top: -1px;
 }
 
-#Dashboard .nav-tabs a:hover {
-    background-color: white;
-}
+#Dashboard .nav-tabs a:hover { background-color: white; }
 
 .content-area .tab-content {
     display: none;
     padding: 20px;
 }
 
-.content-area .tab-content.active {
-    display: block;
-}
+.content-area .tab-content.active { display: block; }
 
 .dashboard-stats {
     display: flex;
@@ -94,43 +79,23 @@ Main Dashdoard styles
     border: 1px solid #ddd;
     border-radius: 4px;
 }
-/* 
 
-Individual element styles
-
-*/
-
-#joinGroupSection {
+#joinGroupSection, #createGroupSection, #createCourse {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 10px; 
+    gap: 10px;
     width: 100%;
 }
 
-#joinGroupSection > * {
+#joinGroupSection > *, #createGroupSection > *, #createCourse > * {
     display: block;
     width: 100%;
     margin-bottom: 10px;
 }
 
-textarea {
-    box-sizing: border-box;
-    flex-grow: 1;
-    min-width: 0;
-    height: 50px;
-    padding: 1em;
-    font: inherit;
-    border-radius: 0 10px 10px 0;
-    border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
-    color: var(--text-color);
-    transition: 150ms ease;
-}
-
-select {
+textarea, select {
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -148,14 +113,16 @@ select {
 textarea {
     min-height: 120px;
     resize: vertical;
+    padding: 1em;
 }
 
-select:hover, textarea:hover {
+select:hover, textarea:hover,
+#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover {
     border-color: var(--accent-color);
-    outline: none;
 }
 
-select:focus, textarea:focus {
+select:focus, textarea:focus,
+#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus {
     outline: none;
     border-color: var(--text-color);
 }
@@ -167,27 +134,14 @@ form div:has(textarea) {
 form div:has(textarea) label {
     height: auto;
     min-height: 120px;
-    align-items: center; 
+    align-items: center;
 }
 
-textarea {
-    min-height: 120px;
-    resize: vertical;
-}
+input[name="courseSection"] { width: 25%; }
 
-input[name="courseSection"] {
-    width: 25%;
-}
+#txtCourseName, div:has(#txtCourseName) > label { margin-top: 15px; }
 
-#txtCourseName{
-    margin-top: 15px;
-}
-
-div:has(#txtCourseName) > label {
-    margin-top: 15px;
-}
-
-#txtCourseSection, #contact-input{
+#txtCourseSection, #contact-input {
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -201,58 +155,30 @@ div:has(#txtCourseName) > label {
     transition: 150ms ease;
 }
 
-#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover {
-    border-color: var(--accent-color);
-}
-
-#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-
 .dash-separator {
     display: flex;
-    align-items: center; 
-    padding: 0 10px; 
-    height: 50px; 
+    align-items: center;
+    padding: 0 10px;
+    height: 50px;
     margin-top: 15px;
 }
-#selCourseName {
-    margin-top: 10px;
-}
 
-div:has(#selCourseName) > label {
-    margin-top: 10px;
-}
-
-#createGroupSection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createGroupSection > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
+#selCourseName, div:has(#selCourseName) > label { margin-top: 10px; }
 
 #txtCourseName, #txtGroupName {
     background-color: var(--dashboard-input-color);
     border: 2px solid var(--dashboard-input-color);
 }
+
 .input-note {
     display: block;
     font-size: 0.8em;
     color: var(--text-color);
     opacity: 0.8;
     margin-top: 5px;
-    margin-left: 50px; /* Aligns with the input field */
+    margin-left: 50px;
 }
-/* Course term input group styling */
+
 .course-term-group {
     display: flex;
     align-items: center;
@@ -260,9 +186,7 @@ div:has(#selCourseName) > label {
 }
 
 .course-term-group select,
-.course-term-group input {
-    flex: 1;
-}
+.course-term-group input { flex: 1; }
 
 #txtCourseYear {
     width: 100px;
@@ -277,29 +201,9 @@ div:has(#selCourseName) > label {
     transition: 150ms ease;
 }
 
-#txtCourseYear:hover {
-    border-color: var(--accent-color);
-}
+#txtCourseYear:hover { border-color: var(--accent-color); }
+#txtCourseYear:focus { outline: none; border-color: var(--text-color); }
 
-#txtCourseYear:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-#createCourse {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createCourse > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-/* Container for date inputs on one line */
 .date-inputs-container {
     display: flex;
     width: 100%;
@@ -307,7 +211,6 @@ div:has(#selCourseName) > label {
     margin-top: 15px;
 }
 
-/* Style for the season select and end date groups */
 .date-input-group {
     display: flex;
     flex: 1;
@@ -327,7 +230,8 @@ div:has(#selCourseName) > label {
 }
 
 .date-input-group select,
-.date-input-group input {
+.date-input-group input,
+.date-input-year input {
     flex-grow: 1;
     min-width: 0;
     height: 50px;
@@ -335,71 +239,18 @@ div:has(#selCourseName) > label {
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
     background-color: var(--dashboard-input-color);
     color: var(--text-color);
     transition: 150ms ease;
 }
 
-/* Style for the year input without label */
-.date-input-year {
-    flex: 0.7;
-}
+.date-input-year { flex: 0.7; }
 
 .date-input-year input {
     width: 100%;
-    height: 50px;
-    padding: 0 1em;
-    font: inherit;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    color: var(--text-color);
-    transition: 150ms ease;
 }
-
-/* Hover and focus states */
-.date-input-group select:hover,
-.date-input-group input:hover,
-.date-input-year input:hover {
-    border-color: var(--accent-color);
-}
-
-.date-input-group select:focus,
-.date-input-group input:focus,
-.date-input-year input:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-
-/* Make the note appear below all inputs */
-.input-note {
-    display: block;
-    font-size: 0.8em;
-    color: var(--text-color);
-    opacity: 0.8;
-    margin-top: 5px;
-    width: 100%;
-    text-align: right;
-}
-
-/* Make createCourse section consistent with createGroupSection */
-#createCourse {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createCourse > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
 
 .group-card {
     background-color: var(--input-color);
@@ -442,30 +293,19 @@ div:has(#selCourseName) > label {
 
 .member-list {
     list-style: none;
-    padding-left: 20px;
-    margin: 10px 0;
-    max-height: 0;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-    margin: 0;
-    padding: 0;
 }
 
-.member-list.collapsed {
-    max-height: 0;
-}
-
-.member-list:not(.collapsed) {
-    max-height: 500px;
-}
+.member-list.collapsed { max-height: 0; }
+.member-list:not(.collapsed) { max-height: 500px; }
 
 .member-list li {
     color: var(--text-color);
     padding: 5px 0;
-}
-
-.members-section {
-    margin-top: 10px;
 }
 
 .collapse-btn {
@@ -482,30 +322,16 @@ div:has(#selCourseName) > label {
     border-radius: 10px;
 }
 
-.collapse-btn:hover {
-    background-color: var(--accent-color);
-}
-
-.member-list {
-    max-height: 200px;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-.member-list.collapsed {
-    max-height: 0;
-}
+.collapse-btn:hover { background-color: var(--accent-color); }
 
 .collapse-icon {
     display: inline-block;
     transition: transform 0.3s ease;
 }
 
-.collapse-btn.active .collapse-icon {
-    transform: rotate(180deg);
-}
+.collapse-btn.active .collapse-icon { transform: rotate(180deg); }
 
-#btn-take-survey, #btn-leave-group{
+#btn-take-survey, #btn-leave-group {
     margin-top: 5px;
     border: none;
     border-radius: 1000px;
@@ -519,16 +345,12 @@ div:has(#selCourseName) > label {
     transition: 150ms ease;
 }
 
-#btn-take-survey:hover, #btn-leave-group:hover{
-    background-color: var(--text-color);
-}
-
-#btn-take-survey:focus, #btn-leave-group:focus{
+#btn-take-survey:hover, #btn-leave-group:hover,
+#btn-take-survey:focus, #btn-leave-group:focus {
     outline: none;
     background-color: var(--text-color);
 }
 
-/* Profile Tab Positioning */
 .tabs {
     position: relative;
     display: flex;
@@ -543,18 +365,15 @@ div:has(#selCourseName) > label {
     z-index: 2;
 }
 
-.profile-tab-container li {
-    list-style: none;
-    margin-bottom: -1px;
-}
+.profile-tab-container li { list-style: none; margin-bottom: -1px; }
 
 .profile-tab-container a {
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ddd;
+    background-color: var(--text-color);
+    color: var(--accent-color);
+    border: 1px solid var(--text-color);
     border-bottom: none;
     border-radius: 6px 6px 0 0;
     font-weight: 500;
@@ -562,23 +381,11 @@ div:has(#selCourseName) > label {
 }
 
 .profile-tab-container a:hover {
-    background-color: white;
-    color: var(--accent-color);
-}
-
-/* Make the profile tab visually distinct */
-.profile-tab-container a {
-    background-color: var(--text-color);
-    color: var(--accent-color);
-    border-color: var(--text-color);
-}
-
-.profile-tab-container a:hover {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     color: var(--text-color);
 }
-/* Toggle Switch Styles */
+
 .toggle-container {
     position: relative;
     display: inline-block;
@@ -626,75 +433,23 @@ div:has(#selCourseName) > label {
     transition: color 0.3s;
 }
 
-.toggle-icon svg {
-    margin-right: 5px;
-    fill: currentColor;
-}
+.toggle-icon svg { margin-right: 5px; fill: currentColor; }
+.toggle-text { font-size: 14px; font-weight: 500; }
 
-.toggle-text {
-    font-size: 14px;
-    font-weight: 500;
-}
+.toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
 
-/* When toggle is checked (public/student) */
-.toggle-input:checked + .toggle-label .toggle-slider {
-    transform: translateX(0);
-}
+.toggle-input:checked + .toggle-label .public-icon { color: white; }
+.toggle-input:checked + .toggle-label .private-icon { color: var(--text-color); }
+.toggle-input:not(:checked) + .toggle-label .public-icon { color: var(--text-color); }
+.toggle-input:not(:checked) + .toggle-label .private-icon { color: white; }
 
-.toggle-input:checked + .toggle-label .public-icon {
-    color: white;
-}
+.toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
 
-.toggle-input:checked + .toggle-label .private-icon {
-    color: var(--text-color);
-}
+.student-only, .faculty-only { display: none; }
+.no-js .student-only, .no-js .faculty-only { display: block; }
 
-/* When toggle is not checked (private/Faculty) */
-.toggle-input:not(:checked) + .toggle-label .toggle-slider {
-    transform: translateX(116px);
-}
-
-.toggle-input:not(:checked) + .toggle-label .public-icon {
-    color: var(--text-color);
-}
-
-.toggle-input:not(:checked) + .toggle-label .private-icon {
-    color: white;
-}
-
-/* Focus styles for accessibility */
-.toggle-input:focus + .toggle-label {
-    box-shadow: 0 0 1px var(--accent-color);
-}
-/* Text color changes when toggle has focus */
-.toggle-input:focus:checked + .toggle-label .public-icon,
-.toggle-input:focus:checked + .toggle-label .student-icon {
-    color: #ffffff; 
-}
-.toggle-input:focus:not(:checked) + .toggle-label .private-icon,
-.toggle-input:focus:not(:checked) + .toggle-label .staff-icon {
-    color: #ffffff; 
-}
-.toggle-input:focus + .toggle-label .toggle-text {
-    font-weight: 600; /* Make text slightly bolder when focused */
-}
-/* Role-specific visibility */
-.student-only, .faculty-only {
-    display: none; /* Hidden by default, will be shown via JavaScript */
-}
-
-/* When JavaScript is disabled, show everything as fallback */
-.no-js .student-only, .no-js .faculty-only {
-    display: block;
-}
-
-/* Reset all form elements to ensure consistent styling */
-#profileContacts form * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-/* Center the entire contacts section */
 #profileContacts {
     display: flex;
     flex-direction: column;
@@ -703,14 +458,8 @@ div:has(#selCourseName) > label {
     margin-top: 20px;
 }
 
-/* Center the form within the contacts section */
-#profileContacts form {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
+#profileContacts form { display: flex; justify-content: center; width: 100%; }
 
-/* Center the additionalContacts section */
 #additionalContacts {
     display: flex;
     flex-direction: column;
@@ -718,8 +467,10 @@ div:has(#selCourseName) > label {
     width: 100%;
 }
 
-/* Style for any dynamically added contact rows */
-#additionalContacts .contact-row {
+#Profile h3 { text-align: center; margin-bottom: 20px; }
+#Profile hr { width: 80%; margin: 20px auto; }
+
+.contact-row {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -729,34 +480,11 @@ div:has(#selCourseName) > label {
     max-width: 550px;
 }
 
-/* Center the Profile tab content */
-#Profile h3 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#Profile hr {
-    width: 80%;
-    margin: 20px auto;
-}
-/* Style the contact row with flexbox for alignment */
-#profileContacts .contact-row {
-    display: flex;
-    align-items: center; /* Change from stretch to center */
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    width: 100%;
-    max-width: 550px;
-}
-
-/* Style the contact-type-container */
 #profileContacts .contact-type-container {
     display: flex;
     height: 50px;
 }
 
-/* Style the label with icon */
 #profileContacts .contact-type-container label {
     flex-shrink: 0;
     height: 50px;
@@ -770,7 +498,6 @@ div:has(#selCourseName) > label {
     align-items: center;
 }
 
-/* Style the select dropdown */
 #profileContacts .contact-type {
     height: 50px;
     border-radius: 0 10px 10px 0;
@@ -782,10 +509,8 @@ div:has(#selCourseName) > label {
     background-color: var(--dashboard-input-color);
     color: var(--text-color);
     font: inherit;
-    appearance: auto; /* Ensure native select appearance */
 }
 
-/* Style the contact input field */
 #profileContacts .contact-input {
     height: 50px;
     max-width: 200px;
@@ -797,7 +522,6 @@ div:has(#selCourseName) > label {
     font: inherit;
 }
 
-/* Style the add button */
 #profileContacts .btn-add-contact {
     height: 50px;
     width: 50px;
@@ -813,16 +537,5 @@ div:has(#selCourseName) > label {
     cursor: pointer;
 }
 
-/* Ensure all elements have the same line-height */
 #profileContacts .contact-row > *,
-#profileContacts .contact-type-container > * {
-    line-height: 50px;
-}
-
-/* Fix any browser-specific styling issues */
-#profileContacts select,
-#profileContacts input,
-#profileContacts button {
-    vertical-align: middle;
-}
-
+#profileContacts .contact-type-container > * { line-height: 50px; }
