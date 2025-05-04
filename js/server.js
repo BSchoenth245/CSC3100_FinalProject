@@ -675,7 +675,20 @@ app.get('/members', (req,res) => {
         message: "Comment updated successfully"
       })
     })
-})
+  })
+
+  app.delete('/deleteComment', (req, res) => {
+    const { Comment } = req.body
+    const deleteSQL = `DELETE FROM tblComments WHERE GroupMemberID = ? AND Comment = ?`
+    db.run(deleteSQL, [currentUser, Comment], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Comment deleted successfully"
+      })
+    })
+  })
     /*
 
     Socials and comments endpoints
