@@ -885,7 +885,20 @@ app.get('/members', (req,res) => {
 
   })
 
-app.post('/addAssessmentQuestion', (req,res) => {
+  app.delete('/deleteAssessment', (req, res) => {
+    const { Name } = req.body
+    const deleteSQL = `DELETE FROM tblAssessments WHERE Name = ? AND owner = ?`
+    db.run(deleteSQL, [Name, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Assessment deleted successfully"
+      })
+    })
+  })
+
+  app.post('/addAssessmentQuestion', (req,res) => {
   const { AssessmentName, QType, Options, Narrative, QNumber } = req.body
   const QuestionID = uuidv4()
 
