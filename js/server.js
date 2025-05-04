@@ -831,7 +831,7 @@ app.get('/members', (req,res) => {
     const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
     const AssessmentID = uuidv4()
 
-    const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
+    const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?,?)`
     const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
 
     db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
@@ -841,7 +841,7 @@ app.get('/members', (req,res) => {
       if (!rows) {
         return res.status(404).json({ error: "Course not found" })
       }
-      db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+      db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name, currentUser], (err) => {
         if (err) {
           return res.status(400).json({ error: err.message })
         }
@@ -924,6 +924,25 @@ app.get('/members', (req,res) => {
       })
     })
   })
+  })
+
+  app.post('/getAssessmentQuestions', (req, res) => {
+    const { Name } = req.body
+    const Questionsql = `SELECT * FROM tblAssessmentQuestions WHERE AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.all(Questionsql, [Name, currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Question not found" })
+      }
+      return res.status(200).json({
+        message: "Questions retrieved successfully",
+        count: rows.length,
+        questions: rows
+      })
+    })
   })
 
   app.post('/addAssessmentResponse', (req, res) => {
