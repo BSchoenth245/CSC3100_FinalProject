@@ -421,19 +421,21 @@
                         <form>
                             <div class="contact-row">
                                 <!-- Here the user can select between a few options and this is subject to change, however it should be easy to add svg's with this method from my assumption -->
-                                <label for="selContact">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                        <path d="M160-40v-80h640v80H160Zm0-800v-80h640v80H160Zm320 400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm70-80h500q-45-56-109-88t-141-32q-77 0-141 32t-109 88Z"/>
-                                    </svg>
-                                </label>
-                                <select class="contact-type" id="selContact">
-                                    <option value="discord">Discord</option>
-                                    <option value="phone">Phone</option>
-                                    <option value="email">Email</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="linkedin">LinkedIn</option>
-                                    <option value="custom">Custom</option>
-                                </select>
+                                <div class="contact-type-container">
+                                    <label for="selContact">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M160-40v-80h640v80H160Zm0-800v-80h640v80H160Zm320 400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm70-80h500q-45-56-109-88t-141-32q-77 0-141 32t-109 88Z"/>
+                                        </svg>
+                                    </label>
+                                    <select class="contact-type" id="selContact">
+                                        <option value="discord">Discord</option>
+                                        <option value="phone">Phone</option>
+                                        <option value="email">Email</option>
+                                        <option value="instagram">Instagram</option>
+                                        <option value="linkedin">LinkedIn</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </div>
 
                                 <!-- Contact Input -->
                                 <input type="text" class="contact-input" id="contact-input"placeholder="Enter handle" />

@@ -63,6 +63,7 @@ $("#btnRegister").on('click',function(){
 
     const strPassword = $('#txtRegPassword').val()
     const strConPassword = $('#txtConfirmPassword').val()
+    const isFaculty = document.getElementById('commentVisibilityValue');
 
     let blnError = false
     let strMessage = ""
@@ -98,24 +99,29 @@ $("#btnRegister").on('click',function(){
         })
     }
     else{
-        checkEmailExists(email).then(data => {
-            if (data.exists) {
-                Swal.fire({
-                    title: "There's a problem!",
-                    text: "Email already exists!",
-                    icon: "error"
-                })
-            } else if (!data.exists) {
-                // If email does not exist in the database already, proceed with registration
-                registerUser(strUsername, strPassword, strFirst, strLast)
-                //success message
-                Swal.fire({
-                    title: "Success",
-                    html: "Registration complete",
-                    icon: "success"
-                })
-            }
+        fetch('http://localhost:8000/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: strFirst,
+                lastName: strLast,
+                email: strUsername,
+                password: strPassword,
+                isFaculty: isFaculty
+            })
         })
+        .then(response => {
+            console.log('Status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Registration response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
         // Clear registration inputs and redirect to login page
     document.querySelector('#txtRegUsername').value = '';
@@ -129,13 +135,13 @@ $("#btnRegister").on('click',function(){
 }   
 })
 
-function checkEmailExists(strEmail) {
-    return fetch('/checkemail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({strEmail})
-    }).then(response => response.json());
-  }
+// function checkEmailExists(strEmail) {
+//     return fetch('/checkemail', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({strEmail})
+//     }).then(response => response.json());
+//   }
 
 // Reveals/hides password on the login page
 function ViewLogPass() {
@@ -232,23 +238,23 @@ function createUser(strUsername, strPassword) {
     });
 }
 
-function registerUser(strUsername, strPassword, strFirst, strLast) {
+// function registerUser(strUsername, strPassword, strFirst, strLast) {
 
-    fetch('/registration', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
+//     fetch('/registration', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
+//     })
+//     .catch(error => {
+//         Swal.fire({
+//             title: "Error",
+//             text: error.message,
+//             icon: "error"
+//         });
+//     });
+// }
 
 function loginUser(strUsername, strPassword) {
     return fetch('/login', { // Add 'return' here
@@ -315,26 +321,42 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.querySelector('#btnCreateGroup').addEventListener('click', function() {
-    let blnError = false
-    let strMessage = ""
+document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+    let blnError = false;
+    let strMessage = "";
 
-    // Add null checks before accessing value property
-    const groupNameInput = document.querySelector('#txtGroupName')
-    const courseNameInput = document.querySelector('#txtCourseName') 
-    const courseSectionInput = document.querySelector('#txtCourseSection')
-
-    if (!groupNameInput || groupNameInput.value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Group Name Cannot Be Blank. <br></p>'
+    if (document.querySelector('#txtCourseName').value.trim().length < 1) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
     }
-    if (!courseNameInput || courseNameInput.value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>'
+    if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. <br></p>';
     }
-    if (!courseSectionInput || courseSectionInput.value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. </p>'
+    
+    // Validate season and year
+    if (document.querySelector('#selCourseSeason').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Season Must Be Selected. <br></p>';
+    }
+    
+    const yearInput = document.querySelector('#txtCourseYear');
+    if (!yearInput.value) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Year Cannot Be Blank. <br></p>';
+    } else {
+        const year = parseInt(yearInput.value);
+        const currentYear = new Date().getFullYear();
+        
+        if (isNaN(year) || year < currentYear || year > currentYear + 10) {
+            blnError = true;
+            strMessage += `<p class="mb-0 mt-0">Course Year Must Be Between ${currentYear} and ${currentYear + 10}. <br></p>`;
+        }
+    }
+    
+    if (document.querySelector('#dateEndDate').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
 
     if (blnError) {
@@ -342,9 +364,72 @@ document.querySelector('#btnCreateGroup').addEventListener('click', function() {
             title: "Oh no, you have an error!",
             html: strMessage,
             icon: "error"
-        })
+        });
+    } else {
+        // Get the current date for the start date
+        const startDate = new Date().toISOString().split('T')[0];
+        const endDate = document.querySelector('#dateEndDate').value;
+        
+        // Combine season and year for course term
+        const courseSeason = document.querySelector('#selCourseSeason').value;
+        const courseYear = document.querySelector('#txtCourseYear').value;
+        const courseTerm = `${courseSeason} ${courseYear}`;
+        
+        // Create course with the collected data
+        createCourse(
+            document.querySelector('#txtCourseName').value,
+            document.querySelector('#txtCourseSection').value,
+            courseTerm,
+            startDate,
+            endDate
+        );
     }
-})
+});
+
+
+function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
+    fetch('/createcourse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            CourseName: courseName,
+            CourseNumber: courseName, // You might want to separate course number and name
+            CourseSection: courseSection,
+            CourseTerm: courseTerm,
+            StartDate: startDate,
+            EndDate: endDate
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        Swal.fire({
+            title: "Success",
+            text: "Course created successfully",
+            icon: "success"
+        });
+        
+        // Clear the form
+        document.querySelector('#txtCourseName').value = '';
+        document.querySelector('#txtCourseSection').value = '';
+        document.querySelector('#selCourseSeason').value = ''; // Clear season
+        document.querySelector('#txtCourseYear').value = '';   // Clear year
+        document.querySelector('#dateEndDate').value = '';
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
 
 
 
@@ -401,11 +486,11 @@ function fetchUserRole() {
 // Call this function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserRole();
-    
+
     // The toggle switch in the registration form should still work for new users
     const userTypeToggle = document.getElementById('userTypeToggle');
     const userTypeValue = document.getElementById('userTypeValue');
-    
+
     if (userTypeToggle && userTypeValue) {
         userTypeToggle.addEventListener('change', function() {
             userTypeValue.value = this.checked ? 'Student' : 'Staff';
@@ -429,6 +514,3 @@ $(document).on('click', '.btn-add-contact', function () {
 $(document).on('click', '.btn-delete-contact', function () {
     $(this).closest('.contact-row').remove();
 });
-
-
-
