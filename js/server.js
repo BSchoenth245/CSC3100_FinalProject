@@ -690,9 +690,37 @@ app.post("/AddAssessment", (req, res) => {
       })
     })
   })
-
-
 })
+
+app.post('/addAssessmentQuestion', (req,res) => {
+  const { AssessmentName, QType, Options, Narrative } = req.body
+  const QuestionID = uuidv4()
+
+  const Questionsql = `INSERT INTO tblAssessmentQuestions VALUES (?,?,?,?,?)`
+  const AssessmentIDsql = `SELECT AssessmentID FROM tblAssessments WHERE Name = ? AND owner = ?`
+
+  db.all(AssessmentIDsql, [AssessmentName, currentUser], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    if (!rows) {
+      return res.status(404).json({ error: "Assessment not found" })
+    }
+    const AssessmentID = rows[0].AssessmentID
+
+    db.run(Questionsql, [QuestionID, AssessmentID, QType, Options, Narrative], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(201).json({
+        QuestionID: QuestionID,
+        message: "Question added successfully"
+      })
+    })
+  })
+  })
+
+
 
     /*
 
