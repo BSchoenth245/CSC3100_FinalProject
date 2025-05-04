@@ -573,6 +573,7 @@ app.get('/members', (req,res) => {
       })
     })
   })
+
   app.delete('/deleteSocial', (req, res) => {
     const { SocialType } = req.body
     const deleteSQL = `DELETE FROM tblSocials WHERE UserID = ? AND SocialType = ?`
@@ -757,20 +758,6 @@ app.get('/members', (req,res) => {
     }
   })
 
-  app.patch('/updateUser', (req, res) => {
-    const { Fname, Lname, Email, Password } = req.body
-    const CryptPass = bcrypt.hashSync(Password, intSalt)
-    const updateSQL = `UPDATE tblUsers SET Fname = ?, Lname = ?, Email = ?, Password = ? WHERE UserID = ?`
-    db.run(updateSQL, [Fname, Lname, Email, CryptPass, currentUser], (err) => {
-      if (err) {
-        return res.status(400).json({ error: err.message })
-      }
-      return res.status(200).json({
-        message: "User updated successfully"
-      })
-    })
-  })
-
   app.get('/getUserRole', async (req, res) => {
     try {
       // In a real implementation, you would get the current user from the session
@@ -799,7 +786,32 @@ app.get('/members', (req,res) => {
       });
     }
   });
+
+  app.patch('/updateUser', (req, res) => {
+    const { Fname, Lname, Email, Password } = req.body
+    const CryptPass = bcrypt.hashSync(Password, intSalt)
+    const updateSQL = `UPDATE tblUsers SET Fname = ?, Lname = ?, Email = ?, Password = ? WHERE UserID = ?`
+    db.run(updateSQL, [Fname, Lname, Email, CryptPass, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "User updated successfully"
+      })
+    })
+  })
   
+  app.delete('/deleteUser', (req, res) => {
+    const deleteSQL = `DELETE FROM tblUsers WHERE UserID = ?`
+    db.run(deleteSQL, [currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "User deleted successfully"
+      })
+    })
+  })
 
     /*
 
@@ -837,6 +849,23 @@ app.post("/AddAssessment", (req, res) => {
         AssessmentID: AssessmentID,
         message: "Assessment added successfully"
       })
+    })
+  })
+})
+
+app.get('/getAssessments', (req, res) => {
+  const Assessmentsql = `SELECT * FROM tblAssessments WHERE owner = ?`
+  db.all(Assessmentsql, [currentUser], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    if (!rows) {
+      return res.status(404).json({ error: "Assessment not found" })
+    }
+    return res.status(200).json({
+      message: "Assessments retrieved successfully",
+      count: rows.length,
+      assessments: rows
     })
   })
 })
