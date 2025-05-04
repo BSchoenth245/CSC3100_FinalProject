@@ -21,61 +21,60 @@ const intSalt = 10;
     */
 
   app.post('/registration', async (req, res) => {
-      try {
-          // Get request data
-          const { firstName, lastName, email, password, isFaculty } = req.body
-          const UserID = uuidv4()
-          const currentTime = new Date().toISOString()
-          
-          // Hash password
-          const hashedPassword = await bcrypt.hash(password, intSalt)
-          const InsertSql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime, isFaculty) 
-                      VALUES (?,?,?,?,?,?,?,?)`
-
-          if(isFaculty == 'Student'){
-            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 0], (err) => {
-              if (err) {
+    try {
+        // Get request data
+        const { firstName, lastName, email, password, isFaculty } = req.body
+        const UserID = uuidv4()
+        const currentTime = new Date().toISOString()
+        
+        // Check if email already exists
+        const checkEmailSql = `SELECT COUNT(*) as count FROM tblUsers WHERE Email = ?`
+        
+        db.get(checkEmailSql, [email], async (err, row) => {
+            if (err) {
                 res.status(400).json({ error: err.message })
                 return
-              }
-              res.status(201).json({
-                UserID: UserID,
-                message: "Comment added successfully"
-              })
-            })
-          } else {
-            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 1], (err) => {
-              if (err) {
-                res.status(400).json({ error: err.message })
+            }
+            
+            if (row.count > 0) {
+                res.status(409).json({ error: "Email already registered" })
                 return
-              }
-              res.status(201).json({
-                UserID: UserID,
-                message: "Comment added successfully"
-              })
-            })
-          }
-        }
-      catch (err) {
-          res.status(500).json({ error: err.message })
-      }
-  })
+            }
 
-  app.post('/checkemail', async (req, res) => {
-      const strEmail = req.body
-      const strCommand = `SELECT COUNT(*) as count FROM tblUsers WHERE Email = ?`
-      db.get(strCommand, [strEmail], (err, row) => {
-          if (err) {
-              res.status(400).json({ error: err.message })
-              return
-          }
-          if (row.count === 1) {
-              res.status(200).json({ exists: false })
-          } else {
-              res.status(200).json({ exists: true })
-          }
-      })
-  })
+            // Hash password
+            const hashedPassword = await bcrypt.hash(password, intSalt)
+            const InsertSql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime, isFaculty) 
+                        VALUES (?,?,?,?,?,?,?,?)`
+
+            if(isFaculty == 'Student'){
+                db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 0], (err) => {
+                    if (err) {
+                        res.status(400).json({ error: err.message })
+                        return
+                    }
+                    res.status(201).json({
+                        UserID: UserID,
+                        message: "Registration successful"
+                    })
+                })
+            } else {
+                db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 1], (err) => {
+                    if (err) {
+                        res.status(400).json({ error: err.message })
+                        return
+                    }
+                    res.status(201).json({
+                        UserID: UserID,
+                        message: "Registration Successful"
+                    })
+                })
+            }
+        })
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
 
   app.post('/login', async (req, res) => {
       try {
@@ -162,7 +161,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
@@ -191,6 +190,76 @@ const intSalt = 10;
       res.status(500).json({ error: err.message })
     }
   })
+
+  app.get('/courses', (req, res) => {
+  const coursesSQL = `SELECT DISTINCT * 
+                      FROM tblCourses
+                      LEFT JOIN tblEnrollements ON tblCourses.CourseID = tblEnrollements.CourseID 
+                      WHERE UserID = ?`
+
+  db.all(coursesSQL, [currentUser], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    
+    if (!rows || rows.length === 0) {
+      return res.status(200).json({
+        message: "No courses found for this user",
+        courses: []
+      })
+    }
+
+    return res.status(200).json({
+      message: "Courses retrieved successfully", 
+      count: rows.length,
+      courses: rows
+    })
+  })
+})
+
+app.patch('/updatecourse', async (req, res) => {
+    try {
+      const { CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate, CourseID} = req.body
+      const comUpdate = `UPDATE tblCourses
+      SET CourseName = ?, CourseNumber = ?, CourseSection = ?, CourseTerm = ?, StartDate = ?, EndDate = ?
+      WHERE CourseID = ?`
+
+      db.run(comUpdate, [CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate, CourseID], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CourseID: CourseID,
+          message: "Course updated successfully"
+        })
+      })
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+app.delete('/deleteCourse', async (req, res) => {
+    try {
+      const { CourseID } = req.body
+      const comDelete = `DELETE FROM tblCourses WHERE CourseID = ?`
+
+      db.run(comDelete, [CourseID], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CourseID: CourseID,
+          message: "Course deleted successfully"
+        })
+      })
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+
 
   app.post('/creategroup', async (req, res) => {
     try {
@@ -357,7 +426,7 @@ const intSalt = 10;
     console.log('With parameter:', currentUser);
     
     // Use db.all to get multiple rows
-    db.all(sqlGroups, [currentUser], (err, rows) => {
+  db.all(sqlGroups, [currentUser], (err, rows) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(400).json({ error: err.message });
@@ -384,7 +453,44 @@ const intSalt = 10;
     });
   });
 
-  app.get('/members', (req,res) => {
+  app.delete('/deleteGroup', (req,res) => {
+    const { GroupName, CourseName, CourseNumber, CourseSection } = req.body
+    
+    // Get GroupID from course details
+    const getGroupSQL = `SELECT GroupID FROM tblCourseGroups 
+                        LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
+                        WHERE GroupName = ? AND CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+    db.get(getGroupSQL, [GroupName, CourseName, CourseNumber, CourseSection], (err, row) => {
+        if (err) {
+            return res.status(400).json({ error: err.message })
+        }
+        if (!row) {
+            return res.status(404).json({ error: "Group not found" })
+        }
+
+        // Delete group members first
+        const deleteMembersSQL = `DELETE FROM tblGroupMembers WHERE GroupID = ?`
+        db.run(deleteMembersSQL, [row.GroupID], (err) => {
+            if (err) {
+                return res.status(400).json({ error: err.message })
+            }
+
+            // Then delete the group
+            const deleteGroupSQL = `DELETE FROM tblCourseGroups WHERE GroupID = ?`
+            db.run(deleteGroupSQL, [row.GroupID], (err) => {
+                if (err) {
+                    return res.status(400).json({ error: err.message })
+                }
+                return res.status(200).json({
+                    GroupID: row.GroupID,
+                    message: "Group and members deleted successfully"
+                })
+            })
+        })
+    })
+})
+
+app.get('/members', (req,res) => {
     const membersSQL = `SELECT * FROM tblGroupMembers
                         left join tblCourseGroups on tblGroupMembers.GroupID = tblCourseGroups.GroupID WHERE UserID = ?`
     db.all(membersSQL, [currentUser], (err, rows) => {
@@ -408,7 +514,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
@@ -438,7 +544,24 @@ const intSalt = 10;
     }
   })
 
-    app.patch('/updateSocial', (req, res) => {
+  app.get('/socials', (req, res) => {
+    const socialsSQL = `SELECT * FROM tblSocials WHERE UserID = ?`
+    db.all(socialsSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No socials found" })
+      }
+      return res.status(200).json({
+        message: "Socials retrieved successfully",
+        count: rows.length,
+        socials: rows
+      })
+    })
+  })
+
+  app.patch('/updateSocial', (req, res) => {
     const { SocialType, Username } = req.body
     const updateSQL = `UPDATE tblSocials SET SocialType = ?, Username = ? WHERE UserID = ?`
     db.run(updateSQL, [SocialType, Username, currentUser], (err) => {
@@ -527,6 +650,20 @@ const intSalt = 10;
     })
   })
 
+  app.patch('/updateComment', (req,res) => {
+    const { OGComment, NewComment, isPrivate } = req.body
+    const currentTime = new Date().toISOString()
+    const updateSQL = `UPDATE tblComments SET Comment = ?, subittedDateTime = ?, private = ? WHERE GroupMemberID = ? AND Comment = ?`
+    
+    db.run(updateSQL, [NewComment, currentTime, isPrivate, currentUser, OGComment], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Comment updated successfully"
+      })
+    })
+})
     /*
 
     Socials and comments endpoints
@@ -534,7 +671,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
@@ -642,6 +779,103 @@ const intSalt = 10;
     /*
 
     User Management endpoints
+
+    */
+
+//====================================================================================
+
+    /*
+
+    Assessment Related Endpoint
+
+    */
+
+app.post("/AddAssessment", (req, res) => {
+  const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
+  const AssessmentID = uuidv4()
+
+  const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
+  const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+
+  db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    if (!rows) {
+      return res.status(404).json({ error: "Course not found" })
+    }
+    db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(201).json({
+        AssessmentID: AssessmentID,
+        message: "Assessment added successfully"
+      })
+    })
+  })
+})
+
+app.post('/addAssessmentQuestion', (req,res) => {
+  const { AssessmentName, QType, Options, Narrative, QNumber } = req.body
+  const QuestionID = uuidv4()
+
+  const Questionsql = `INSERT INTO tblAssessmentQuestions VALUES (?,?,?,?,?,?)`
+  const AssessmentIDsql = `SELECT AssessmentID FROM tblAssessments WHERE Name = ? AND owner = ?`
+
+  db.all(AssessmentIDsql, [AssessmentName, currentUser], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    if (!rows) {
+      return res.status(404).json({ error: "Assessment not found" })
+    }
+    const AssessmentID = rows[0].AssessmentID
+
+    db.run(Questionsql, [QuestionID, AssessmentID, QType, Options, Narrative, QNumber], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(201).json({
+        QuestionID: QuestionID,
+        message: "Question added successfully"
+      })
+    })
+  })
+  })
+
+  app.post('/addAssessmentResponse', (req, res) => {
+    const { AssessmentName, QNumber, Response } = req.body
+    const ResponseID = uuidv4()
+
+    const Responsesql = `INSERT INTO tblAssessmentResponses VALUES (?, ?, ?, ?)`
+    const QuestionIDsql = `SELECT QuestionID FROM tblAssessmentQuestions WHERE AssessmentID = 
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)
+                          AND QuestionNumber = ?`
+    db.all(QuestionIDsql, [AssessmentName, currentUser, QNumber], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Question not found" })
+      }
+      const QuestionID = rows[0].QuestionID
+
+      db.run(Responsesql, [ResponseID, QuestionID, Response, currentUser], (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message })
+        }
+        return res.status(201).json({
+          ResponseID: ResponseID,
+          message: "Response added successfully"
+        })
+      })
+    })
+  })
+
+    /*
+
+    Assessment Related Endpoint
 
     */
 

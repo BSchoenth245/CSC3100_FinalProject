@@ -63,6 +63,7 @@ $("#btnRegister").on('click',function(){
 
     const strPassword = $('#txtRegPassword').val()
     const strConPassword = $('#txtConfirmPassword').val()
+    const isFaculty = document.getElementById('commentVisibilityValue');
 
     let blnError = false
     let strMessage = ""
@@ -98,24 +99,29 @@ $("#btnRegister").on('click',function(){
         })
     }
     else{
-        checkEmailExists(email).then(data => {
-            if (data.exists) {
-                Swal.fire({
-                    title: "There's a problem!",
-                    text: "Email already exists!",
-                    icon: "error"
-                })
-            } else if (!data.exists) {
-                // If email does not exist in the database already, proceed with registration
-                registerUser(strUsername, strPassword, strFirst, strLast)
-                //success message
-                Swal.fire({
-                    title: "Success",
-                    html: "Registration complete",
-                    icon: "success"
-                })
-            }
+        fetch('http://localhost:8000/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: strFirst,
+                lastName: strLast,
+                email: strUsername,
+                password: strPassword,
+                isFaculty: isFaculty
+            })
         })
+        .then(response => {
+            console.log('Status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Registration response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
         // Clear registration inputs and redirect to login page
     document.querySelector('#txtRegUsername').value = '';
@@ -129,13 +135,13 @@ $("#btnRegister").on('click',function(){
 }   
 })
 
-function checkEmailExists(strEmail) {
-    return fetch('/checkemail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({strEmail})
-    }).then(response => response.json());
-  }
+// function checkEmailExists(strEmail) {
+//     return fetch('/checkemail', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({strEmail})
+//     }).then(response => response.json());
+//   }
 
 // Reveals/hides password on the login page
 function ViewLogPass() {
@@ -232,23 +238,23 @@ function createUser(strUsername, strPassword) {
     });
 }
 
-function registerUser(strUsername, strPassword, strFirst, strLast) {
+// function registerUser(strUsername, strPassword, strFirst, strLast) {
 
-    fetch('/registration', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
+//     fetch('/registration', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
+//     })
+//     .catch(error => {
+//         Swal.fire({
+//             title: "Error",
+//             text: error.message,
+//             icon: "error"
+//         });
+//     });
+// }
 
 function loginUser(strUsername, strPassword) {
     return fetch('/login', { // Add 'return' here
