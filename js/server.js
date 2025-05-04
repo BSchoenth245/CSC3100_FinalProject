@@ -522,7 +522,6 @@ app.get('/members', (req,res) => {
 
     */
 
-
   app.post('/addSocial', async (req, res) => {
     try {
       const { SocialType, Username, isPrivate } = req.body
@@ -690,6 +689,7 @@ app.get('/members', (req,res) => {
       })
     })
   })
+
     /*
 
     Socials and comments endpoints
@@ -827,48 +827,63 @@ app.get('/members', (req,res) => {
 
     */
 
-app.post("/AddAssessment", (req, res) => {
-  const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
-  const AssessmentID = uuidv4()
+  app.post("/AddAssessment", (req, res) => {
+    const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
+    const AssessmentID = uuidv4()
 
-  const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
-  const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+    const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
+    const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
 
-  db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
-    if (err) {
-      return res.status(400).json({ error: err.message })
-    }
-    if (!rows) {
-      return res.status(404).json({ error: "Course not found" })
-    }
-    db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+    db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
       if (err) {
         return res.status(400).json({ error: err.message })
       }
-      return res.status(201).json({
-        AssessmentID: AssessmentID,
-        message: "Assessment added successfully"
+      if (!rows) {
+        return res.status(404).json({ error: "Course not found" })
+      }
+      db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message })
+        }
+        return res.status(201).json({
+          AssessmentID: AssessmentID,
+          message: "Assessment added successfully"
+        })
       })
     })
   })
-})
 
-app.get('/getAssessments', (req, res) => {
-  const Assessmentsql = `SELECT * FROM tblAssessments WHERE owner = ?`
-  db.all(Assessmentsql, [currentUser], (err, rows) => {
-    if (err) {
-      return res.status(400).json({ error: err.message })
-    }
-    if (!rows) {
-      return res.status(404).json({ error: "Assessment not found" })
-    }
-    return res.status(200).json({
-      message: "Assessments retrieved successfully",
-      count: rows.length,
-      assessments: rows
+  app.get('/getAssessments', (req, res) => {
+    const Assessmentsql = `SELECT * FROM tblAssessments WHERE owner = ?`
+    db.all(Assessmentsql, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Assessment not found" })
+      }
+      return res.status(200).json({
+        message: "Assessments retrieved successfully",
+        count: rows.length,
+        assessments: rows
+      })
     })
   })
-})
+
+  app.patch('/updateAssessment', (req, res) => {
+    const { StartDate, EndDate, Name, OGName } = req.body
+
+    const updateSQL = `UPDATE tblAssessments SET StartDate = ?, EndDate = ?, Name = ? WHERE Name = ? AND owner = ?`
+    db.run(updateSQL, [StartDate, EndDate, Name, OGName, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Assessment updated successfully"
+      })
+    })
+
+  })
 
 app.post('/addAssessmentQuestion', (req,res) => {
   const { AssessmentName, QType, Options, Narrative, QNumber } = req.body
@@ -932,8 +947,6 @@ app.post('/addAssessmentQuestion', (req,res) => {
     Assessment Related Endpoint
 
     */
-
-
 
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)
