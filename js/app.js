@@ -135,14 +135,6 @@ $("#btnRegister").on('click',function(){
 }   
 })
 
-// function checkEmailExists(strEmail) {
-//     return fetch('/checkemail', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({strEmail})
-//     }).then(response => response.json());
-//   }
-
 // Reveals/hides password on the login page
 function ViewLogPass() {
     var x = document.getElementById("txtLogPassword");
@@ -238,23 +230,6 @@ function createUser(strUsername, strPassword) {
     });
 }
 
-// function registerUser(strUsername, strPassword, strFirst, strLast) {
-
-//     fetch('/registration', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
-//     })
-//     .catch(error => {
-//         Swal.fire({
-//             title: "Error",
-//             text: error.message,
-//             icon: "error"
-//         });
-//     });
-// }
 
 function loginUser(strUsername, strPassword) {
     return fetch('/login', { // Add 'return' here
