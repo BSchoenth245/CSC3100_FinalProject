@@ -21,61 +21,60 @@ const intSalt = 10;
     */
 
   app.post('/registration', async (req, res) => {
-      try {
-          // Get request data
-          const { firstName, lastName, email, password, isFaculty } = req.body
-          const UserID = uuidv4()
-          const currentTime = new Date().toISOString()
-          
-          // Hash password
-          const hashedPassword = await bcrypt.hash(password, intSalt)
-          const InsertSql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime, isFaculty) 
-                      VALUES (?,?,?,?,?,?,?,?)`
-
-          if(isFaculty == 'Student'){
-            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 0], (err) => {
-              if (err) {
+    try {
+        // Get request data
+        const { firstName, lastName, email, password, isFaculty } = req.body
+        const UserID = uuidv4()
+        const currentTime = new Date().toISOString()
+        
+        // Check if email already exists
+        const checkEmailSql = `SELECT COUNT(*) as count FROM tblUsers WHERE Email = ?`
+        
+        db.get(checkEmailSql, [email], async (err, row) => {
+            if (err) {
                 res.status(400).json({ error: err.message })
                 return
-              }
-              res.status(201).json({
-                UserID: UserID,
-                message: "Comment added successfully"
-              })
-            })
-          } else {
-            db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 1], (err) => {
-              if (err) {
-                res.status(400).json({ error: err.message })
+            }
+            
+            if (row.count > 0) {
+                res.status(409).json({ error: "Email already registered" })
                 return
-              }
-              res.status(201).json({
-                UserID: UserID,
-                message: "Comment added successfully"
-              })
-            })
-          }
-        }
-      catch (err) {
-          res.status(500).json({ error: err.message })
-      }
-  })
+            }
 
-  app.post('/checkemail', async (req, res) => {
-      const strEmail = req.body
-      const strCommand = `SELECT COUNT(*) as count FROM tblUsers WHERE Email = ?`
-      db.get(strCommand, [strEmail], (err, row) => {
-          if (err) {
-              res.status(400).json({ error: err.message })
-              return
-          }
-          if (row.count === 1) {
-              res.status(200).json({ exists: false })
-          } else {
-              res.status(200).json({ exists: true })
-          }
-      })
-  })
+            // Hash password
+            const hashedPassword = await bcrypt.hash(password, intSalt)
+            const InsertSql = `INSERT INTO tblUsers (UserID, fName, lName, Email, Password, CreationDateTime, LastLogDateTime, isFaculty) 
+                        VALUES (?,?,?,?,?,?,?,?)`
+
+            if(isFaculty == 'Student'){
+                db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 0], (err) => {
+                    if (err) {
+                        res.status(400).json({ error: err.message })
+                        return
+                    }
+                    res.status(201).json({
+                        UserID: UserID,
+                        message: "Registration successful"
+                    })
+                })
+            } else {
+                db.run(InsertSql, [UserID, firstName, lastName, email, hashedPassword, currentTime, null, 1], (err) => {
+                    if (err) {
+                        res.status(400).json({ error: err.message })
+                        return
+                    }
+                    res.status(201).json({
+                        UserID: UserID,
+                        message: "Registration Successful"
+                    })
+                })
+            }
+        })
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
 
   app.post('/login', async (req, res) => {
       try {
@@ -357,7 +356,7 @@ const intSalt = 10;
     console.log('With parameter:', currentUser);
     
     // Use db.all to get multiple rows
-    db.all(sqlGroups, [currentUser], (err, rows) => {
+  db.all(sqlGroups, [currentUser], (err, rows) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(400).json({ error: err.message });
@@ -438,7 +437,7 @@ const intSalt = 10;
     }
   })
 
-    app.patch('/updateSocial', (req, res) => {
+  app.patch('/updateSocial', (req, res) => {
     const { SocialType, Username } = req.body
     const updateSQL = `UPDATE tblSocials SET SocialType = ?, Username = ? WHERE UserID = ?`
     db.run(updateSQL, [SocialType, Username, currentUser], (err) => {
