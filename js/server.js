@@ -573,6 +573,18 @@ app.get('/members', (req,res) => {
       })
     })
   })
+  app.delete('/deleteSocial', (req, res) => {
+    const { SocialType } = req.body
+    const deleteSQL = `DELETE FROM tblSocials WHERE UserID = ? AND SocialType = ?`
+    db.run(deleteSQL, [currentUser, SocialType], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Social deleted successfully"
+      })
+    })
+  })
 
   app.post('/addComment', async (req, res) => {
     try {
