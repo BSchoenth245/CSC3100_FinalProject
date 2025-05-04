@@ -688,35 +688,76 @@ div:has(#selCourseName) > label {
     display: block;
 }
 
-/* Center the contact form in the Profile tab */
+/* Reset all form elements to ensure consistent styling */
+#profileContacts form * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/* Center the entire contacts section */
+#profileContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Center the form within the contacts section */
 #profileContacts form {
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
-/* Center the contact row elements */
-#profileContacts .contact-row {
+/* Center the additionalContacts section */
+#additionalContacts {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    width: 80%; /* Adjust width as needed */
-    max-width: 600px;
+    width: 100%;
 }
-/* Align contact form elements */
-#profileContacts .contact-row {
+
+/* Style for any dynamically added contact rows */
+#additionalContacts .contact-row {
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
     gap: 10px;
     margin-bottom: 15px;
     width: 100%;
+    max-width: 550px;
+}
+
+/* Center the Profile tab content */
+#Profile h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#Profile hr {
+    width: 80%;
+    margin: 20px auto;
+}
+/* Style the contact row with flexbox for alignment */
+#profileContacts .contact-row {
+    display: flex;
+    align-items: center; /* Change from stretch to center */
     justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 550px;
+}
+
+/* Style the contact-type-container */
+#profileContacts .contact-type-container {
+    display: flex;
+    height: 50px;
 }
 
 /* Style the label with icon */
-#profileContacts .contact-row label {
+#profileContacts .contact-type-container label {
     flex-shrink: 0;
     height: 50px;
     width: 50px;
@@ -729,23 +770,59 @@ div:has(#selCourseName) > label {
     align-items: center;
 }
 
-/* Style the select dropdown to match other inputs */
+/* Style the select dropdown */
 #profileContacts .contact-type {
-    border-radius: 0 10px 10px 0;
-    border-left: none;
     height: 50px;
-    min-width: 120px;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: none;
+    min-width: 130px;
+    max-width: 150px;
+    padding: 0 10px;
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    font: inherit;
+    appearance: auto; /* Ensure native select appearance */
 }
 
 /* Style the contact input field */
 #profileContacts .contact-input {
-    flex: 2;
     height: 50px;
+    max-width: 200px;
+    border-radius: 10px;
+    padding: 0 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    font: inherit;
 }
 
 /* Style the add button */
 #profileContacts .btn-add-contact {
     height: 50px;
-    padding: 0 20px;
-    border-radius: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
 }
+
+/* Ensure all elements have the same line-height */
+#profileContacts .contact-row > *,
+#profileContacts .contact-type-container > * {
+    line-height: 50px;
+}
+
+/* Fix any browser-specific styling issues */
+#profileContacts select,
+#profileContacts input,
+#profileContacts button {
+    vertical-align: middle;
+}
+
