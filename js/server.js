@@ -693,10 +693,10 @@ app.post("/AddAssessment", (req, res) => {
 })
 
 app.post('/addAssessmentQuestion', (req,res) => {
-  const { AssessmentName, QType, Options, Narrative } = req.body
+  const { AssessmentName, QType, Options, Narrative, QNumber } = req.body
   const QuestionID = uuidv4()
 
-  const Questionsql = `INSERT INTO tblAssessmentQuestions VALUES (?,?,?,?,?)`
+  const Questionsql = `INSERT INTO tblAssessmentQuestions VALUES (?,?,?,?,?,?)`
   const AssessmentIDsql = `SELECT AssessmentID FROM tblAssessments WHERE Name = ? AND owner = ?`
 
   db.all(AssessmentIDsql, [AssessmentName, currentUser], (err, rows) => {
@@ -708,7 +708,7 @@ app.post('/addAssessmentQuestion', (req,res) => {
     }
     const AssessmentID = rows[0].AssessmentID
 
-    db.run(Questionsql, [QuestionID, AssessmentID, QType, Options, Narrative], (err) => {
+    db.run(Questionsql, [QuestionID, AssessmentID, QType, Options, Narrative, QNumber], (err) => {
       if (err) {
         return res.status(400).json({ error: err.message })
       }
@@ -718,6 +718,35 @@ app.post('/addAssessmentQuestion', (req,res) => {
       })
     })
   })
+  })
+
+  app.post('/addAssessmentResponse', (req, res) => {
+    const { AssessmentName, QNumber, Response } = req.body
+    const ResponseID = uuidv4()
+
+    const Responsesql = `INSERT INTO tblAssessmentResponses VALUES (?, ?, ?, ?)`
+    const QuestionIDsql = `SELECT QuestionID FROM tblAssessmentQuestions WHERE AssessmentID = 
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)
+                          AND QuestionNumber = ?`
+    db.all(QuestionIDsql, [AssessmentName, currentUser, QNumber], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Question not found" })
+      }
+      const QuestionID = rows[0].QuestionID
+
+      db.run(Responsesql, [ResponseID, QuestionID, Response, currentUser], (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message })
+        }
+        return res.status(201).json({
+          ResponseID: ResponseID,
+          message: "Response added successfully"
+        })
+      })
+    })
   })
 
 
