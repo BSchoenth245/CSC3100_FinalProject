@@ -705,4 +705,47 @@ div:has(#selCourseName) > label {
     width: 80%; /* Adjust width as needed */
     max-width: 600px;
 }
+/* Align contact form elements */
+#profileContacts .contact-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    justify-content: center;
+}
 
+/* Style the label with icon */
+#profileContacts .contact-row label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style the select dropdown to match other inputs */
+#profileContacts .contact-type {
+    border-radius: 0 10px 10px 0;
+    border-left: none;
+    height: 50px;
+    min-width: 120px;
+}
+
+/* Style the contact input field */
+#profileContacts .contact-input {
+    flex: 2;
+    height: 50px;
+}
+
+/* Style the add button */
+#profileContacts .btn-add-contact {
+    height: 50px;
+    padding: 0 20px;
+    border-radius: 50px;
+}
