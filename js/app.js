@@ -500,16 +500,39 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).on('click', '.btn-add-contact', function () {
-    const newRow = $(this).closest('.contact-row').clone();
+    const currentRow = $(this).closest('.contact-row');
 
-    // Clear input value and show delete button
-    newRow.find('.contact-input').val('');
-    newRow.find('.btn-delete-contact').show();
+    const contactType = currentRow.find('.contact-type').val();
+    const contactValue = currentRow.find('.contact-input').val().trim();
 
-    // Append new row to the additional contacts container
-    $('#additionalContacts').append(newRow);
+    // Validation
+    if (!contactType || !contactValue) {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Select a contact type and enter a value.",
+            icon: "warning"
+        });
+        return;
+    }
+
+    // Generate a styled static row
+    const staticRow = `
+        <div class="contact-row static-contact ${contactType}">
+            <div class="contact-display">
+                <span class="contact-label">${contactType}</span>
+                <span class="contact-value">${contactValue}</span>
+            </div>
+            <button type="button" class="btn-delete-contact">🗑️</button>
+        </div>
+    `;
+
+    // Add above the input row
+    $('#additionalContacts').append(staticRow);
+
+    // Clear input row fields
+    currentRow.find('.contact-type').val('discord'); // default reset
+    currentRow.find('.contact-input').val('');
 });
-
 
 $(document).on('click', '.btn-delete-contact', function () {
     $(this).closest('.contact-row').remove();
