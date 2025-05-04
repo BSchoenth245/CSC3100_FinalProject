@@ -945,6 +945,21 @@ app.get('/members', (req,res) => {
     })
   })
 
+  app.patch('/updateAssessmentQuestion', (req, res) => {
+    const { QType, Options, Narrative, QNumber, OGQNumber } = req.body
+
+    const updateSQL = `UPDATE tblAssessmentQuestions SET QuestionType = ?, Options = ?, QuestionNarrative = ?, QuestionNumber = ? WHERE QuestionNumber = ? AND AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.run(updateSQL, [QType, Options, Narrative, QNumber, OGQNumber, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Question updated successfully"
+      })
+    })
+  })
+
   app.post('/addAssessmentResponse', (req, res) => {
     const { AssessmentName, QNumber, Response } = req.body
     const ResponseID = uuidv4()
