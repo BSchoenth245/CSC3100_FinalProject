@@ -1,20 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root{
     --accent-color: #8672FF;
     --base-color: white;
     --text-color: #2e2b41;
     --input-color: #F3F0FF;
+    --dashboard-input-color:#ede9ff; 
 }
+
 *{
     margin: 0;
     padding: 0;
 }
+
 html{
     font-family: Poppins, Segeo UI, sans-serif;
     font-size: 12pt;
     color: var(--text-color);
     text-align: center;
 }
+
 body{
     min-height: 100vh;
     background-image: url(../images/background.jpg);
@@ -22,6 +27,7 @@ body{
     background-position: right;
     overflow: hidden;
 }
+
 .wrapper{
     box-sizing: border-box;
     background-color: var(--base-color);
@@ -34,11 +40,13 @@ body{
     align-items: center;
     justify-content: center;
 }
+
 h1{
     font-size: 3rem;
     font-weight: 900;
     text-transform: uppercase;
 }
+
 form{
     width: min(400px, 100%);
     margin-top: 20px;
@@ -48,11 +56,13 @@ form{
     align-items: center;
     gap: 10px;
 }
+
 form > div{
     width: 100%;
     display: flex;
     justify-content: center;
 }
+
 form label{
     flex-shrink: 0;
     height: 50px;
@@ -67,6 +77,7 @@ form label{
     font-size: 1.5rem;
     font-weight: 500;
 }
+
 form input{
     box-sizing: border-box;
     flex-grow: 1;
@@ -80,19 +91,26 @@ form input{
     background-color: var(--input-color);
     transition: 150ms ease;
 }
+
 form input:hover{
     border-color: var(--accent-color);
 }
+
 form input:focus{
     outline: none;
     border-color: var(--text-color);
 }
-div:has(input:focus) > label{
+
+div:has(input:focus) > label,
+div:has(select:focus) > label,
+div:has(textarea:focus) > label{
     background-color: var(--text-color);
 }
+
 form input::placeholder{
     color: var(--text-color);
 }
+
 form button{
     margin-top: 10px;
     border: none;
@@ -106,137 +124,100 @@ form button{
     cursor: pointer;
     transition: 150ms ease;
 }
+
 form button:hover{
     background-color: var(--text-color);
 }
+
 form button:focus{
     outline: none;
     background-color: var(--text-color);
 }
+
 #btnSwapRegister{
     background: none;
     border: none;
     padding: 0;
-    color: var(--accent-color);  /* Using your accent color variable */
+    color: var(--accent-color); 
     font: inherit;
     cursor: pointer;
     text-decoration: none;
 }
+
 #btnSwapRegister:hover{
     text-decoration: underline;
 }
+
 #btnSwapLogin{
     background: none;
     border: none;
     padding: 0;
-    color: var(--accent-color);  /* Using your accent color variable */
+    color: var(--accent-color);  
     font: inherit;
     cursor: pointer;
     text-decoration: none;
 }
+
 #btnSwapLogin:hover{
     text-decoration: underline;
 }
+
 p {
     margin: 0;
     padding: 0;
     display: inline; 
 }
-#Dashboard .wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 80vh; 
-    border-radius: 10px 10px 0 0;
-    background-color: rgba(255, 255, 255, 0.9);
-}
 
-#Dashboard .nav-tabs {
-    position: absolute;
-    top: -45px; 
-    left: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+/* Contact row styling for profile */
+.contact-row {
     display: flex;
-    gap: 2px;
-    z-index: 1;
-}
-
-#Dashboard .nav-tabs li {
-    margin-bottom: -1px;
-}
-
-#Dashboard .nav-tabs a {
-    display: inline-block;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ddd;
-    border-bottom: none;
-    border-radius: 6px 6px 0 0;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-#Dashboard .nav-tabs li.active a {
-    background-color: white;
-    color: var(--accent-color);
-    border-bottom: none;
-    padding-bottom: 11px;
-}
-
-#Dashboard .content-area {
-    padding: 20px;
-    height: calc(100% - 40px);
-    overflow-y: auto;
-    border-top: 1px solid #ddd;
-    margin-top: -1px;
-}
-
-#Dashboard .nav-tabs a:hover {
-    background-color: white;
-}
-
-.content-area .tab-content {
-    display: none;
-    padding: 20px;
-}
-
-.content-area .tab-content.active {
-    display: block;
-}
-
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px 0;
-}
-
-.form-group {
+    gap: 10px;
     margin-bottom: 15px;
+    align-items: center;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
+.contact-type {
+    flex: 1;
+    min-width: 100px;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.contact-input {
+    flex: 2;
 }
 
-
-@media(max-width: 1100px){
-    .wrapper{
-        width: min(600px, 100%);
-        border-radius: 0;
-    }
+.btn-add-contact, .btn-delete-contact {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
+
+.btn-add-contact {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-delete-contact {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.btn-add-contact:hover {
+    background-color: var(--text-color);
+}
+
+.btn-delete-contact:hover {
+    background-color: #e60000;
+}
+
+#profileContacts {
+    margin-top: 20px;
+}
+
+/* 
+
+CSS SPECIFICAL FOR THE DASHBOARD AND ANY PART OF THE DASHBORAD THAT NEEDS ITS ON CUSTOMIZATION
+
+
+*/

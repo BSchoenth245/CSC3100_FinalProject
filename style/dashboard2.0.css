@@ -1,0 +1,695 @@
+
+/* 
+
+Main Dashdoard styles 
+
+*/
+#Dashboard .wrapper {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 80vh;
+    border-radius: 10px 10px 0 0;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+#Dashboard .nav-tabs {
+    position: absolute; top: -55px; left: 20px;
+    list-style: none; padding: 0; margin: 0;
+    display: flex; gap: 2px; z-index: 1;
+}
+
+#Dashboard .nav-tabs li { margin-bottom: -1px; }
+
+#Dashboard .nav-tabs a {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#Dashboard .nav-tabs li.active a {
+    background-color: white;
+    color: var(--accent-color);
+    border-bottom: none;
+    padding-bottom: 11px;
+}
+
+#Dashboard .content-area {
+    padding: 20px;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    border-top: 1px solid #ddd;
+    margin-top: -1px;
+}
+
+#Dashboard .nav-tabs a:hover { background-color: white; }
+
+.content-area .tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.content-area .tab-content.active { display: block; }
+
+.dashboard-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#joinGroupSection, #createGroupSection, #createCourse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+#joinGroupSection > *, #createGroupSection > *, #createCourse > * {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+textarea, select {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: none;
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: 150ms ease;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    padding: 1em;
+}
+
+select:hover, textarea:hover,
+#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover {
+    border-color: var(--accent-color);
+}
+
+select:focus, textarea:focus,
+#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus {
+    outline: none;
+    border-color: var(--text-color);
+}
+
+form div:has(textarea) {
+    align-items: stretch;
+}
+
+form div:has(textarea) label {
+    height: auto;
+    min-height: 120px;
+    align-items: center;
+}
+
+input[name="courseSection"] { width: 25%; }
+
+#txtCourseName, div:has(#txtCourseName) > label { margin-top: 15px; }
+
+#txtCourseSection, #contact-input {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 1em;
+    margin-top: 15px;
+    font: inherit;
+    border-radius: 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    transition: 150ms ease;
+}
+
+.dash-separator {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 50px;
+    margin-top: 15px;
+}
+
+#selCourseName, div:has(#selCourseName) > label { margin-top: 10px; }
+
+#txtCourseName, #txtGroupName {
+    background-color: var(--dashboard-input-color);
+    border: 2px solid var(--dashboard-input-color);
+}
+
+.input-note {
+    display: block;
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-top: 5px;
+    margin-left: 50px;
+}
+
+.course-term-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.course-term-group select,
+.course-term-group input { flex: 1; }
+
+#txtCourseYear {
+    width: 100px;
+    text-align: center;
+    box-sizing: border-box;
+    height: 50px;
+    padding: 1em;
+    font: inherit;
+    border-radius: 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    transition: 150ms ease;
+}
+
+#txtCourseYear:hover { border-color: var(--accent-color); }
+#txtCourseYear:focus { outline: none; border-color: var(--text-color); }
+
+.date-inputs-container {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.date-input-group {
+    display: flex;
+    flex: 1;
+}
+
+.date-input-group label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.date-input-group select,
+.date-input-group input,
+.date-input-year input {
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: 150ms ease;
+}
+
+.date-input-year { flex: 0.7; }
+
+.date-input-year input {
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.group-card {
+    background-color: var(--input-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    width: 400px;
+    height: fit-content;
+    align-self: flex-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.group-header {
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.group-header h3 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.group-code {
+    color: var(--accent-color);
+    font-size: 0.9em;
+}
+
+.group-info p {
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+.member-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.member-list.collapsed { max-height: 0; }
+.member-list:not(.collapsed) { max-height: 500px; }
+
+.member-list li {
+    color: var(--text-color);
+    padding: 5px 0;
+}
+
+.collapse-btn {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: var(--input-color);
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.collapse-btn:hover { background-color: var(--accent-color); }
+
+.collapse-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.collapse-btn.active .collapse-icon { transform: rotate(180deg); }
+
+#btn-take-survey, #btn-leave-group {
+    margin-top: 5px;
+    border: none;
+    border-radius: 1000px;
+    padding: .30em 3em;
+    background-color: var(--accent-color);
+    color: var(--base-color);
+    font: inherit;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 150ms ease;
+}
+
+#btn-take-survey:hover, #btn-leave-group:hover,
+#btn-take-survey:focus, #btn-leave-group:focus {
+    outline: none;
+    background-color: var(--text-color);
+}
+
+.tabs {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.profile-tab-container {
+    position: absolute;
+    right: 20px;
+    top: -55px;
+    z-index: 2;
+}
+
+.profile-tab-container li { list-style: none; margin-bottom: -1px; }
+
+.profile-tab-container a {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    background-color: var(--text-color);
+    color: var(--accent-color);
+    border: 1px solid var(--text-color);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.profile-tab-container a:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.toggle-container {
+    position: relative;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 100px;
+    position: relative;
+    padding: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 100px;
+    height: 36px;
+    border-radius: 45px;
+    transition: 0.3s;
+    background-color: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-icon {
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+.toggle-icon svg { margin-right: 5px; fill: currentColor; }
+.toggle-text { font-size: 14px; font-weight: 500; }
+
+.toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
+
+.toggle-input:checked + .toggle-label .public-icon { color: white; }
+.toggle-input:checked + .toggle-label .private-icon { color: var(--text-color); }
+.toggle-input:not(:checked) + .toggle-label .public-icon { color: var(--text-color); }
+.toggle-input:not(:checked) + .toggle-label .private-icon { color: white; }
+
+.toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
+
+.student-only, .faculty-only { display: none; }
+.no-js .student-only, .no-js .faculty-only { display: block; }
+
+#profileContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#profileContacts form { display: flex; justify-content: center; width: 100%; }
+
+#additionalContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#Profile h3 { text-align: center; margin-bottom: 20px; }
+#Profile hr { width: 80%; margin: 20px auto; }
+
+.contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 550px;
+}
+
+#profileContacts .contact-type-container {
+    display: flex;
+    height: 50px;
+}
+
+#profileContacts .contact-type-container label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#profileContacts .contact-type {
+    height: 50px;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: none;
+    min-width: 130px;
+    max-width: 150px;
+    padding: 0 10px;
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    font: inherit;
+}
+
+#profileContacts .contact-input {
+    height: 50px;
+    max-width: 200px;
+    border-radius: 10px;
+    padding: 0 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    font: inherit;
+}
+
+#profileContacts .btn-add-contact {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* Fix alignment with minimal code */
+#profileContacts .contact-row > *,
+#profileContacts .contact-type-container > *,
+#profileContacts .contact-input,
+#profileContacts .btn-add-contact {
+    margin: 0;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Ensure the select and input are properly aligned */
+#profileContacts select,
+#profileContacts input {
+    vertical-align: middle;
+    margin: 0;
+}
+
+
+/* Style for the additionalContacts container */
+#additionalContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Style for dynamically added contact rows */
+#additionalContacts .contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 550px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect for contact rows */
+#additionalContacts .contact-row:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Style for the contact display container */
+#additionalContacts .contact-display {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 15px;
+    overflow: hidden; /* Prevent text overflow */
+}
+
+/* Style for contact type label */
+#additionalContacts .contact-label {
+    font-weight: 600;
+    color: var(--accent-color);
+    min-width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgba(134, 114, 255, 0.1);
+    text-align: center;
+}
+
+/* Style for contact value */
+#additionalContacts .contact-value {
+    flex: 1;
+    color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+/* Style for delete button in added contacts */
+#additionalContacts .btn-delete-contact {
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect for delete button */
+#additionalContacts .btn-delete-contact:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+}
+
+/* Add specific styling for different contact types */
+#additionalContacts .discord {
+    border-left: 4px solid #7289DA;
+}
+
+#additionalContacts .phone {
+    border-left: 4px solid #28a745;
+}
+
+#additionalContacts .email {
+    border-left: 4px solid #007bff;
+}
+
+#additionalContacts .instagram {
+    border-left: 4px solid #E1306C;
+}
+
+#additionalContacts .linkedin {
+    border-left: 4px solid #0077B5;
+}
+
+#additionalContacts .custom {
+    border-left: 4px solid #6c757d;
+}
+
+/* Animation for newly added contacts */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#additionalContacts .contact-row {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Ensure consistent spacing between form and additional contacts */
+#profileContacts form {
+    margin-bottom: 20px;
+}
+
+/* Empty state styling */
+#additionalContacts:empty::before {
+    content: "No contacts added yet";
+    display: block;
+    color: var(--text-color);
+    opacity: 0.6;
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+}

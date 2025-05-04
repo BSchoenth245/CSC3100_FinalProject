@@ -1,0 +1,126 @@
+/* Responsive Styles */
+
+/* Base responsive adjustments */
+@media (max-width: 768px) {
+    .wrapper {
+        width: 100%;
+        padding: 20px;
+        border-radius: 0;
+    }
+
+    form {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    h1 {
+        font-size: 2rem; /* Smaller heading on mobile */
+    }
+}
+
+/* Dashboard specific responsive adjustments */
+@media (max-width: 768px) {
+    #Dashboard .wrapper {
+        height: 90vh; /* Slightly taller on mobile */
+    }
+
+    #Dashboard .nav-tabs {
+        flex-wrap: wrap;
+        top: -65px; /* Adjust if tabs wrap to two lines */
+    }
+
+    #Dashboard .nav-tabs a {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr; /* Stack cards vertically */
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .content-area {
+        padding: 15px;
+        height: calc(100% - 20px);
+    }
+
+    .content-area .tab-content {
+        padding: 15px 10px;
+    }
+    
+    .profile-tab-container {
+        top: -65px;
+        right: 10px;
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+    html {
+        font-size: 10pt; /* Slightly smaller base font size */
+    }
+
+    form input {
+        height: 45px; /* Slightly smaller input fields */
+    }
+
+    form label {
+        height: 45px;
+        width: 45px;
+    }
+
+    #Dashboard .nav-tabs {
+        left: 10px;
+        right: 10px;
+    }
+
+    #Dashboard .nav-tabs a {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    form button {
+        padding: .75em 3em;
+    }
+    
+    .profile-panel {
+        width: 100%;
+        right: -100%;
+    }
+}
+
+/* Handle very small screens */
+@media (max-width: 320px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    form {
+        margin-top: 15px;
+        margin-bottom: 30px;
+    }
+
+    .wrapper {
+        padding: 10px;
+    }
+}
+
+/* Handle height issues */
+@media (max-height: 600px) {
+    #Dashboard .wrapper {
+        height: 95vh;
+    }
+
+    .content-area {
+        padding-top: 10px;
+    }
+}
+
+/* Improve background handling */
+@media (max-width: 768px) {
+    body {
+        background-position: center;
+        overflow-y: auto;
+    }
+}

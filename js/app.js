@@ -1,4 +1,3 @@
-
 $("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -30,9 +29,27 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        document.querySelector('#Login').style.display = 'none';
-        document.querySelector('#Dashboard').style.display = 'block';
+        // loginUser(strUsername, strPassword).then(data => {
+        //     if (data.error) {
+        //         Swal.fire({
+        //             title: "There's a problem!",
+        //             text: data.error,
+        //             icon: "error"
+        //         })
+        //     } else if (!data.error) {
+        //         Swal.fire({
+        //             title: "Success",
+        //             text: data.message,
+        //             icon: "success"
+        //         })
+                 document.querySelector('#Login').style.display = 'none';
+                 document.querySelector('#Dashboard').style.display = 'block'
+        //     }
+        // })
+
+        // Clear password input
     }
+    document.querySelector('#txtLogPassword').value = ''
 })
 
 $("#btnRegister").on('click',function(){
@@ -46,6 +63,7 @@ $("#btnRegister").on('click',function(){
 
     const strPassword = $('#txtRegPassword').val()
     const strConPassword = $('#txtConfirmPassword').val()
+    const isFaculty = document.getElementById('commentVisibilityValue');
 
     let blnError = false
     let strMessage = ""
@@ -58,7 +76,7 @@ $("#btnRegister").on('click',function(){
     }
     if(strLast.trim().length < 1){
         blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'
     }
     if(!regEmail.test(strUsername)){
         blnError = true
@@ -80,14 +98,30 @@ $("#btnRegister").on('click',function(){
             icon: "error"
         })
     }
-    // Success message
     else{
-
-        Swal.fire({
-            title: "Success",
-            html: "Registration complete",
-            icon: "success"
+        fetch('http://localhost:8000/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: strFirst,
+                lastName: strLast,
+                email: strUsername,
+                password: strPassword,
+                isFaculty: isFaculty
+            })
         })
+        .then(response => {
+            console.log('Status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Registration response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
         // Clear registration inputs and redirect to login page
     document.querySelector('#txtRegUsername').value = '';
@@ -100,6 +134,14 @@ $("#btnRegister").on('click',function(){
     document.querySelector('#Login').style.display = 'block';
 }   
 })
+
+// function checkEmailExists(strEmail) {
+//     return fetch('/checkemail', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({strEmail})
+//     }).then(response => response.json());
+//   }
 
 // Reveals/hides password on the login page
 function ViewLogPass() {
@@ -145,12 +187,12 @@ $(document).ready(function() {
     // Hide all tab content except the first one initially
     $('.tab-content:not(:first)').hide();
 
-    // Handle tab clicks
-    $('.nav-tabs a').click(function(e) {
+    // Handle tab clicks for both regular tabs and profile tab
+    $('.nav-tabs a, .profile-tab-container a').click(function(e) {
         e.preventDefault();
         
-        // Remove active class from all tabs
-        $('.nav-tabs li').removeClass('active');
+        // Remove active class from all tabs (both containers)
+        $('.nav-tabs li, .profile-tab-container li').removeClass('active');
         // Add active class to current tab
         $(this).parent('li').addClass('active');
         
@@ -161,5 +203,399 @@ $(document).ready(function() {
         $('.tab-content').hide();
         // Show the selected tab content
         $(tabContentId).fadeIn();
+    });
+
+});
+
+// function to create user by sending a fetch to the server.js file sending the username and password in the body
+// ensuring the correct content type and catching errors
+function createUser(strUsername, strPassword) {
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ strUsername, strPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        Swal.fire({
+            title: "Success",
+            text: data.message,
+            icon: "success"
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+// function registerUser(strUsername, strPassword, strFirst, strLast) {
+
+//     fetch('/registration', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ strUsername, strPassword, strFirst, strLast })
+//     })
+//     .catch(error => {
+//         Swal.fire({
+//             title: "Error",
+//             text: error.message,
+//             icon: "error"
+//         });
+//     });
+// }
+
+function loginUser(strUsername, strPassword) {
+    return fetch('/login', { // Add 'return' here
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: strUsername, password: strPassword })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse and return JSON data
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+        throw error; // Re-throw the error so the caller can handle it
+    });
+}
+
+// Adding the collapse menu logic
+function toggleMembers(button) {
+    // Get the parent card first
+    const card = button.closest('.group-card');
+    
+    // Find the member list within this specific card
+    const memberList = card.querySelector('.member-list');
+    
+    // Toggle both the list and the button itself
+    memberList.classList.toggle('collapsed');
+    button.classList.toggle('active'); // Changed from collapseIcon to button
+}
+// Add this to your app.js file
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleSwitch = document.getElementById('commentVisibilityToggle');
+    const hiddenInput = document.getElementById('commentVisibilityValue');
+    
+    if (toggleSwitch && hiddenInput) {
+        toggleSwitch.addEventListener('change', function() {
+            hiddenInput.value = this.checked ? 'public' : 'private';
+        });
+    }
+});
+// Student/Staff Toggle JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const userTypeToggle = document.getElementById('userTypeToggle');
+    const userTypeValue = document.getElementById('userTypeValue');
+    
+    if (userTypeToggle && userTypeValue) {
+        // Set initial value based on the checkbox state
+        userTypeValue.value = userTypeToggle.checked ? 'Student' : 'Staff';
+        
+        // Add event listener for changes
+        userTypeToggle.addEventListener('change', function() {
+            userTypeValue.value = this.checked ? 'Student' : 'Staff';
+            console.log('User type set to:', userTypeValue.value);
+        });
+    }
+});
+
+
+document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+    let blnError = false;
+    let strMessage = "";
+
+    if (document.querySelector('#txtCourseName').value.trim().length < 1) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
+    }
+    if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. <br></p>';
+    }
+    
+    // Validate season and year
+    if (document.querySelector('#selCourseSeason').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Season Must Be Selected. <br></p>';
+    }
+    
+    const yearInput = document.querySelector('#txtCourseYear');
+    if (!yearInput.value) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Year Cannot Be Blank. <br></p>';
+    } else {
+        const year = parseInt(yearInput.value);
+        const currentYear = new Date().getFullYear();
+        
+        if (isNaN(year) || year < currentYear || year > currentYear + 10) {
+            blnError = true;
+            strMessage += `<p class="mb-0 mt-0">Course Year Must Be Between ${currentYear} and ${currentYear + 10}. <br></p>`;
+        }
+    }
+    
+    if (document.querySelector('#dateEndDate').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
+    }
+
+    if (blnError) {
+        Swal.fire({
+            title: "Oh no, you have an error!",
+            html: strMessage,
+            icon: "error"
+        });
+    } else {
+        // Get the current date for the start date
+        const startDate = new Date().toISOString().split('T')[0];
+        const endDate = document.querySelector('#dateEndDate').value;
+        
+        // Combine season and year for course term
+        const courseSeason = document.querySelector('#selCourseSeason').value;
+        const courseYear = document.querySelector('#txtCourseYear').value;
+        const courseTerm = `${courseSeason} ${courseYear}`;
+        
+        // Create course with the collected data
+        createCourse(
+            document.querySelector('#txtCourseName').value,
+            document.querySelector('#txtCourseSection').value,
+            courseTerm,
+            startDate,
+            endDate
+        );
+    }
+});
+
+
+function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
+    fetch('/createcourse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            CourseName: courseName,
+            CourseNumber: courseName, // You might want to separate course number and name
+            CourseSection: courseSection,
+            CourseTerm: courseTerm,
+            StartDate: startDate,
+            EndDate: endDate
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        Swal.fire({
+            title: "Success",
+            text: "Course created successfully",
+            icon: "success"
+        });
+        
+        // Clear the form
+        document.querySelector('#txtCourseName').value = '';
+        document.querySelector('#txtCourseSection').value = '';
+        document.querySelector('#selCourseSeason').value = ''; // Clear season
+        document.querySelector('#txtCourseYear').value = '';   // Clear year
+        document.querySelector('#dateEndDate').value = '';
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+
+
+// Function to update UI based on user type
+function updateUIForUserRole(userRole) {
+    // Hide all role-specific elements first
+    document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
+        element.style.display = 'none';
+    });
+    
+    // Show elements specific to the current user role
+    if (userRole === 'Student') {
+        document.querySelectorAll('.student-only').forEach(element => {
+            element.style.display = '';
+        });
+        
+        // Hide the Create Group section within the addNewGroup tab
+        if (document.querySelector('#createGroupSection')) {
+            document.querySelector('#createGroupSection').style.display = 'none';
+        }
+    } else if (userRole === 'Staff') {
+        document.querySelectorAll('.faculty-only').forEach(element => {
+            element.style.display = '';
+        });
+        
+        // Hide the Join Group section within the addNewGroup tab
+        if (document.querySelector('#joinGroupSection')) {
+            document.querySelector('#joinGroupSection').style.display = 'none';
+        }
+    }
+}
+
+// Fetch the user's role from the server when the page loads
+function fetchUserRole() {
+    fetch('/getUserRole')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            updateUIForUserRole(data.userRole);
+        })
+        .catch(error => {
+            console.error('Error fetching user role:', error);
+            // Fallback to showing everything if there's an error
+            document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
+                element.style.display = '';
+            });
+        });
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fetchUserRole();
+
+    // The toggle switch in the registration form should still work for new users
+    const userTypeToggle = document.getElementById('userTypeToggle');
+    const userTypeValue = document.getElementById('userTypeValue');
+
+    if (userTypeToggle && userTypeValue) {
+        userTypeToggle.addEventListener('change', function() {
+            userTypeValue.value = this.checked ? 'Student' : 'Staff';
+            console.log('Registration user type set to:', userTypeValue.value);
+        });
+    }
+});
+
+$(document).on('click', '.btn-add-contact', function () {
+    const currentRow = $(this).closest('.contact-row');
+
+    const contactType = currentRow.find('.contact-type').val();
+    const contactValue = currentRow.find('.contact-input').val().trim();
+
+    // Validation
+    if (!contactType || !contactValue) {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Select a contact type and enter a value.",
+            icon: "warning"
+        });
+        return;
+    }
+
+    // Generate a styled static row
+    const staticRow = `
+        <div class="contact-row static-contact ${contactType}">
+            <div class="contact-display">
+                <span class="contact-label">${contactType}</span>
+                <span class="contact-value">${contactValue}</span>
+            </div>
+            <button type="button" class="btn-delete-contact">🗑️</button>
+        </div>
+    `;
+
+    // Add above the input row
+    $('#additionalContacts').append(staticRow);
+
+    // Clear input row fields
+    currentRow.find('.contact-type').val('discord'); // default reset
+    currentRow.find('.contact-input').val('');
+});
+
+$(document).on('click', '.btn-delete-contact', function () {
+    $(this).closest('.contact-row').remove();
+});
+
+// Add comments and comment tab functionality
+document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
+    const group = document.querySelector('#selGroup').value;
+    const feedback = document.querySelector('#txtFeedback').value.trim();
+    const visibility = document.querySelector('#commentVisibilityValue').value;
+    const commentsTab = document.querySelector('#Comments');
+
+    let blnError = false;
+    let strMessage = "";
+
+    // if (!group) {
+    //     blnError = true;
+    //     strMessage += "<p>Please select a group.</p>";
+    // }
+    if (!feedback) {
+        blnError = true;
+        strMessage += "<p>Feedback cannot be empty.</p>";
+    }
+
+    if (blnError) {
+        Swal.fire({
+            title: "Error",
+            html: strMessage,
+            icon: "error"
+        });
+        return;
+    }
+
+    // Get current date and time
+    const now = new Date();
+    const formattedDate = now.toLocaleString("en-US", {
+        dateStyle: "long",
+        timeStyle: "short"
+    });
+
+    // Create comment element
+    const commentHTML = `
+        <div class="group card">
+            <div class="group-header">
+                <h3><strong>Brock The Rock</strong></h3>
+                <span class="group-code"> Submitted on: ${formattedDate} </span>
+            </div>
+            <p>"${feedback}"</p>
+        </div>
+    `;
+
+    // Insert comment into View Comments tab
+    commentsTab.insertAdjacentHTML('beforeend', commentHTML);
+
+    // Clear form
+    document.querySelector('#selGroup').value = '';
+    document.querySelector('#txtFeedback').value = '';
+    document.querySelector('#commentVisibilityToggle').checked = true;
+    document.querySelector('#commentVisibilityValue').value = 'public';
+
+    Swal.fire({
+        title: "Success!",
+        text: "Your feedback has been added.",
+        icon: "success"
     });
 });
