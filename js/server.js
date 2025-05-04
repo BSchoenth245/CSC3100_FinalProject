@@ -39,7 +39,7 @@ const intSalt = 10;
                 return
               }
               res.status(201).json({
-                CommentID: CommentID,
+                UserID: UserID,
                 message: "Comment added successfully"
               })
             })
@@ -50,7 +50,7 @@ const intSalt = 10;
                 return
               }
               res.status(201).json({
-                CommentID: CommentID,
+                UserID: UserID,
                 message: "Comment added successfully"
               })
             })
@@ -608,6 +608,36 @@ const intSalt = 10;
       })
     })
   })
+
+  app.get('/getUserRole', async (req, res) => {
+    try {
+      // In a real implementation, you would get the current user from the session
+      // For now, we're using the currentUser variable
+      const sql = `SELECT isFaculty FROM tblUsers WHERE UserID = ?`;
+      
+      db.get(sql, [currentUser], (err, row) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        if (!row) {
+          return res.status(404).json({ error: "User not found" });
+        }
+        
+        // Return the user role based on the isFaculty boolean
+        const userRole = row.isFaculty ? 'Staff' : 'Student';
+        return res.status(200).json({ 
+          userRole: userRole
+        });
+      });
+    } catch (err) {
+      console.error('Error getting user role:', err);
+      return res.status(500).json({ 
+        error: "Internal server error",
+        details: err.message 
+      });
+    }
+  });
+  
 
     /*
 

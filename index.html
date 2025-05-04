@@ -93,6 +93,27 @@
                     <input type="password" name="repeat-password" id="txtConfirmPassword" placeholder="Repeat Password"
                         aria-label="repeat password">
                 </div>
+                <div class="student-staff-toggle">
+                    <div class="toggle-container">
+                        <input type="checkbox" id="userTypeToggle" class="toggle-input" checked>
+                        <label for="userTypeToggle" class="toggle-label">
+                            <span class="toggle-icon student-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M840-280v-276L480-360 40-600l440-240 440 240v320h-80ZM480-120 200-272v-200l280 152 280-152v200L480-120Z"/>
+                                </svg>
+                                <span class="toggle-text">Student</span>
+                            </span>
+                            <span class="toggle-icon staff-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M160-80q-33 0-56.5-23.5T80-160v-440q0-33 23.5-56.5T160-680h200v-120q0-33 23.5-56.5T440-880h80q33 0 56.5 23.5T600-800v120h200q33 0 56.5 23.5T880-600v440q0 33-23.5 56.5T800-80H160Zm80-160h240v-18q0-17-9.5-31.5T444-312q-20-9-40.5-13.5T360-330q-23 0-43.5 4.5T276-312q-17 8-26.5 22.5T240-258v18Zm320-60h160v-60H560v60Zm-200-60q25 0 42.5-17.5T420-420q0-25-17.5-42.5T360-480q-25 0-42.5 17.5T300-420q0 25 17.5 42.5T360-360Zm200-60h160v-60H560v60ZM440-600h80v-200h-80v200Z"/>
+                                </svg>
+                                <span class="toggle-text">Staff</span>
+                            </span>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <input type="hidden" name="FacultyToggle" id="userTypeValue" value="Student">
+                    </div>
+                </div>                                                
                 <button type="button" id="btnRegister">Register</button>
             </form>
             <p>
@@ -111,7 +132,8 @@
             <div class="tabs">
                 <ul class="nav-tabs">
                     <li class="active"><a href="#Groups">Groups</a></li>
-                    <li><a href="#addNewGroup">Add Group</a></li>
+                    <li class="student-only"><a href="#addNewGroup">Add Group</a></li>
+                    <li class="faculty-only"><a href="#addNewGroup">Create Group</a></li>
                     <li><a href="#Comments">Comments</a></li>
                     <li><a href="#addNewComments">Add Comment</a></li>
                 </ul>
@@ -180,40 +202,27 @@
                 </div>
 
                 <div id="addNewGroup" class="tab-content">
-                    <!-- Dashboard tab content -->
-                    <!-- 
+                    <!-- Student section - Join Group -->
+                    <div id="joinGroupSection" class="student-only">
+                        <h2>Add New Groups Here</h2>
+                        <div class="dashboard-stats">
+                            <h3>Join a Group</h3>
+                            <form>
+                                <div>
+                                    <label for="txtGroupCode">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
+                                    </label>
+                                    <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
+                                </div>
+                                <button type="button" id="btnJoinGroup">Join Group</button>
+                            </form> 
+                        </div>
+                    </div>
                     
-
-
-
-                        THE COMMENTED SECITON IS IMPORTANT 
-                            it is the join group section the buttons for which appears on screen haven't been added yet
-                            so it was commented out so i could work on the create group section
-                    
-
-
-
-                     -->
-                    <!-- <h2>Add New Groups Here</h2>
-                    <div class="dashboard-stats"> -->
-                    <!-- Add your dashboard widgets, stats, or content here -->
-                    <!-- <div id="joinGroupSection">
-                                <h3>Join a Group</h3>
-                                <form>
-                                    <div>
-                                        <label for="txtGroupCode">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
-                                        </label>
-                                        <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
-                                    </div>
-                                    <button type="button">Join Group</button>
-                                </form> 
-                            </div>
-                       
-                    </div> -->
-                    <h2>Create New Group</h2>
-                    <div class="dashboard-stats">
-                        <div id="createGroupSection">
+                    <!-- Faculty section - Create Group -->
+                    <div id="createGroupSection" class="faculty-only">
+                        <h2>Create New Group</h2>
+                        <div class="dashboard-stats">
                             <form>
                                 <div>
                                     <label for="txtGroupName">
@@ -238,11 +247,12 @@
                                     <input type="text" id="txtCourseSection" name="courseSection"
                                         placeholder="Section" />
                                 </div>
-                                <button type="button">Create Group</button>
+                                <button type="button" id="btnCreateGroup">Create Group</button>
                             </form>
                         </div>
                     </div>
                 </div>
+                
 
                 <div id="Comments" class="tab-content">
                     <!-- Settings tab content -->

@@ -297,6 +297,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// Student/Staff Toggle JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const userTypeToggle = document.getElementById('userTypeToggle');
+    const userTypeValue = document.getElementById('userTypeValue');
+    
+    if (userTypeToggle && userTypeValue) {
+        // Set initial value based on the checkbox state
+        userTypeValue.value = userTypeToggle.checked ? 'Student' : 'Staff';
+        
+        // Add event listener for changes
+        userTypeToggle.addEventListener('change', function() {
+            userTypeValue.value = this.checked ? 'Student' : 'Staff';
+            console.log('User type set to:', userTypeValue.value);
+        });
+    }
+});
+
 
 document.querySelector('#btnCreateGroup').addEventListener('click', function() {
     blnError = false
@@ -323,3 +340,69 @@ document.querySelector('#btnCreateGroup').addEventListener('click', function() {
         })
     }
 })
+
+// Function to update UI based on user type
+function updateUIForUserRole(userRole) {
+    // Hide all role-specific elements first
+    document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
+        element.style.display = 'none';
+    });
+    
+    // Show elements specific to the current user role
+    if (userRole === 'Student') {
+        document.querySelectorAll('.student-only').forEach(element => {
+            element.style.display = '';
+        });
+        
+        // Hide the Create Group section within the addNewGroup tab
+        if (document.querySelector('#createGroupSection')) {
+            document.querySelector('#createGroupSection').style.display = 'none';
+        }
+    } else if (userRole === 'Staff') {
+        document.querySelectorAll('.faculty-only').forEach(element => {
+            element.style.display = '';
+        });
+        
+        // Hide the Join Group section within the addNewGroup tab
+        if (document.querySelector('#joinGroupSection')) {
+            document.querySelector('#joinGroupSection').style.display = 'none';
+        }
+    }
+}
+
+// Fetch the user's role from the server when the page loads
+function fetchUserRole() {
+    fetch('/getUserRole')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            updateUIForUserRole(data.userRole);
+        })
+        .catch(error => {
+            console.error('Error fetching user role:', error);
+            // Fallback to showing everything if there's an error
+            document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
+                element.style.display = '';
+            });
+        });
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fetchUserRole();
+    
+    // The toggle switch in the registration form should still work for new users
+    const userTypeToggle = document.getElementById('userTypeToggle');
+    const userTypeValue = document.getElementById('userTypeValue');
+    
+    if (userTypeToggle && userTypeValue) {
+        userTypeToggle.addEventListener('change', function() {
+            userTypeValue.value = this.checked ? 'Student' : 'Staff';
+            console.log('Registration user type set to:', userTypeValue.value);
+        });
+    }
+});

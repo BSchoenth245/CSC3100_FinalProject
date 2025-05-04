@@ -473,7 +473,7 @@ div:has(#txtCourseName) > label {
     font-weight: 500;
 }
 
-/* When toggle is checked (public) */
+/* When toggle is checked (public/student) */
 .toggle-input:checked + .toggle-label .toggle-slider {
     transform: translateX(0);
 }
@@ -486,7 +486,7 @@ div:has(#txtCourseName) > label {
     color: var(--text-color);
 }
 
-/* When toggle is not checked (private) */
+/* When toggle is not checked (private/Faculty) */
 .toggle-input:not(:checked) + .toggle-label .toggle-slider {
     transform: translateX(116px);
 }
@@ -502,4 +502,25 @@ div:has(#txtCourseName) > label {
 /* Focus styles for accessibility */
 .toggle-input:focus + .toggle-label {
     box-shadow: 0 0 1px var(--accent-color);
+}
+/* Text color changes when toggle has focus */
+.toggle-input:focus:checked + .toggle-label .public-icon,
+.toggle-input:focus:checked + .toggle-label .student-icon {
+    color: #ffffff; 
+}
+.toggle-input:focus:not(:checked) + .toggle-label .private-icon,
+.toggle-input:focus:not(:checked) + .toggle-label .staff-icon {
+    color: #ffffff; 
+}
+.toggle-input:focus + .toggle-label .toggle-text {
+    font-weight: 600; /* Make text slightly bolder when focused */
+}
+/* Role-specific visibility */
+.student-only, .faculty-only {
+    display: none; /* Hidden by default, will be shown via JavaScript */
+}
+
+/* When JavaScript is disabled, show everything as fallback */
+.no-js .student-only, .no-js .faculty-only {
+    display: block;
 }
