@@ -315,21 +315,42 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.querySelector('#btnCreateGroup').addEventListener('click', function() {
-    blnError = false
-    strMessage = ""
+document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+    let blnError = false;
+    let strMessage = "";
 
-    if (document.querySelector('#txtGroupName').value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Group Name Cannot Be Blank. <br></p>'            
-    }
     if (document.querySelector('#txtCourseName').value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>'
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
     }
     if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. </p>'
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Section Cannot Be Blank. <br></p>';
+    }
+    
+    // Validate season and year
+    if (document.querySelector('#selCourseSeason').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Season Must Be Selected. <br></p>';
+    }
+    
+    const yearInput = document.querySelector('#txtCourseYear');
+    if (!yearInput.value) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">Course Year Cannot Be Blank. <br></p>';
+    } else {
+        const year = parseInt(yearInput.value);
+        const currentYear = new Date().getFullYear();
+        
+        if (isNaN(year) || year < currentYear || year > currentYear + 10) {
+            blnError = true;
+            strMessage += `<p class="mb-0 mt-0">Course Year Must Be Between ${currentYear} and ${currentYear + 10}. <br></p>`;
+        }
+    }
+    
+    if (document.querySelector('#dateEndDate').value === "") {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
 
     if (blnError) {
@@ -337,9 +358,74 @@ document.querySelector('#btnCreateGroup').addEventListener('click', function() {
             title: "Oh no, you have an error!",
             html: strMessage,
             icon: "error"
-        })
+        });
+    } else {
+        // Get the current date for the start date
+        const startDate = new Date().toISOString().split('T')[0];
+        const endDate = document.querySelector('#dateEndDate').value;
+        
+        // Combine season and year for course term
+        const courseSeason = document.querySelector('#selCourseSeason').value;
+        const courseYear = document.querySelector('#txtCourseYear').value;
+        const courseTerm = `${courseSeason} ${courseYear}`;
+        
+        // Create course with the collected data
+        createCourse(
+            document.querySelector('#txtCourseName').value,
+            document.querySelector('#txtCourseSection').value,
+            courseTerm,
+            startDate,
+            endDate
+        );
     }
-})
+});
+
+
+function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
+    fetch('/createcourse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            CourseName: courseName,
+            CourseNumber: courseName, // You might want to separate course number and name
+            CourseSection: courseSection,
+            CourseTerm: courseTerm,
+            StartDate: startDate,
+            EndDate: endDate
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        Swal.fire({
+            title: "Success",
+            text: "Course created successfully",
+            icon: "success"
+        });
+        
+        // Clear the form
+        document.querySelector('#txtCourseName').value = '';
+        document.querySelector('#txtCourseSection').value = '';
+        document.querySelector('#selCourseSeason').value = ''; // Clear season
+        document.querySelector('#txtCourseYear').value = '';   // Clear year
+        document.querySelector('#dateEndDate').value = '';
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+
 
 // Function to update UI based on user type
 function updateUIForUserRole(userRole) {
@@ -394,11 +480,11 @@ function fetchUserRole() {
 // Call this function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserRole();
-    
+
     // The toggle switch in the registration form should still work for new users
     const userTypeToggle = document.getElementById('userTypeToggle');
     const userTypeValue = document.getElementById('userTypeValue');
-    
+
     if (userTypeToggle && userTypeValue) {
         userTypeToggle.addEventListener('change', function() {
             userTypeValue.value = this.checked ? 'Student' : 'Staff';

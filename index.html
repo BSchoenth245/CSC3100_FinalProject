@@ -132,8 +132,8 @@
             <div class="tabs">
                 <ul class="nav-tabs">
                     <li class="active"><a href="#Groups">Groups</a></li>
-                    <li class="student-only"><a href="#addNewGroup">Add Group</a></li>
-                    <li class="faculty-only"><a href="#addNewGroup">Create Group</a></li>
+                    <li><a href="#addNewGroup">Add Group</a></li>
+                    <!-- <li><a href="#addNewGroup">Create Group</a></li> -->
                     <li><a href="#Comments">Comments</a></li>
                     <li><a href="#addNewComments">Add Comment</a></li>
                 </ul>
@@ -202,27 +202,40 @@
                 </div>
 
                 <div id="addNewGroup" class="tab-content">
-                    <!-- Student section - Join Group -->
-                    <div id="joinGroupSection" class="student-only">
-                        <h2>Add New Groups Here</h2>
-                        <div class="dashboard-stats">
-                            <h3>Join a Group</h3>
-                            <form>
-                                <div>
-                                    <label for="txtGroupCode">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
-                                    </label>
-                                    <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
-                                </div>
-                                <button type="button" id="btnJoinGroup">Join Group</button>
-                            </form> 
-                        </div>
-                    </div>
+                    <!-- Dashboard tab content -->
+                    <!-- 
                     
-                    <!-- Faculty section - Create Group -->
-                    <div id="createGroupSection" class="faculty-only">
-                        <h2>Create New Group</h2>
-                        <div class="dashboard-stats">
+
+
+
+                        THE COMMENTED SECITON IS IMPORTANT 
+                            it is the join group section the buttons for which appears on screen haven't been added yet
+                            so it was commented out so i could work on the create group section
+                    
+
+
+
+                     -->
+                    <!-- <h2>Add New Groups Here</h2>
+                    <div class="dashboard-stats"> -->
+                    <!-- Add your dashboard widgets, stats, or content here -->
+                    <!-- <div id="joinGroupSection">
+                                <h3>Join a Group</h3>
+                                <form>
+                                    <div>
+                                        <label for="txtGroupCode">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
+                                        </label>
+                                        <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
+                                    </div>
+                                    <button type="button">Join Group</button>
+                                </form> 
+                            </div>
+                       
+                    </div> -->
+                    <h2>Create New Group</h2>
+                    <div class="dashboard-stats">
+                        <div id="createGroupSection">
                             <form>
                                 <div>
                                     <label for="txtGroupName">
@@ -234,6 +247,30 @@
                                     </label>
                                     <input type="text" id="txtGroupName" placeholder="Enter Group Name" />
                                 </div>
+                                <div>
+                                    <label for="selCourseName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                        </svg>
+                                    </label>
+                                    <select id="selCourseName" aria-label="Select a course">
+                                        <option value="">Select Course</option>
+                                        <option value="CSC3100">CSC3100-001 - Web Development</option>
+                                        <option value="CSC4150">CSC4150-003 - Database Systems</option>
+                                        <option value="CSC2200">CSC2200-005 - Data Structures</option>
+                                    </select>
+                                </div>
+                                <button type="button">Create Group</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h2>Create New Course</h2>
+                    <div class="dashboard-stats">
+                        <div id="createCourse">
+                            <form>
                                 <div>
                                     <label for="txtCourseName">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -247,12 +284,50 @@
                                     <input type="text" id="txtCourseSection" name="courseSection"
                                         placeholder="Section" />
                                 </div>
-                                <button type="button" id="btnCreateGroup">Create Group</button>
+                                
+                                <!-- Course Term and End Date Selection (all on one line) -->
+                                <div class="date-inputs-container">
+                                    <!-- Season Select -->
+                                    <div class="date-input-group">
+                                        <label for="selCourseSeason">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                width="24px" fill="#e8eaed">
+                                                <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80Zm-80 320q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm0-80h480v-640H240v640Zm0 0v-640 640Z"/>
+                                            </svg>
+                                        </label>
+                                        <select id="selCourseSeason" aria-label="Select course season">
+                                            <option value="">Season</option>
+                                            <option value="Spring">Spring</option>
+                                            <option value="Summer">Summer</option>
+                                            <option value="Fall">Fall</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Year Input -->
+                                    <div class="date-input-year">
+                                        <input type="number" id="txtCourseYear" placeholder="Year" min="2023" max="2100" />
+                                    </div>
+                                    
+                                    <!-- End Date Input -->
+                                    <div class="date-input-group">
+                                        <label for="dateEndDate">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                                width="24px" fill="#e8eaed">
+                                                <path d="M320-280h80v-280h-80v280Zm240 0h80v-280h-80v280ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v640q0 33-23.5 56.5T800-80H160Zm0-80h640v-480H160v480Zm0-560h640v-80H160v80Zm0 0v-80 80Z"/>
+                                            </svg>
+                                        </label>
+                                        <input type="date" id="dateEndDate" placeholder="End Date" />
+                                    </div>
+                                </div>
+                                <span class="input-note">Start date will be set automatically to today's date</span>
+
+                                
+                                <button type="button" id="btnCreateCourse">Create Course</button>
                             </form>
                         </div>
                     </div>
+
                 </div>
-                
 
                 <div id="Comments" class="tab-content">
                     <!-- Settings tab content -->
