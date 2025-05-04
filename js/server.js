@@ -149,7 +149,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
@@ -395,7 +395,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
@@ -514,6 +514,20 @@ const intSalt = 10;
     })
   })
 
+  app.patch('/updateComment', (req,res) => {
+    const { OGComment, NewComment, Comment, isPrivate } = req.body
+    const currentTime = new Date().toISOString()
+    const updateSQL = `UPDATE tblComments SET Comment = ?, subittedDateTime = ?, private = ? WHERE CommentID = ?`
+    
+    db.run(updateSQL, [NewComment, currentTime, CommentID], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Comment updated successfully"
+      })
+    })
+})
     /*
 
     Socials and comments endpoints
@@ -521,7 +535,7 @@ const intSalt = 10;
 
     */
 
-//-------------------------------------------------------------------------------
+//====================================================================================
 
     /*
 
