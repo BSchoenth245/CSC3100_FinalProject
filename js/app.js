@@ -777,10 +777,54 @@ function loadCourses() {
         Swal.fire('Error', 'Could not load courses', 'error');
     });
 }
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadCourses();
-  });
-  
+	// Handle Take Survey button clicks
+	document.querySelectorAll('.group-card .card-actions button').forEach(button => {
+		button.addEventListener('click', (e) => {
+			const btn = e.target;
+			const card = btn.closest('.group-card');
+
+			if (btn.textContent === 'Take Survey') {
+				const groupName = card.querySelector('.group-header h3').textContent;
+
+				Swal.fire({
+					title: 'Survey Started',
+					text: `You clicked "Take Survey" for ${groupName}.`,
+					icon: 'info'
+				});
+			}
+
+			if (btn.textContent === 'Leave Group') {
+				const groupName = card.querySelector('.group-header h3').textContent;
+
+				Swal.fire({
+					title: 'Are you sure?',
+					text: `Do you want to leave "${groupName}"?`,
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Yes, leave group',
+					cancelButtonText: 'Cancel'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						card.remove();
+
+						Swal.fire({
+							title: 'Left Group',
+							text: `You have left "${groupName}".`,
+							icon: 'success'
+						});
+					}
+				});
+			}
+		});
+	});
+});
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     loadCourses();
+//   });
+
 
 
 
