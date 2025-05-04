@@ -419,28 +419,30 @@
                     -->
                     <div id="profileContacts">
                         <!-- Contact Entry Row -->
-                        <div class="contact-row">
-                            <!-- Here the user can select between a few options and this is subject to change, however it should be easy to add svg's with this method from my assumption -->
-                            <select class="contact-type">
-                                <option value="discord">Discord</option>
-                                <option value="phone">Phone</option>
-                                <option value="email">Email</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="linkedin">LinkedIn</option>
-                                <option value="custom">Custom</option>
-                            </select>
+                        <form>
+                            <div class="contact-row">
+                                <!-- Here the user can select between a few options and this is subject to change, however it should be easy to add svg's with this method from my assumption -->
+                                <select class="contact-type">
+                                    <option value="discord">Discord</option>
+                                    <option value="phone">Phone</option>
+                                    <option value="email">Email</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="linkedin">LinkedIn</option>
+                                    <option value="custom">Custom</option>
+                                </select>
 
-                            <!-- Contact Input -->
-                            <input type="text" class="contact-input" placeholder="Enter handle, phone, or link" />
+                                <!-- Contact Input -->
+                                <input type="text" class="contact-input" id="contact-input"placeholder="Enter handle, phone, or link" />
 
-                            <!-- Add Button -->
-                            <button type="button" class="btn-add-contact">Add Contact</button>
+                                <!-- Add Button -->
+                                <button type="button" class="btn-add-contact">Add Contact</button>
 
-                            <!-- Delete Icon (Initially hidden for first input row, shown on added rows) also we will need an svg for this -->
-                            <button type="button" class="btn-delete-contact" style="display: none;">
-                                🗑️ <!-- This is just an emoji as an example, the plan was to add a separate svg-->
-                            </button>
-                        </div>
+                                <!-- Delete Icon (Initially hidden for first input row, shown on added rows) also we will need an svg for this -->
+                                <button type="button" class="btn-delete-contact" style="display: none;">
+                                    🗑️ <!-- This is just an emoji as an example, the plan was to add a separate svg-->
+                                </button>
+                            </div>
+                        </form>
 
                         <!-- Additional rows will be inserted here dynamically with javascript-->
                         <div id="additionalContacts"></div>

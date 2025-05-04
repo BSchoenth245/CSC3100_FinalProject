@@ -187,7 +187,7 @@ div:has(#txtCourseName) > label {
     margin-top: 15px;
 }
 
-#txtCourseSection{
+#txtCourseSection, #contact-input{
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -201,11 +201,11 @@ div:has(#txtCourseName) > label {
     transition: 150ms ease;
 }
 
-#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover {
+#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover {
     border-color: var(--accent-color);
 }
 
-#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus {
+#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus {
     outline: none;
     border-color: var(--text-color);
 }
@@ -687,3 +687,22 @@ div:has(#selCourseName) > label {
 .no-js .student-only, .no-js .faculty-only {
     display: block;
 }
+
+/* Center the contact form in the Profile tab */
+#profileContacts form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Center the contact row elements */
+#profileContacts .contact-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px;
+}
+
