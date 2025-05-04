@@ -537,8 +537,23 @@ input[name="courseSection"] { width: 25%; }
     cursor: pointer;
 }
 
+/* Fix alignment with minimal code */
 #profileContacts .contact-row > *,
-#profileContacts .contact-type-container > * { line-height: 50px; }
+#profileContacts .contact-type-container > *,
+#profileContacts .contact-input,
+#profileContacts .btn-add-contact {
+    margin: 0;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Ensure the select and input are properly aligned */
+#profileContacts select,
+#profileContacts input {
+    vertical-align: middle;
+    margin: 0;
+}
+
 
 /* Style for the additionalContacts container */
 #additionalContacts {
