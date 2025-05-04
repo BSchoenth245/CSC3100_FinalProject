@@ -1002,6 +1002,26 @@ app.get('/members', (req,res) => {
     })
   })
 
+  app.post('/getAssessmentResponses', (req, res) => {
+    const { AssessmentName } = req.body
+    const Responsesql = `SELECT * FROM tblAssessmentResponses WHERE QuestionID IN
+                          (SELECT QuestionID FROM tblAssessmentQuestions WHERE AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?))`
+    db.all(Responsesql, [AssessmentName, currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Response not found" })
+      }
+      return res.status(200).json({
+        message: "Responses retrieved successfully",
+        count: rows.length,
+        responses: rows
+      })
+    })
+  })
+
     /*
 
     Assessment Related Endpoint
