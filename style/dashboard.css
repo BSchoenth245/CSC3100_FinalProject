@@ -217,6 +217,13 @@ div:has(#txtCourseName) > label {
     height: 50px; 
     margin-top: 15px;
 }
+#selCourseName {
+    margin-top: 10px;
+}
+
+div:has(#selCourseName) > label {
+    margin-top: 10px;
+}
 
 #createGroupSection {
     display: flex;
@@ -237,6 +244,162 @@ div:has(#txtCourseName) > label {
     background-color: var(--dashboard-input-color);
     border: 2px solid var(--dashboard-input-color);
 }
+.input-note {
+    display: block;
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-top: 5px;
+    margin-left: 50px; /* Aligns with the input field */
+}
+/* Course term input group styling */
+.course-term-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.course-term-group select,
+.course-term-group input {
+    flex: 1;
+}
+
+#txtCourseYear {
+    width: 100px;
+    text-align: center;
+    box-sizing: border-box;
+    height: 50px;
+    padding: 1em;
+    font: inherit;
+    border-radius: 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    transition: 150ms ease;
+}
+
+#txtCourseYear:hover {
+    border-color: var(--accent-color);
+}
+
+#txtCourseYear:focus {
+    outline: none;
+    border-color: var(--text-color);
+}
+#createCourse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px; 
+    width: 100%;
+}
+
+#createCourse > * {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+/* Container for date inputs on one line */
+.date-inputs-container {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Style for the season select and end date groups */
+.date-input-group {
+    display: flex;
+    flex: 1;
+}
+
+.date-input-group label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.date-input-group select,
+.date-input-group input {
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: none;
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: 150ms ease;
+}
+
+/* Style for the year input without label */
+.date-input-year {
+    flex: 0.7;
+}
+
+.date-input-year input {
+    width: 100%;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid var(--dashboard-input-color);
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: 150ms ease;
+}
+
+/* Hover and focus states */
+.date-input-group select:hover,
+.date-input-group input:hover,
+.date-input-year input:hover {
+    border-color: var(--accent-color);
+}
+
+.date-input-group select:focus,
+.date-input-group input:focus,
+.date-input-year input:focus {
+    outline: none;
+    border-color: var(--text-color);
+}
+
+/* Make the note appear below all inputs */
+.input-note {
+    display: block;
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-top: 5px;
+    width: 100%;
+    text-align: right;
+}
+
+/* Make createCourse section consistent with createGroupSection */
+#createCourse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px; 
+    width: 100%;
+}
+
+#createCourse > * {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 
 .group-card {
     background-color: var(--input-color);
@@ -414,4 +577,113 @@ div:has(#txtCourseName) > label {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
     color: var(--text-color);
+}
+/* Toggle Switch Styles */
+.toggle-container {
+    position: relative;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 100px;
+    position: relative;
+    padding: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 100px;
+    height: 36px;
+    border-radius: 45px;
+    transition: 0.3s;
+    background-color: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-icon {
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+.toggle-icon svg {
+    margin-right: 5px;
+    fill: currentColor;
+}
+
+.toggle-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* When toggle is checked (public/student) */
+.toggle-input:checked + .toggle-label .toggle-slider {
+    transform: translateX(0);
+}
+
+.toggle-input:checked + .toggle-label .public-icon {
+    color: white;
+}
+
+.toggle-input:checked + .toggle-label .private-icon {
+    color: var(--text-color);
+}
+
+/* When toggle is not checked (private/Faculty) */
+.toggle-input:not(:checked) + .toggle-label .toggle-slider {
+    transform: translateX(116px);
+}
+
+.toggle-input:not(:checked) + .toggle-label .public-icon {
+    color: var(--text-color);
+}
+
+.toggle-input:not(:checked) + .toggle-label .private-icon {
+    color: white;
+}
+
+/* Focus styles for accessibility */
+.toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 1px var(--accent-color);
+}
+/* Text color changes when toggle has focus */
+.toggle-input:focus:checked + .toggle-label .public-icon,
+.toggle-input:focus:checked + .toggle-label .student-icon {
+    color: #ffffff; 
+}
+.toggle-input:focus:not(:checked) + .toggle-label .private-icon,
+.toggle-input:focus:not(:checked) + .toggle-label .staff-icon {
+    color: #ffffff; 
+}
+.toggle-input:focus + .toggle-label .toggle-text {
+    font-weight: 600; /* Make text slightly bolder when focused */
+}
+/* Role-specific visibility */
+.student-only, .faculty-only {
+    display: none; /* Hidden by default, will be shown via JavaScript */
+}
+
+/* When JavaScript is disabled, show everything as fallback */
+.no-js .student-only, .no-js .faculty-only {
+    display: block;
 }
