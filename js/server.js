@@ -239,6 +239,26 @@ app.patch('/updatecourse', async (req, res) => {
     }
   })
 
+app.delete('/deleteCourse', async (req, res) => {
+    try {
+      const { CourseID } = req.body
+      const comDelete = `DELETE FROM tblCourses WHERE CourseID = ?`
+
+      db.run(comDelete, [CourseID], (err) => {
+        if (err) {
+          res.status(400).json({ error: err.message })
+          return
+        }
+        res.status(201).json({
+          CourseID: CourseID,
+          message: "Course deleted successfully"
+        })
+      })
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
+  })
+
   app.post('/creategroup', async (req, res) => {
     try {
       const { GroupName, CourseName, CourseSection } = req.body
