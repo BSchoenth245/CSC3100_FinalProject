@@ -190,7 +190,34 @@ const intSalt = 10;
       res.status(500).json({ error: err.message })
     }
   })
-  app.patch('/updatecourse', async (req, res) => {
+
+  app.get('/courses', (req, res) => {
+  const coursesSQL = `SELECT DISTINCT * 
+                      FROM tblCourses
+                      LEFT JOIN tblEnrollements ON tblCourses.CourseID = tblEnrollements.CourseID 
+                      WHERE UserID = ?`
+
+  db.all(coursesSQL, [currentUser], (err, rows) => {
+    if (err) {
+      return res.status(400).json({ error: err.message })
+    }
+    
+    if (!rows || rows.length === 0) {
+      return res.status(200).json({
+        message: "No courses found for this user",
+        courses: []
+      })
+    }
+
+    return res.status(200).json({
+      message: "Courses retrieved successfully", 
+      count: rows.length,
+      courses: rows
+    })
+  })
+})
+
+app.patch('/updatecourse', async (req, res) => {
     try {
       const { CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate, CourseID} = req.body
       const comUpdate = `UPDATE tblCourses
