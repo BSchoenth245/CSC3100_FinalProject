@@ -539,3 +539,142 @@ input[name="courseSection"] { width: 25%; }
 
 #profileContacts .contact-row > *,
 #profileContacts .contact-type-container > * { line-height: 50px; }
+
+/* Style for the additionalContacts container */
+#additionalContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Style for dynamically added contact rows */
+#additionalContacts .contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 550px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect for contact rows */
+#additionalContacts .contact-row:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Style for the contact display container */
+#additionalContacts .contact-display {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 15px;
+    overflow: hidden; /* Prevent text overflow */
+}
+
+/* Style for contact type label */
+#additionalContacts .contact-label {
+    font-weight: 600;
+    color: var(--accent-color);
+    min-width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgba(134, 114, 255, 0.1);
+    text-align: center;
+}
+
+/* Style for contact value */
+#additionalContacts .contact-value {
+    flex: 1;
+    color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+/* Style for delete button in added contacts */
+#additionalContacts .btn-delete-contact {
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect for delete button */
+#additionalContacts .btn-delete-contact:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+    color: #ff4d4d;
+}
+
+/* Add specific styling for different contact types */
+#additionalContacts .discord {
+    border-left: 4px solid #7289DA;
+}
+
+#additionalContacts .phone {
+    border-left: 4px solid #28a745;
+}
+
+#additionalContacts .email {
+    border-left: 4px solid #007bff;
+}
+
+#additionalContacts .instagram {
+    border-left: 4px solid #E1306C;
+}
+
+#additionalContacts .linkedin {
+    border-left: 4px solid #0077B5;
+}
+
+#additionalContacts .custom {
+    border-left: 4px solid #6c757d;
+}
+
+/* Animation for newly added contacts */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#additionalContacts .contact-row {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Ensure consistent spacing between form and additional contacts */
+#profileContacts form {
+    margin-bottom: 20px;
+}
+
+/* Empty state styling */
+#additionalContacts:empty::before {
+    content: "No contacts added yet";
+    display: block;
+    color: var(--text-color);
+    opacity: 0.6;
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+}
