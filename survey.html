@@ -1,0 +1,121 @@
+<!-- Survey Section -->
+<div class="card-body">
+    <h1 class="text-center mb-4">Group Member Assessment</h1>
+    <form id="frmSurvey">
+        <div class="mb-3">
+            <label for="selGroupMemberSurvey" class="form-label">Select Group Member</label>
+            <select class="form-control" id="selGroupMemberSurvey" aria-label="Select a group member to assess">
+                <!-- Group members will be added dynamically -->
+            </select>
+        </div>
+
+        <!-- Likert Scale Questions -->
+        <div class="mb-3">
+            <h5>Likert Scale Questions</h5>
+            <p>Contribution: This team member consistently contributed valuable ideas to the group project.</p>
+            <div>
+                <label><input type="radio" name="likertContribution" value="1"> Strongly Disagree</label><br>
+                <label><input type="radio" name="likertContribution" value="2"> Disagree</label><br>
+                <label><input type="radio" name="likertContribution" value="3"> Neutral</label><br>
+                <label><input type="radio" name="likertContribution" value="4"> Agree</label><br>
+                <label><input type="radio" name="likertContribution" value="5"> Strongly Agree</label>
+            </div>
+            <p>Reliability: This team member completed their assigned tasks on time.</p>
+            <div>
+                <label><input type="radio" name="likertReliability" value="1"> Strongly Disagree</label><br>
+                <label><input type="radio" name="likertReliability" value="2"> Disagree</label><br>
+                <label><input type="radio" name="likertReliability" value="3"> Neutral</label><br>
+                <label><input type="radio" name="likertReliability" value="4"> Agree</label><br>
+                <label><input type="radio" name="likertReliability" value="5"> Strongly Agree</label>
+            </div>
+            <p>Collaboration: This person was easy to work with and receptive to feedback.</p>
+            <div>
+                <label><input type="radio" name="likertCollaboration" value="1"> Strongly Disagree</label><br>
+                <label><input type="radio" name="likertCollaboration" value="2"> Disagree</label><br>
+                <label><input type="radio" name="likertCollaboration" value="3"> Neutral</label><br>
+                <label><input type="radio" name="likertCollaboration" value="4"> Agree</label><br>
+                <label><input type="radio" name="likertCollaboration" value="5"> Strongly Agree</label>
+            </div>
+            <p>Initiative: This team member took initiative in organizing or guiding group work.</p>
+            <div>
+                <label><input type="radio" name="likertInitiative" value="1"> Strongly Disagree</label><br>
+                <label><input type="radio" name="likertInitiative" value="2"> Disagree</label><br>
+                <label><input type="radio" name="likertInitiative" value="3"> Neutral</label><br>
+                <label><input type="radio" name="likertInitiative" value="4"> Agree</label><br>
+                <label><input type="radio" name="likertInitiative" value="5"> Strongly Agree</label>
+            </div>
+            <p>Communication: This team member communicated clearly and effectively with the group.</p>
+            <div>
+                <label><input type="radio" name="likertCommunication" value="1"> Strongly Disagree</label><br>
+                <label><input type="radio" name="likertCommunication" value="2"> Disagree</label><br>
+                <label><input type="radio" name="likertCommunication" value="3"> Neutral</label><br>
+                <label><input type="radio" name="likertCommunication" value="4"> Agree</label><br>
+                <label><input type="radio" name="likertCommunication" value="5"> Strongly Agree</label>
+            </div>
+        </div>
+
+        <!-- Multiple Choice Questions -->
+        <div class="mb-3">
+            <h5>Multiple Choice Questions</h5>
+            <p>Contribution: This team member consistently contributed valuable ideas to the group project.</p>
+            <select class="form-control" name="mcqContribution">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+            </select>
+            <p>Reliability: This team member completed their assigned tasks on time.</p>
+            <select class="form-control" name="mcqReliability">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+            </select>
+            <p>Collaboration: This person was easy to work with and receptive to feedback.</p>
+            <select class="form-control" name="mcqCollaboration">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+            </select>
+            <p>Initiative: This team member took initiative in organizing or guiding group work.</p>
+            <select class="form-control" name="mcqInitiative">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+            </select>
+            <p>Communication: This team member communicated clearly and effectively with the group.</p>
+            <select class="form-control" name="mcqCommunication">
+                <option value="" disabled selected hidden>Select an option</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+            </select>
+        </div>
+
+        <!-- Short Response Questions -->
+        <div class="mb-3">
+            <h5>Short Response Questions</h5>
+            <label for="txtMostValuableContribution" class="form-label">What was this team member’s most valuable contribution to the project?</label>
+            <textarea class="form-control" id="txtMostValuableContribution" rows="3" placeholder="Enter your response here..."></textarea>
+            <label for="txtImprovementSuggestions" class="form-label mt-3">How could this person improve their participation in future group work?</label>
+            <textarea class="form-control" id="txtImprovementSuggestions" rows="3" placeholder="Enter your response here..."></textarea>
+            <label for="txtPositiveDifference" class="form-label mt-3">Describe a moment where this team member made a positive difference.</label>
+            <textarea class="form-control" id="txtPositiveDifference" rows="3" placeholder="Enter your response here..."></textarea>
+        </div>
+
+        <button class="btn btn-primary col-12 mt-3" type="button" id="btnSubmitSurvey" aria-label="Submit Survey">Submit Survey</button>
+        <button class="btn btn-link col-12 mt-2" type="button" id="btnBackToDashboardSurvey" aria-label="Go Back to Dashboard">Back to Dashboard</button>
+    </form>
+</div>

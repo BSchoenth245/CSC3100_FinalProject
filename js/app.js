@@ -800,6 +800,41 @@ document.addEventListener('DOMContentLoaded', () => {
 //     loadCourses();
 //   });
 
+// Survey fully created, now we need to add the functionality to the button
+document.querySelector('#btn-take-survey')?.addEventListener('click', () => {
+    getSurveyQuestions()
+})
+
+document.addEventListener('click', (event) => {
+    if (event.target && event.target.id === 'btnBackToDashboardSurvey') {
+        document.querySelector('#divStudentSurvey').querySelectorAll('input, textarea, select').forEach(element => {
+            if (element.type === 'checkbox' || element.type === 'radio') {
+                element.checked = false;
+            } else {
+                element.value = '';
+            }
+        });
+        document.querySelector('#divStudentSurvey').style.display = 'none';
+        document.querySelector('#divStudentDashboard').style.display = 'block';
+    }
+});
+
+function getSurveyQuestions() {
+    fetch('./survey.html')
+    .then(response => response.text())
+    .then(data => {
+        document.querySelector('#divStudentSurvey').innerHTML = data
+        let strHTML = '<option disabled selected hidden >Select a group member</option>'
+        mockGroupMembers.forEach(member => {
+            strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`
+        })
+        document.querySelector('#selGroupMemberSurvey').innerHTML = strHTML
+        document.querySelector('#divStudentSurvey').style.display = 'block'
+        document.querySelector('#divStudentDashboard').style.display = 'none'
+    })
+    .catch(error => console.error('Error loading survey questions:', error))
+}
+
 
 
 
