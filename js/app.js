@@ -537,3 +537,65 @@ $(document).on('click', '.btn-add-contact', function () {
 $(document).on('click', '.btn-delete-contact', function () {
     $(this).closest('.contact-row').remove();
 });
+
+// Add comments and comment tab functionality
+document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
+    const group = document.querySelector('#selGroup').value;
+    const feedback = document.querySelector('#txtFeedback').value.trim();
+    const visibility = document.querySelector('#commentVisibilityValue').value;
+    const commentsTab = document.querySelector('#Comments');
+
+    let blnError = false;
+    let strMessage = "";
+
+    // if (!group) {
+    //     blnError = true;
+    //     strMessage += "<p>Please select a group.</p>";
+    // }
+    if (!feedback) {
+        blnError = true;
+        strMessage += "<p>Feedback cannot be empty.</p>";
+    }
+
+    if (blnError) {
+        Swal.fire({
+            title: "Error",
+            html: strMessage,
+            icon: "error"
+        });
+        return;
+    }
+
+    // Get current date and time
+    const now = new Date();
+    const formattedDate = now.toLocaleString("en-US", {
+        dateStyle: "long",
+        timeStyle: "short"
+    });
+
+    // Create comment element
+    const commentHTML = `
+        <div class="group card">
+            <div class="group-header">
+                <h3><strong>Brock The Rock</strong></h3>
+                <span class="group-code"> Submitted on: ${formattedDate} </span>
+            </div>
+            <p>"${feedback}"</p>
+        </div>
+    `;
+
+    // Insert comment into View Comments tab
+    commentsTab.insertAdjacentHTML('beforeend', commentHTML);
+
+    // Clear form
+    document.querySelector('#selGroup').value = '';
+    document.querySelector('#txtFeedback').value = '';
+    document.querySelector('#commentVisibilityToggle').checked = true;
+    document.querySelector('#commentVisibilityValue').value = 'public';
+
+    Swal.fire({
+        title: "Success!",
+        text: "Your feedback has been added.",
+        icon: "success"
+    });
+});
