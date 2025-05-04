@@ -259,6 +259,8 @@ app.delete('/deleteCourse', async (req, res) => {
     }
   })
 
+
+
   app.post('/creategroup', async (req, res) => {
     try {
       const { GroupName, CourseName, CourseSection } = req.body
@@ -503,6 +505,22 @@ app.delete('/deleteCourse', async (req, res) => {
     } catch (err) {
       res.status(500).json({ error: err.message })
     }
+  })
+  app.get('/socials', (req, res) => {
+    const socialsSQL = `SELECT * FROM tblSocials WHERE UserID = ?`
+    db.all(socialsSQL, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "No socials found" })
+      }
+      return res.status(200).json({
+        message: "Socials retrieved successfully",
+        count: rows.length,
+        socials: rows
+      })
+    })
   })
 
   app.patch('/updateSocial', (req, res) => {
