@@ -175,7 +175,9 @@
                                     </ul>
                                 </div>
                                 <div class="card-actions">
-                                    <button type="button" class="btn-take-survey">Take Survey</button>
+                                    <!-- make the data group id dynamic -->
+                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+
                                     <button type="button" class="btn-leave-group">Leave Group</button>
                                 </div>
                             </div>
@@ -201,8 +203,9 @@
                                     </ul>
                                 </div>
                                 <div class="card-actions">
-                                    <button type="button" class="btn-take-survey">Take Survey</button>
-                                    <button type="button" class="btn-leave-group">Leave Group</button>
+                                    <!-- make the data-group-id dynamic -->
+                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+                                    <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
                                 </div>
                             </div>
                         </div>
@@ -492,7 +495,10 @@
             </div>
         </div>
     </div>
-    
+    <!-- Add this right before the closing </body> tag -->
+    <div id="divStudentSurvey" class="survey-modal" style="display:none;">
+        <!-- Survey content will be loaded here -->
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
