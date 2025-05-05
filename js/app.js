@@ -51,28 +51,28 @@ $("#btnLogin").on('click',function(){
             })
         })
         
-.then(response => {
-    // First check if there's content to parse as JSON
-    const contentType = response.headers.get('content-type');
+        .then(response => {
+            // First check if there's content to parse as JSON
+            const contentType = response.headers.get('content-type');
+            
+            if (!response.ok) {
+                // For error responses, handle both JSON and non-JSON responses
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || `Login failed: ${response.status}`);
+                    });
+                } else {
+                    throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+                }
+            }
     
-    if (!response.ok) {
-        // For error responses, handle both JSON and non-JSON responses
-        if (contentType && contentType.includes('application/json')) {
-            return response.json().then(data => {
-                throw new Error(data.error || `Login failed: ${response.status}`);
-            });
-        } else {
-            throw new Error(`Login failed: ${response.status} ${response.statusText}`);
-        }
-    }
-    
-    // For successful responses, ensure we have JSON before parsing
-    if (contentType && contentType.includes('application/json')) {
-        return response.json();
-    } else {
-        throw new Error('Server returned non-JSON response');
-    }
-})
+            // For successful responses, ensure we have JSON before parsing
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response');
+            }
+        })
         .then(data => {
             loadingBtn.close();
             
@@ -81,8 +81,8 @@ $("#btnLogin").on('click',function(){
                 title: 'Success!',
                 text: 'Login successful',
                 icon: 'success',
-                showConfirmButton: false,
-                timer: 1500
+                showConfirmButton: true,
+                timer: null
             }).then(() => {
                 console.log("Login success callback triggered");
                 
@@ -362,7 +362,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function(ev
 
     if (document.querySelector('#txtCourseName').value.trim().length < 1) {
         blnError = true;
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';
     }
     if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
         blnError = true;
