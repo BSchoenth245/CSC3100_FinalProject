@@ -1,288 +1,4 @@
-$("#btnLogin").on('click', function () {
-	// Debug: Triggered login button
-	console.log('[Login] Login button clicked');
 
-	const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-
-	let strUsername = document.querySelector('#txtLogUser').value;
-	const strPassword = $('#txtLogPassword').val();
-	let blnError = false;
-	let strMessage = '';
-
-	strUsername = strUsername.toLowerCase();
-
-	if (!regEmail.test(strUsername)) {
-		blnError = true;
-		strMessage += '<p class="mb-0 mt-0">Username must be an email address</p>';
-	}
-
-	if (strPassword.length < 8) {
-		blnError = true;
-		strMessage += "<p>Password must be at least 8 characters</p>";
-	}
-
-	if (blnError) {
-		Swal.fire({
-			title: "Oh no, you have an error!",
-			html: strMessage,
-			icon: "error"
-		});
-		console.warn('[Login] Validation failed:', strMessage);
-	} else {
-		console.log('[Login] Passed validation, sending fetch request...');
-
-		const loadingSwal = Swal.fire({
-			title: 'Logging in...',
-			didOpen: () => Swal.showLoading(),
-			allowOutsideClick: false,
-			allowEscapeKey: false,
-			showConfirmButton: false
-		});
-
-		fetch('http://localhost:8000/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				email: strUsername,
-				password: strPassword
-			})
-		})
-			.then(response => {
-				console.log('[Login] Fetch response status:', response.status);
-
-				const contentType = response.headers.get('content-type');
-
-				if (!response.ok) {
-					if (contentType && contentType.includes('application/json')) {
-						return response.json().then(data => {
-							console.error('[Login] Backend returned JSON error:', data);
-							throw new Error(data.error || `Login failed: ${response.status}`);
-						});
-					} else {
-						throw new Error(`Login failed: ${response.status} ${response.statusText}`);
-					}
-				}
-
-				if (contentType && contentType.includes('application/json')) {
-					return response.json();
-				} else {
-					throw new Error('Server returned non-JSON response');
-				}
-			})
-			.then(data => {
-				console.log('[Login] Login success response:', data);
-
-				Swal.fire({
-					title: 'Success!',
-					text: 'Login successful',
-					icon: 'success',
-					showConfirmButton: false,
-					timer: 1500
-			 }).then(() => {
-					console.log("[Login] Success dialog confirmed");
-
-					const loginDiv = document.querySelector('#Login');
-					const dashboardDiv = document.querySelector('#Dashboard');
-
-					if (loginDiv) loginDiv.style.display = 'none';
-					if (dashboardDiv) dashboardDiv.style.display = 'block';
-
-					console.log("[Login] Toggled to dashboard");
-
-					try {
-						loadCourses();
-						loadGroups();
-						loadUserProfile();
-					} catch (e) {
-						console.error("[Login] Error loading post-login data:", e);
-					}
-				});
-			})
-			.catch(error => {
-				console.error('[Login] Fetch error:', error);
-
-				Swal.fire({
-					title: 'Error',
-					text: error.message,
-					icon: 'error'
-				});
-			})
-			.finally(() => {
-				console.log("[Login] Cleaning up login form...");
-				document.querySelector('#txtLogPassword').value = '';
-			});
-	}
-});
-
-function loadUserProfile() {
-	console.log('[loadUserProfile] called');
-
-	const userId = sessionStorage.getItem('userId');
-
-	if (!userId) {
-		console.warn('[loadUserProfile] No userId found in sessionStorage.');
-		return;
-	}
-
-	console.log(`[loadUserProfile] Fetching profile for userId: ${userId}`);
-
-	fetch(`http://localhost:8000/UserInfo?userId=${userId}`)
-		.then(response => {
-			if (!response.ok) {
-				throw new Error(`Failed to fetch user profile. Status: ${response.status}`);
-			}
-			return response.json();
-		})
-		.then(userData => {
-			console.log('[loadUserProfile] Received user data:', userData);
-
-			// Example DOM updates
-			if (userData.name) {
-				document.querySelector('#lblUserName').textContent = userData.name;
-			}
-			if (userData.email) {
-				document.querySelector('#lblUserEmail').textContent = userData.email;
-			}
-			// Add more fields as needed
-		})
-		.catch(err => {
-			console.error('[loadUserProfile] Error:', err);
-			Swal.fire({
-				title: 'Error',
-				text: 'Failed to load user profile.',
-				icon: 'error'
-			});
-		});
-}
-
-
-
-
-$("#btnRegister").on('click',function(){
-    const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-    //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-
-    // Captures necessary Login data
-    let strUsername = document.querySelector('#txtRegUsername').value
-    let strFirst = document.querySelector('#txtFirstName').value
-    let strLast = document.querySelector('#txtLastName').value
-
-    const strPassword = $('#txtRegPassword').val()
-    const strConPassword = $('#txtConfirmPassword').val()
-    const isFaculty = document.getElementById('commentVisibilityValue');
-
-    let blnError = false
-    let strMessage = ""
-
-    strUsername = strUsername.toLowerCase()
-    // Input validation for login
-    if(strFirst.trim().length < 1){
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
-    }
-    if(strLast.trim().length < 1){
-        blnError = true
-        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'
-    }
-    if(!regEmail.test(strUsername)){
-        blnError = true
-        strMessage+='<p class ="mb-0 mt-0">Username must be an email address. </p>'
-    }
-    if(strPassword.length < 8){
-        blnError = true
-        strMessage+="<p>Password cannot be blank. </p>"
-    }
-    if(strConPassword != strPassword){
-        blnError = true
-        strMessage+="<p>Passwords must match.</p>"
-    }
-    // Error message
-    if(blnError == true){
-        Swal.fire({
-            title: "Oh no, you have an error!",
-            html: strMessage,
-            icon: "error"
-        })
-    }
-    else{
-        fetch('http://localhost:8000/registration', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName: strFirst,
-                lastName: strLast,
-                email: strUsername,
-                password: strPassword,
-                isFaculty: isFaculty
-            })
-        })
-        .then(response => {
-            console.log('Status:', response.status);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Registration response:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-
-        // Clear registration inputs and redirect to login page
-    document.querySelector('#txtRegUsername').value = '';
-    document.querySelector('#txtFirstName').value = '';
-    document.querySelector('#txtLastName').value = '';
-    document.querySelector('#txtRegPassword').value = '';
-    document.querySelector('#txtConfirmPassword').value = '';
-    
-    document.querySelector('#Register').style.display = 'none';
-    document.querySelector('#Login').style.display = 'block';
-}   
-})
-
-// Reveals/hides password on the login page
-function ViewLogPass() {
-    var x = document.getElementById("txtLogPassword");
-    if (x.type === "password") {
-        $('#btnViewLogPass').removeClass('bi-eye')
-        document.querySelector('#btnViewLogPass').classList.add('bi-eye-slash')
-        x.type = "text";
-    } else {
-        $('#btnViewLogPass').removeClass('bi-eye-slash')
-        document.querySelector('#btnViewLogPass').classList.add('bi-eye')
-        x.type = "password";
-    }
-}
-
-$(document).on('keypress', function(e) {
-    if (e.which === 13) { // Enter key code
-        if (Swal.isVisible()) {
-            // If SweetAlert is open, let the default SweetAlert Enter key handling work
-            return;
-        } else if ($('#Login').is(':visible')) {
-            // Only trigger login button if SweetAlert is not open
-            $('#btnLogin').click();
-        } else if ($('#Register').is(':visible')) {
-            // Only trigger register button if SweetAlert is not open
-            $('#btnRegister').click();
-        }
-    }
-});
-
-    // Add event listeners to buttons
-    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-            document.querySelector('#Login').style.display = 'none';
-            document.querySelector('#Register').style.display = 'block';
-        })
-
-    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    });
-    
 $(document).ready(function() {
     // Hide all tab content except the first one initially
     $('.tab-content:not(:first)').hide();
@@ -307,61 +23,6 @@ $(document).ready(function() {
 
 });
 
-// function to create user by sending a fetch to the server.js file sending the username and password in the body
-// ensuring the correct content type and catching errors
-function createUser(strUsername, strPassword) {
-
-    fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        Swal.fire({
-            title: "Success",
-            text: data.message,
-            icon: "success"
-        });
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
-
-function loginUser(strUsername, strPassword) {
-    return fetch('http://localhost:8000/login', { // Add 'return' here
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: strUsername, password: strPassword })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Parse and return JSON data
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-        throw error; // Re-throw the error so the caller can handle it
-    });
-}
 
 // Adding the collapse menu logic
 function toggleMembers(button) {
@@ -375,33 +36,11 @@ function toggleMembers(button) {
     memberList.classList.toggle('collapsed');
     button.classList.toggle('active'); // Changed from collapseIcon to button
 }
-// Add this to your app.js file
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleSwitch = document.getElementById('commentVisibilityToggle');
-    const hiddenInput = document.getElementById('commentVisibilityValue');
-    
-    if (toggleSwitch && hiddenInput) {
-        toggleSwitch.addEventListener('change', function() {
-            hiddenInput.value = this.checked ? 'public' : 'private';
-        });
-    }
-});
-// Student/Staff Toggle JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const userTypeToggle = document.getElementById('userTypeToggle');
-    const userTypeValue = document.getElementById('userTypeValue');
-    
-    if (userTypeToggle && userTypeValue) {
-        // Set initial value based on the checkbox state
-        userTypeValue.value = userTypeToggle.checked ? 'Student' : 'Staff';
-        
-        // Add event listener for changes
-        userTypeToggle.addEventListener('change', function() {
-            userTypeValue.value = this.checked ? 'Student' : 'Staff';
-            console.log('User type set to:', userTypeValue.value);
-        });
-    }
-});
+
+
+
+
+
 
 document.querySelector('#btnCreateCourse').addEventListener('click', function() {
     let blnError = false;
@@ -1007,6 +646,82 @@ const mockGroupMembers = [
 ];
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Add sample received comments
+    const sampleReceivedComments = [
+        {
+            sender: "Jane Smith",
+            timestamp: "April 19, 2025 at 2:30 PM",
+            group: "Team Awesome",
+            text: "Great job on the presentation yesterday! Your explanation of the database schema was very clear."
+        },
+        {
+            sender: "Professor Johnson",
+            timestamp: "April 18, 2025 at 10:15 AM",
+            group: "CSC3100-001",
+            text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
+        }
+    ];
+
+    // Remove empty state message if adding sample comments
+    if (sampleReceivedComments.length > 0) {
+        const emptyMessage = document.querySelector('#receivedComments .empty-comments');
+        if (emptyMessage) {
+            emptyMessage.remove();
+        }
+    }
+
+    // Add sample received comments to the received column
+    sampleReceivedComments.forEach(comment => {
+        const commentHTML = `
+            <div class="comment-card received-comment">
+                <div class="comment-header">
+                    <div class="comment-sender">${comment.sender}</div>
+                    <div class="comment-timestamp">${comment.timestamp}</div>
+                </div>
+                <div class="comment-group">From: ${comment.group}</div>
+                <div class="comment-text">${comment.text}</div>
+            </div>
+        `;
+        document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
+    });
+});
+
+document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
+    loadCourses();
+})
+
+function loadCourses() {
+    fetch('/courses')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch courses');
+        }
+        return response.json();
+    })
+    .then(courses => {
+        const container = document.querySelector('#groupsList');
+        container.innerHTML = ''; // clear any existing cards
+        
+        courses.forEach(course => {
+            const cardHTML = `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>${course.name}</h3>
+                        <p>Section: ${course.section}</p>
+                        <p>Term: ${course.term}</p>
+                        <p>End Date: ${course.endDate}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    });
+}
+
+
+// Everything added Monday May 5th for the survey
+
 function getSurveyQuestions(groupName = '') {
     fetch('./survey.html')
         .then(response => response.text())
@@ -1084,6 +799,102 @@ function getSurveyQuestions(groupName = '') {
             setTimeout(() => modalContainer.classList.add('active'), 10);
         })
         .catch(error => console.error('[Survey] Error loading survey.html:', error));
+}
+
+btnAddSurveyQuestion.addEventListener('click', () => {
+    // Get values
+    const questionText = document.getElementById('txtSurveyQuestion').value.trim();
+    const questionType = document.getElementById('selQuestionType').value;
+    const groupId = document.getElementById('selSurveyGroup').value;
+  
+    let blnError = false;
+    let strMessage = '';
+  
+    if (!questionText) {
+        blnError = true;
+        strMessage += '<p>Question text cannot be blank.</p>';
+    }
+  
+    if (!groupId) {
+        blnError = true;
+        strMessage += '<p>Please select a group.</p>';
+    }
+  
+    if (blnError) {
+        Swal.fire({
+            title: 'Oops!',
+            html: strMessage,
+            icon: 'error'
+        });
+        return;
+    }
+  
+    // Post to backend
+    fetch('http://localhost:8000/addAssessmentQuestion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            groupId,
+            questionText,
+        type: questionType
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Failed to add question');
+        return res.json();
+    })
+    .then(data => {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Survey question added.',
+            icon: 'success'
+        });
+  
+        // Refresh preview list
+        loadInstructorSurveyQuestions(groupId);
+  
+        // Reset form
+        document.getElementById('txtSurveyQuestion').value = '';
+        document.getElementById('selQuestionType').value = 'open';
+    })
+    .catch(err => {
+    console.error('[Instructor] Failed to add question:', err);
+    Swal.fire({
+        title: 'Error',
+        text: 'There was a problem saving your question.',
+        icon: 'error'
+        });
+    });
+});
+
+function loadInstructorSurveyQuestions(groupId) {
+    fetch(`http://localhost:8000/getAssessmentQuestions?groupId=${groupId}`)
+        .then(res => res.json())
+        .then(questions => {
+            const container = document.getElementById('surveyQuestionPreviewList');
+            container.innerHTML = ''; // Clear existing previews
+    
+            if (questions.length === 0) {
+            container.innerHTML = '<p class="text-muted">No questions created yet.</p>';
+            return;
+            }
+    
+            questions.forEach((q, index) => {
+            const questionHTML = `
+                <div class="card mb-2 p-3">
+                <strong>Q${index + 1}:</strong> ${q.questionText}<br>
+                <span class="badge bg-secondary">${q.type === 'scale' ? 'Likert Scale' : 'Open Response'}</span>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', questionHTML);
+            });
+        })
+        .catch(err => {
+            console.error('[Instructor] Failed to load questions:', err);
+            document.getElementById('surveyQuestionPreviewList').innerHTML = '<p class="text-danger">Failed to load questions.</p>';
+        });
 }
 
 
@@ -1207,75 +1018,3 @@ function getSurveyQuestions(groupName = '') {
 //         icon: "success"
 //     });
 // });
-document.addEventListener('DOMContentLoaded', function() {
-    // Add sample received comments
-    const sampleReceivedComments = [
-        {
-            sender: "Jane Smith",
-            timestamp: "April 19, 2025 at 2:30 PM",
-            group: "Team Awesome",
-            text: "Great job on the presentation yesterday! Your explanation of the database schema was very clear."
-        },
-        {
-            sender: "Professor Johnson",
-            timestamp: "April 18, 2025 at 10:15 AM",
-            group: "CSC3100-001",
-            text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
-        }
-    ];
-
-    // Remove empty state message if adding sample comments
-    if (sampleReceivedComments.length > 0) {
-        const emptyMessage = document.querySelector('#receivedComments .empty-comments');
-        if (emptyMessage) {
-            emptyMessage.remove();
-        }
-    }
-
-    // Add sample received comments to the received column
-    sampleReceivedComments.forEach(comment => {
-        const commentHTML = `
-            <div class="comment-card received-comment">
-                <div class="comment-header">
-                    <div class="comment-sender">${comment.sender}</div>
-                    <div class="comment-timestamp">${comment.timestamp}</div>
-                </div>
-                <div class="comment-group">From: ${comment.group}</div>
-                <div class="comment-text">${comment.text}</div>
-            </div>
-        `;
-        document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
-    });
-});
-
-document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
-    loadCourses();
-})
-
-function loadCourses() {
-    fetch('/courses')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch courses');
-        }
-        return response.json();
-    })
-    .then(courses => {
-        const container = document.querySelector('#groupsList');
-        container.innerHTML = ''; // clear any existing cards
-        
-        courses.forEach(course => {
-            const cardHTML = `
-                <div class="group-card">
-                    <div class="group-header">
-                        <h3>${course.name}</h3>
-                        <p>Section: ${course.section}</p>
-                        <p>Term: ${course.term}</p>
-                        <p>End Date: ${course.endDate}</p>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
-        });
-    });
-}
