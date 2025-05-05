@@ -82,7 +82,7 @@ $("#btnLogin").on('click',function(){
                 text: 'Login successful',
                 icon: 'success',
                 showConfirmButton: true,
-                timer: null
+                
             }).then(() => {
                 console.log("Login success callback triggered");
                 
