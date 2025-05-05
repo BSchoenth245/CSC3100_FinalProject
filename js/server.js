@@ -415,7 +415,7 @@ app.delete('/deleteCourse', async (req, res) => {
       return res.status(400).json({ error: "User not authenticated" });
     }
   
-    const sqlGroups = `SELECT DISTINCT GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
+    const sqlGroups = `SELECT DISTINCT tblCourseGroups.GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
                       FROM tblGroupMembers 
                       LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
                       LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
