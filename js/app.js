@@ -29,6 +29,26 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
+        // loginUser(strUsername, strPassword).then(data => {
+        //     if (data.error) {
+        //         Swal.fire({
+        //             title: "There's a problem!",
+        //             text: data.error,
+        //             icon: "error"
+        //         })
+        //     } else if (!data.error) {
+        //         Swal.fire({
+        //             title: "Success",
+        //             text: data.message,
+        //             icon: "success"
+        //         })
+                document.querySelector('#Login').style.display = 'none';
+                document.querySelector('#Dashboard').style.display = 'block'
+        //     }
+        // })
+
+        // Clear password input
+    }
         // Show loading indicator
         const loadingBtn = Swal.fire({
             title: 'Logging in...',
@@ -110,7 +130,7 @@ $("#btnLogin").on('click',function(){
             });
         })
     document.querySelector('#txtLogPassword').value = ''
-    }
+    
 })
 
 $("#btnRegister").on('click',function(){
@@ -605,20 +625,20 @@ function fetchUserRole() {
 }
 
 // Call this function when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    fetchUserRole();
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetchUserRole();
 
-    // The toggle switch in the registration form should still work for new users
-    const userTypeToggle = document.getElementById('userTypeToggle');
-    const userTypeValue = document.getElementById('userTypeValue');
+//     // The toggle switch in the registration form should still work for new users
+//     const userTypeToggle = document.getElementById('userTypeToggle');
+//     const userTypeValue = document.getElementById('userTypeValue');
 
-    if (userTypeToggle && userTypeValue) {
-        userTypeToggle.addEventListener('change', function() {
-            userTypeValue.value = this.checked ? 'Student' : 'Staff';
-            console.log('Registration user type set to:', userTypeValue.value);
-        });
-    }
-});
+//     if (userTypeToggle && userTypeValue) {
+//         userTypeToggle.addEventListener('change', function() {
+//             userTypeValue.value = this.checked ? 'Student' : 'Staff';
+//             console.log('Registration user type set to:', userTypeValue.value);
+//         });
+//     }
+// });
 
 $(document).on('click', '.btn-add-contact', function () {
     const currentRow = $(this).closest('.contact-row');
@@ -692,27 +712,30 @@ $(document).on('click', '.btn-delete-contact', function () {
 
 // Add comments and comment tab functionality
 document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
-    const group = document.querySelector('#selGroup').value;
-    const feedback = document.querySelector('#txtFeedback').value.trim();
-    const visibility = document.querySelector('#commentVisibilityValue').value;
-    const commentsTab = document.querySelector('#Comments');
-
-    let blnError = false;
-    let strMessage = "";
-
-    // if (!group) {
-    //     blnError = true;
-    //     strMessage += "<p>Please select a group.</p>";
-    // }
-    if (!feedback) {
-        blnError = true;
-        strMessage += "<p>Feedback cannot be empty.</p>";
+    // Get form values using multiple approaches
+    const groupSelect = document.querySelector('#selGroup');
+    const feedbackTextarea = document.querySelector('#txtFeedback');
+    
+    // Get values with fallbacks
+    const group = groupSelect ? groupSelect.value : '';
+    
+    // Try multiple ways to get the textarea value
+    let feedback = '';
+    if (feedbackTextarea) {
+        feedback = feedbackTextarea.value || feedbackTextarea.textContent || '';
+        feedback = feedback.trim();
     }
-
-    if (blnError) {
+    
+    // For debugging
+    console.log('Group:', group);
+    console.log('Feedback:', feedback);
+    console.log('Feedback length:', feedback.length);
+    
+    // Validate feedback
+    if (!feedback) {
         Swal.fire({
             title: "Error",
-            html: strMessage,
+            html: "<p>Feedback cannot be empty.</p>",
             icon: "error"
         });
         return;
@@ -725,25 +748,36 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         timeStyle: "short"
     });
 
-    // Create comment element
+    // Create comment element with EXACTLY the same structure as received comments
     const commentHTML = `
-        <div class="group card">
-            <div class="group-header">
-                <h3><strong>Brock The Rock</strong></h3>
-                <span class="group-code"> Submitted on: ${formattedDate} </span>
+        <div class="comment-card received-comment">
+            <div class="comment-header">
+                <div class="comment-sender">Brock The Rock</div>
+                <div class="comment-timestamp">${formattedDate}</div>
             </div>
-            <p>"${feedback}"</p>
+            <div class="comment-group">To: ${group || 'All Groups'}</div>
+            <div class="comment-text">${feedback}</div>
         </div>
     `;
 
-    // Insert comment into View Comments tab
-    commentsTab.insertAdjacentHTML('beforeend', commentHTML);
+    // Remove empty state message if it exists
+    const emptyMessage = document.querySelector('#sentComments .empty-comments');
+    if (emptyMessage) {
+        emptyMessage.remove();
+    }
+
+    // Insert comment into Sent Comments column
+    document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
 
     // Clear form
-    document.querySelector('#selGroup').value = '';
-    document.querySelector('#txtFeedback').value = '';
-    document.querySelector('#commentVisibilityToggle').checked = true;
-    document.querySelector('#commentVisibilityValue').value = 'public';
+    if (groupSelect) groupSelect.value = '';
+    if (feedbackTextarea) feedbackTextarea.value = '';
+    
+    const visibilityToggle = document.querySelector('#commentVisibilityToggle');
+    if (visibilityToggle) visibilityToggle.checked = true;
+    
+    const visibilityValue = document.querySelector('#commentVisibilityValue');
+    if (visibilityValue) visibilityValue.value = 'public';
 
     Swal.fire({
         title: "Success!",
@@ -1021,68 +1055,6 @@ function getSurveyQuestions(groupName = '') {
     .catch(error => console.error('Error loading survey questions:', error));
 }
 
-// document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
-//     const group = document.querySelector('#selGroup').value;
-//     const feedback = document.querySelector('#txtFeedback').value.trim();
-//     const visibility = document.querySelector('#commentVisibilityValue').value;
-
-//     let blnError = false;
-//     let strMessage = "";
-
-//     if (!feedback) {
-//         blnError = true;
-//         strMessage += "<p>Feedback cannot be empty.</p>";
-//     }
-
-//     if (blnError) {
-//         Swal.fire({
-//             title: "Error",
-//             html: strMessage,
-//             icon: "error"
-//         });
-//         return;
-//     }
-
-//     // Get current date and time
-//     const now = new Date();
-//     const formattedDate = now.toLocaleString("en-US", {
-//         dateStyle: "long",
-//         timeStyle: "short"
-//     });
-
-//     // Create comment element
-//     const commentHTML = `
-//         <div class="comment-card sent-comment">
-//             <div class="comment-header">
-//                 <div class="comment-sender">Brock The Rock</div>
-//                 <div class="comment-timestamp">${formattedDate}</div>
-//             </div>
-//             <div class="comment-group">To: ${group || 'All Groups'}</div>
-//             <div class="comment-text">${feedback}</div>
-//         </div>
-//     `;
-
-//     // Remove empty state message if it exists
-//     const emptyMessage = document.querySelector('#sentComments .empty-comments');
-//     if (emptyMessage) {
-//         emptyMessage.remove();
-//     }
-
-//     // Insert comment into Sent Comments column
-//     document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
-
-//     // Clear form
-//     document.querySelector('#selGroup').value = '';
-//     document.querySelector('#txtFeedback').value = '';
-//     document.querySelector('#commentVisibilityToggle').checked = true;
-//     document.querySelector('#commentVisibilityValue').value = 'public';
-
-//     Swal.fire({
-//         title: "Success!",
-//         text: "Your feedback has been added.",
-//         icon: "success"
-//     });
-// });
 document.addEventListener('DOMContentLoaded', function() {
     // Add sample received comments
     const sampleReceivedComments = [
@@ -1094,7 +1066,6 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             sender: "Professor Johnson",
-            timestamp: "April 18, 2025 at 10:15 AM",
             group: "CSC3100-001",
             text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
         }
@@ -1124,30 +1095,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
-    loadCourses();
-})
-
-function loadCourses() {
-    fetch('/courses')
+function loadGroups() {
+    fetch('/groups')
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to fetch courses');
+            throw new Error('Failed to fetch groups');
         }
         return response.json();
     })
-    .then(courses => {
+    .then(groups => {
         const container = document.querySelector('#groupsList');
         container.innerHTML = ''; // clear any existing cards
         
-        courses.forEach(course => {
+        groups.forEach(group => {
             const cardHTML = `
                 <div class="group-card">
                     <div class="group-header">
-                        <h3>${course.name}</h3>
-                        <p>Section: ${course.section}</p>
-                        <p>Term: ${course.term}</p>
-                        <p>End Date: ${course.endDate}</p>
+                        <h3>${group.name}</h3>
+                        <p>Section: ${group.section}</p>
+                        <p>Term: ${group.term}</p>
+                        <p>End Date: ${group.endDate}</p>
                     </div>
                 </div>
             `;
