@@ -333,6 +333,14 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
+    else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
+    }
+    else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
+    }
 
     if (blnError) {
         Swal.fire({
@@ -351,7 +359,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         const courseTerm = `${courseSeason} ${courseYear}`;
         
         // Create course with the collected data
-        // createCourse(
+        // createcourse(
         //     document.querySelector('#txtCourseName').value,
         //     document.querySelector('#txtCourseSection').value,
         //     courseTerm,
@@ -667,6 +675,25 @@ document.addEventListener('DOMContentLoaded', function () {
             // Extract course and section from courseText (e.g., "CSC3100-001 - Web Development")
             const [courseCode, courseSection] = courseText.split(' - ')[0].split('-');
 
+            //UNCOMMENT THIS WHEN THE BACKEND IS READY!!
+            // createGroup(groupName, courseCode, courseSection, generateGroupCode()).then(data => {
+            //     if (data.error) {
+            //         Swal.fire({
+            //             title: "Error",
+            //             message: data.error,
+            //             icon: "error"
+            //         })
+            //     } else {
+            //         Swal.fire({
+            //             title: "Success",
+            //             text: "Group created successfully",
+            //             icon: "success"
+            //         });
+            //     }
+            // })
+
+
+
             // Build group card HTML
             const groupHTML = `
                 <div class="group-card">
@@ -703,6 +730,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function createGroup(groupName, courseName, courseSection, groupCode) {
+    fetch('/creategroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({groupName, courseName, courseSection, groupCode})
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+}
 
 // Utility function to generate a random group code (like ABC123)
 function generateGroupCode() {
