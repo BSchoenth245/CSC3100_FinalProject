@@ -131,7 +131,8 @@ $("#btnLogin").on('click',function(){
             // Clear password field for security
             document.querySelector('#txtLogPassword').value = '';
         });
-    });
+    }
+});
 
 
 
