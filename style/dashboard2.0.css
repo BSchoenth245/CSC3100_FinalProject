@@ -910,3 +910,203 @@ input[name="courseSection"] { width: 25%; }
     background-color: var(--text-color, #45a049);
 }
 
+/* Survey Question Styling */
+#InstructorSurveys .survey-card {
+    background-color: var(--input-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+#InstructorSurveys .survey-input-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+#InstructorSurveys .survey-input-group label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#InstructorSurveys .survey-input-group input,
+#InstructorSurveys .survey-input-group select {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: none;
+    background-color: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: 150ms ease;
+}
+
+#InstructorSurveys .survey-input-group input:hover,
+#InstructorSurveys .survey-input-group select:hover {
+    border-color: var(--accent-color);
+}
+
+#InstructorSurveys .survey-input-group input:focus,
+#InstructorSurveys .survey-input-group select:focus {
+    outline: none;
+    border-color: var(--text-color);
+}
+
+#InstructorSurveys div:has(input:focus) > label,
+#InstructorSurveys div:has(select:focus) > label {
+    background-color: var(--text-color);
+}
+
+#InstructorSurveys #btnAddSurveyQuestion {
+    margin-top: 10px;
+    border: none;
+    border-radius: 1000px;
+    padding: .85em 4em;
+    background-color: var(--accent-color);
+    color: var(--base-color);
+    font: inherit;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 150ms ease;
+    width: 100%;
+}
+
+#InstructorSurveys #btnAddSurveyQuestion:hover {
+    background-color: var(--text-color);
+}
+
+#InstructorSurveys #btnAddSurveyQuestion:focus {
+    outline: none;
+    background-color: var(--text-color);
+}
+
+#InstructorSurveys hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid var(--dashboard-input-color);
+}
+
+/* Survey question preview styling */
+#surveyQuestionPreviewList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.survey-question-card {
+    background-color: var(--dashboard-input-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.survey-question-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.survey-question-type {
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+.survey-question-text {
+    margin-bottom: 10px;
+}
+
+.survey-question-group {
+    font-size: 0.9em;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.survey-question-visibility {
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.survey-question-visibility svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-color);
+}
+/* Question Type Toggle Styling */
+.question-type-toggle-container {
+    margin: 25px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.toggle-label-text {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.question-type-toggle {
+    position: relative;
+}
+
+.question-type-toggle .toggle-label {
+    display: block;
+    width: 60px;
+    height: 30px;
+    background-color: var(--dashboard-input-color);
+    border-radius: 30px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.question-type-toggle .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    transition: 0.3s;
+    background-color: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* When toggle is checked (Open Response) */
+.question-type-toggle .toggle-input:checked + .toggle-label .toggle-slider {
+    transform: translateX(0);
+}
+
+/* When toggle is not checked (Likert Scale) */
+.question-type-toggle .toggle-input:not(:checked) + .toggle-label .toggle-slider {
+    transform: translateX(50px);
+}
+
+/* Focus styles for accessibility */
+.question-type-toggle .toggle-input:focus + .toggle-label {
+    box-shadow: 0 0 1px var(--accent-color);
+}
+
+/* Active state styling */
+.question-type-toggle-container .active-option {
+    color: var(--accent-color);
+    font-weight: 600;
+}
