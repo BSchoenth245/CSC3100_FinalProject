@@ -523,7 +523,7 @@ app.get('/members', (req,res) => {
 
   app.post('/addSocial', async (req, res) => {
     try {
-      const { SocialType, Username, isPrivate } = req.body
+      const { SocialType, Username } = req.body
       const SocialID = uuidv4()
       const insertSql = `INSERT INTO tblSocials VALUES (?,?,?,?)`
       

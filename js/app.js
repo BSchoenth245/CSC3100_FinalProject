@@ -165,15 +165,15 @@ $(document).on('keypress', function(e) {
 });
 
     // Add event listeners to buttons
-    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-            document.querySelector('#Login').style.display = 'none';
-            document.querySelector('#Register').style.display = 'block';
-        })
+document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+        document.querySelector('#Login').style.display = 'none';
+        document.querySelector('#Register').style.display = 'block';
+})
 
-    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    });
+document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+});
     
 $(document).ready(function() {
     // Hide all tab content except the first one initially
@@ -523,6 +523,32 @@ $(document).on('click', '.btn-add-contact', function () {
         return;
     }
 
+    // Fetch request to test the addSocial endpoint
+fetch('http://localhost:8000/addSocial', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      SocialType: contactType,
+      Username: contactValue
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        console.error('Error details:', errorData);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    console.log('Social ID:', data.SocialID);
+
+  
+
     // Generate a styled static row
     const staticRow = `
         <div class="contact-row static-contact ${contactType}">
@@ -540,6 +566,11 @@ $(document).on('click', '.btn-add-contact', function () {
     // Clear input row fields
     currentRow.find('.contact-type').val('discord'); // default reset
     currentRow.find('.contact-input').val('');
+
+    })
+    .catch(error => {
+    console.error('Error:', error);
+    });
 });
 
 $(document).on('click', '.btn-delete-contact', function () {
