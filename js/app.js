@@ -143,8 +143,7 @@ $("#btnLogin").on('click', function(event) {
             // Clear password field for security
             document.querySelector('#txtLogPassword').value = '';
         });
-    }
-});
+    });
 
 
 $("#btnRegister").on('click',function(){
