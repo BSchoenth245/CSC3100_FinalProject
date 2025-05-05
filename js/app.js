@@ -1,7 +1,4 @@
-$("#btnLogin").on('click', function(e) {
-    // Prevent default form submission
-    e.preventDefault();
-    
+$("#btnLogin").on('click',function(){
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -43,7 +40,7 @@ $("#btnLogin").on('click', function(e) {
             showConfirmButton: false
         });
         
-        fetch('http://localhost:8000/login', {
+        fetch('http://localhost:8000/login',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -53,28 +50,29 @@ $("#btnLogin").on('click', function(e) {
                 password: strPassword 
             })
         })
-        .then(response => {
-            // First check if there's content to parse as JSON
-            const contentType = response.headers.get('content-type');
-            
-            if (!response.ok) {
-                // For error responses, handle both JSON and non-JSON responses
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json().then(data => {
-                        throw new Error(data.error || `Login failed: ${response.status}`);
-                    });
-                } else {
-                    throw new Error(`Login failed: ${response.status} ${response.statusText}`);
-                }
-            }
-
-            // For successful responses, ensure we have JSON before parsing
-            if (contentType && contentType.includes('application/json')) {
-                return response.json();
-            } else {
-                throw new Error('Server returned non-JSON response');
-            }
-        })
+        
+.then(response => {
+    // First check if there's content to parse as JSON
+    const contentType = response.headers.get('content-type');
+    
+    if (!response.ok) {
+        // For error responses, handle both JSON and non-JSON responses
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(data => {
+                throw new Error(data.error || `Login failed: ${response.status}`);
+            });
+        } else {
+            throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+        }
+    }
+    
+    // For successful responses, ensure we have JSON before parsing
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+        throw new Error('Server returned non-JSON response');
+    }
+})
         .then(data => {
             loadingBtn.close();
             
@@ -83,13 +81,21 @@ $("#btnLogin").on('click', function(e) {
                 title: 'Success!',
                 text: 'Login successful',
                 icon: 'success',
-                showConfirmButton: true,
+                showConfirmButton: false,
+                timer: 1500
             }).then(() => {
                 console.log("Login success callback triggered");
                 
-                // Switch visibility of login and dashboard divs
-                document.querySelector('#divLogin').style.display = 'none';
-                document.querySelector('#divDashboard').style.display = 'block';
+                // Get references to elements
+                const loginDiv = document.querySelector('#Login');
+                const dashboardDiv = document.querySelector('#Dashboard');
+                
+                console.log("Login div:", loginDiv);
+                console.log("Dashboard div:", dashboardDiv);
+                
+                // Toggle visibility
+                if (loginDiv) loginDiv.style.display = 'none';
+                if (dashboardDiv) dashboardDiv.style.display = 'block';
                 
                 console.log("Display properties set");
                 
@@ -103,38 +109,11 @@ $("#btnLogin").on('click', function(e) {
                 }
             });
         })
-        .catch(error => {
-            // Close the loading alert when there's an error
-            loadingBtn.close();
-            
-            // Show error message
-            Swal.fire({
-                title: 'Error',
-                text: error.message,
-                icon: 'error'
-            });
-            
-            console.error('Login error:', error);
-        })
-        .finally(() => {
-            // This ensures the loading alert is closed even if something unexpected happens
-            if (Swal.isVisible() && Swal.getTitle().textContent === 'Logging in...') {
-                loadingBtn.close();
-            }
-            
-            // Clear password field for security
-            document.querySelector('#txtLogPassword').value = '';
-        });
+    document.querySelector('#txtLogPassword').value = ''
     }
-    
-    // Prevent event bubbling
-    return false;
-});
+})
 
-
-$("#btnRegister").on('click',function(e){
-    e.preventDefault(); // Prevent form submission
-    
+$("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
@@ -206,17 +185,15 @@ $("#btnRegister").on('click',function(e){
         });
 
         // Clear registration inputs and redirect to login page
-        document.querySelector('#txtRegUsername').value = '';
-        document.querySelector('#txtFirstName').value = '';
-        document.querySelector('#txtLastName').value = '';
-        document.querySelector('#txtRegPassword').value = '';
-        document.querySelector('#txtConfirmPassword').value = '';
-        
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    }   
+    document.querySelector('#txtRegUsername').value = '';
+    document.querySelector('#txtFirstName').value = '';
+    document.querySelector('#txtLastName').value = '';
+    document.querySelector('#txtRegPassword').value = '';
+    document.querySelector('#txtConfirmPassword').value = '';
     
-    return false; // Prevent event bubbling
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+}   
 })
 
 // Reveals/hides password on the login page
@@ -249,15 +226,15 @@ $(document).on('keypress', function(e) {
 });
 
     // Add event listeners to buttons
-document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-        document.querySelector('#Login').style.display = 'none';
-        document.querySelector('#Register').style.display = 'block';
-})
+    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+            document.querySelector('#Login').style.display = 'none';
+            document.querySelector('#Register').style.display = 'block';
+        })
 
-document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-    document.querySelector('#Register').style.display = 'none';
-    document.querySelector('#Login').style.display = 'block';
-});
+    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+        document.querySelector('#Register').style.display = 'none';
+        document.querySelector('#Login').style.display = 'block';
+    });
     
 $(document).ready(function() {
     // Hide all tab content except the first one initially
@@ -379,13 +356,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.querySelector('#btnCreateCourse').addEventListener('click', function(event) {
+document.querySelector('#btnCreateCourse').addEventListener('click', function() {
     let blnError = false;
     let strMessage = "";
 
     if (document.querySelector('#txtCourseName').value.trim().length < 1) {
         blnError = true;
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
     }
     if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
         blnError = true;
@@ -413,14 +390,13 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function(ev
     }
     
     if (document.querySelector('#dateEndDate').value === "") {
-
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
-    // else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
-    //     blnError = true;
-    //     strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
-    // }
+    else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
+    }
     else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
@@ -472,18 +448,18 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function(ev
         .then(data => {
             console.log('Success:', data);
             console.log('Course ID:', data.CourseID);
-
-            Swal.fire({
-                title: "Success!",
-                text: "Course created successfully.",
-                icon: "success"
-            });
         })
         .catch(error => {
             console.error('Error:', error);
         });
   
-        
+
+        // #TODO: delete this when the backend is ready
+        Swal.fire({
+            title: "Success!",
+            text: "Course created successfully.",
+            icon: "success"
+        });
         
         // Optionally insert card into DOM here
         
@@ -628,20 +604,20 @@ function fetchUserRole() {
 }
 
 // Call this function when the page loads
-// document.addEventListener('DOMContentLoaded', function() {
-//     fetchUserRole();
+document.addEventListener('DOMContentLoaded', function() {
+    fetchUserRole();
 
-//     // The toggle switch in the registration form should still work for new users
-//     const userTypeToggle = document.getElementById('userTypeToggle');
-//     const userTypeValue = document.getElementById('userTypeValue');
+    // The toggle switch in the registration form should still work for new users
+    const userTypeToggle = document.getElementById('userTypeToggle');
+    const userTypeValue = document.getElementById('userTypeValue');
 
-//     if (userTypeToggle && userTypeValue) {
-//         userTypeToggle.addEventListener('change', function() {
-//             userTypeValue.value = this.checked ? 'Student' : 'Staff';
-//             console.log('Registration user type set to:', userTypeValue.value);
-//         });
-//     }
-// });
+    if (userTypeToggle && userTypeValue) {
+        userTypeToggle.addEventListener('change', function() {
+            userTypeValue.value = this.checked ? 'Student' : 'Staff';
+            console.log('Registration user type set to:', userTypeValue.value);
+        });
+    }
+});
 
 $(document).on('click', '.btn-add-contact', function () {
     const currentRow = $(this).closest('.contact-row');
@@ -658,32 +634,6 @@ $(document).on('click', '.btn-add-contact', function () {
         });
         return;
     }
-
-    // Fetch request to test the addSocial endpoint
-fetch('http://localhost:8000/addSocial', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      SocialType: contactType,
-      Username: contactValue
-    })
-  })
-  .then(response => {
-    if (!response.ok) {
-      return response.json().then(errorData => {
-        console.error('Error details:', errorData);
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      });
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Success:', data);
-    console.log('Social ID:', data.SocialID);
-
-  
 
     // Generate a styled static row
     const staticRow = `
@@ -702,11 +652,6 @@ fetch('http://localhost:8000/addSocial', {
     // Clear input row fields
     currentRow.find('.contact-type').val('discord'); // default reset
     currentRow.find('.contact-input').val('');
-
-    })
-    .catch(error => {
-    console.error('Error:', error);
-    });
 });
 
 $(document).on('click', '.btn-delete-contact', function () {
@@ -715,30 +660,22 @@ $(document).on('click', '.btn-delete-contact', function () {
 
 // Add comments and comment tab functionality
 document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
-    // Get form values using multiple approaches
-    const groupSelect = document.querySelector('#selGroup');
-    const feedbackTextarea = document.querySelector('#txtFeedback');
-    
-    // Get values with fallbacks
-    const group = groupSelect ? groupSelect.value : '';
-    
-    // Try multiple ways to get the textarea value
-    let feedback = '';
-    if (feedbackTextarea) {
-        feedback = feedbackTextarea.value || feedbackTextarea.textContent || '';
-        feedback = feedback.trim();
-    }
-    
-    // For debugging
-    console.log('Group:', group);
-    console.log('Feedback:', feedback);
-    console.log('Feedback length:', feedback.length);
-    
-    // Validate feedback
+    const group = document.querySelector('#selGroup').value;
+    const feedback = document.querySelector('#txtFeedback').value.trim();
+    const visibility = document.querySelector('#commentVisibilityValue').value;
+
+    let blnError = false;
+    let strMessage = "";
+
     if (!feedback) {
+        blnError = true;
+        strMessage += "<p>Feedback cannot be empty.</p>";
+    }
+
+    if (blnError) {
         Swal.fire({
             title: "Error",
-            html: "<p>Feedback cannot be empty.</p>",
+            html: strMessage,
             icon: "error"
         });
         return;
@@ -751,9 +688,9 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         timeStyle: "short"
     });
 
-    // Create comment element with EXACTLY the same structure as received comments
+    // Create comment element with proper classes for sent comments
     const commentHTML = `
-        <div class="comment-card received-comment">
+        <div class="comment-card sent-comment">
             <div class="comment-header">
                 <div class="comment-sender">Brock The Rock</div>
                 <div class="comment-timestamp">${formattedDate}</div>
@@ -773,14 +710,10 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
     document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
 
     // Clear form
-    if (groupSelect) groupSelect.value = '';
-    if (feedbackTextarea) feedbackTextarea.value = '';
-    
-    const visibilityToggle = document.querySelector('#commentVisibilityToggle');
-    if (visibilityToggle) visibilityToggle.checked = true;
-    
-    const visibilityValue = document.querySelector('#commentVisibilityValue');
-    if (visibilityValue) visibilityValue.value = 'public';
+    document.querySelector('#selGroup').value = '';
+    document.querySelector('#txtFeedback').value = '';
+    document.querySelector('#commentVisibilityToggle').checked = true;
+    document.querySelector('#commentVisibilityValue').value = 'public';
 
     Swal.fire({
         title: "Success!",
@@ -788,6 +721,7 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         icon: "success"
     });
 });
+
 
 // Functionality to the "Add Group" and group tabs
 document.addEventListener('DOMContentLoaded', function () {
@@ -865,8 +799,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             </ul>
                         </div>
                         <div class="card-actions">
-                            <button type="button">Take Survey</button>
-                            <button type="button">Leave Group</button>
+                            <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+                            <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
                         </div>
                     </div>
                 </div>
@@ -948,44 +882,50 @@ function loadCourses() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Handle Take Survey button clicks
-    document.querySelectorAll('.group-card .card-actions button').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const btn = e.target;
+    // Use event delegation for dynamically added buttons
+    document.querySelector('#Groups').addEventListener('click', function(e) {
+        // Check if the clicked element is a Take Survey button
+        if (e.target.classList.contains('btn-take-survey') || 
+            (e.target.parentElement && e.target.parentElement.classList.contains('btn-take-survey'))) {
+            
+            const btn = e.target.classList.contains('btn-take-survey') ? e.target : e.target.parentElement;
             const card = btn.closest('.group-card');
-
-            if (btn.textContent === 'Take Survey') {
-                const groupName = card.querySelector('.group-header h3').textContent;
-                
-                // Instead of just showing an alert, call the getSurveyQuestions function
-                getSurveyQuestions(groupName);
-            }
-
-			if (btn.textContent === 'Leave Group') {
-				const groupName = card.querySelector('.group-header h3').textContent;
-
-				Swal.fire({
-					title: 'Are you sure?',
-					text: `Do you want to leave "${groupName}"?`,
-					icon: 'warning',
-					showCancelButton: true,
-					confirmButtonText: 'Yes, leave group',
-					cancelButtonText: 'Cancel'
-				}).then((result) => {
-					if (result.isConfirmed) {
-						card.remove();
-
-						Swal.fire({
-							title: 'Left Group',
-							text: `You have left "${groupName}".`,
-							icon: 'success'
-						});
-					}
-				});
-			}
-		});
-	});
+            const groupName = card.querySelector('.group-header h3').textContent;
+            
+            // Call the survey function
+            getSurveyQuestions(groupName);
+        }
+        
+        // Check if the clicked element is a Leave Group button
+        if (e.target.classList.contains('btn-leave-group') || 
+            (e.target.parentElement && e.target.parentElement.classList.contains('btn-leave-group'))) {
+            
+            const btn = e.target.classList.contains('btn-leave-group') ? e.target : e.target.parentElement;
+            const card = btn.closest('.group-card');
+            const groupName = card.querySelector('.group-header h3').textContent;
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you want to leave "${groupName}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, leave group',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    card.remove();
+                    
+                    Swal.fire({
+                        title: 'Left Group',
+                        text: `You have left "${groupName}".`,
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+    });
 });
+
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     loadCourses();
@@ -1058,6 +998,68 @@ function getSurveyQuestions(groupName = '') {
     .catch(error => console.error('Error loading survey questions:', error));
 }
 
+// document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
+//     const group = document.querySelector('#selGroup').value;
+//     const feedback = document.querySelector('#txtFeedback').value.trim();
+//     const visibility = document.querySelector('#commentVisibilityValue').value;
+
+//     let blnError = false;
+//     let strMessage = "";
+
+//     if (!feedback) {
+//         blnError = true;
+//         strMessage += "<p>Feedback cannot be empty.</p>";
+//     }
+
+//     if (blnError) {
+//         Swal.fire({
+//             title: "Error",
+//             html: strMessage,
+//             icon: "error"
+//         });
+//         return;
+//     }
+
+//     // Get current date and time
+//     const now = new Date();
+//     const formattedDate = now.toLocaleString("en-US", {
+//         dateStyle: "long",
+//         timeStyle: "short"
+//     });
+
+//     // Create comment element
+//     const commentHTML = `
+//         <div class="comment-card sent-comment">
+//             <div class="comment-header">
+//                 <div class="comment-sender">Brock The Rock</div>
+//                 <div class="comment-timestamp">${formattedDate}</div>
+//             </div>
+//             <div class="comment-group">To: ${group || 'All Groups'}</div>
+//             <div class="comment-text">${feedback}</div>
+//         </div>
+//     `;
+
+//     // Remove empty state message if it exists
+//     const emptyMessage = document.querySelector('#sentComments .empty-comments');
+//     if (emptyMessage) {
+//         emptyMessage.remove();
+//     }
+
+//     // Insert comment into Sent Comments column
+//     document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
+
+//     // Clear form
+//     document.querySelector('#selGroup').value = '';
+//     document.querySelector('#txtFeedback').value = '';
+//     document.querySelector('#commentVisibilityToggle').checked = true;
+//     document.querySelector('#commentVisibilityValue').value = 'public';
+
+//     Swal.fire({
+//         title: "Success!",
+//         text: "Your feedback has been added.",
+//         icon: "success"
+//     });
+// });
 document.addEventListener('DOMContentLoaded', function() {
     // Add sample received comments
     const sampleReceivedComments = [
@@ -1069,6 +1071,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             sender: "Professor Johnson",
+            timestamp: "April 18, 2025 at 10:15 AM",
             group: "CSC3100-001",
             text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
         }
@@ -1098,44 +1101,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function loadGroups() {
-    fetch('/groups')
+document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
+    loadCourses();
+})
+
+function loadCourses() {
+    fetch('/courses')
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to fetch groups');
+            throw new Error('Failed to fetch courses');
         }
         return response.json();
     })
-    .then(groups => {
+    .then(courses => {
         const container = document.querySelector('#groupsList');
         container.innerHTML = ''; // clear any existing cards
         
-        groups.forEach(group => {
+        courses.forEach(course => {
             const cardHTML = `
                 <div class="group-card">
                     <div class="group-header">
-                        <h3>${group.GroupName}</h3>
-                        <span class="group-code">Code: ${group.GroupID}</span>
-                    </div>
-                    <div class="group-info">
-                        <p><strong>Course:</strong> <span class="courseName">${group.CourseName}</span></p>
-                        <p><strong>Section:</strong> <span class="courseSection">${group.CourseSection}</span></p>
-                        <div class="members-section">
-                            <button class="collapse-btn" onclick="toggleMembers(this)">
-                                <strong>Members</strong>
-                                <span class="collapse-icon">▼</span>
-                            </button>
-                            <ul class="member-list collapsed">
-                                <li>Group creator placeholder</li>
-                            </ul>
-                        </div>
-                        <div class="card-actions">
-                            <button type="button">Take Survey</button>
-                            <button type="button">Leave Group</button>
-                        </div>
+                        <h3>${course.name}</h3>
+                        <p>Section: ${course.section}</p>
+                        <p>Term: ${course.term}</p>
+                        <p>End Date: ${course.endDate}</p>
                     </div>
                 </div>
-            `
+            `;
             container.insertAdjacentHTML('beforeend', cardHTML);
         });
     });
