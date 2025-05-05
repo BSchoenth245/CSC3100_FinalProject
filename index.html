@@ -175,7 +175,9 @@
                                     </ul>
                                 </div>
                                 <div class="card-actions">
-                                    <button type="button" class="btn-take-survey">Take Survey</button>
+                                    <!-- make the data group id dynamic -->
+                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+
                                     <button type="button" class="btn-leave-group">Leave Group</button>
                                 </div>
                             </div>
@@ -201,8 +203,9 @@
                                     </ul>
                                 </div>
                                 <div class="card-actions">
-                                    <button type="button" class="btn-take-survey">Take Survey</button>
-                                    <button type="button" class="btn-leave-group">Leave Group</button>
+                                    <!-- make the data-group-id dynamic -->
+                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+                                    <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
                                 </div>
                             </div>
                         </div>
@@ -240,40 +243,6 @@
                                 </form> 
                             </div>
                     </div> -->
-                    <h2>Create New Group</h2>
-                    <div class="dashboard-stats">
-                        <div id="createGroupSection">
-                            <form>
-                                <div>
-                                    <label for="txtGroupName">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                            width="24px" fill="#e8eaed">
-                                            <path
-                                                d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Z" />
-                                        </svg>
-                                    </label>
-                                    <input type="text" id="txtGroupName" placeholder="Enter Group Name" />
-                                </div>
-                                <div>
-                                    <label for="selCourseName">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                            width="24px" fill="#e8eaed">
-                                            <path
-                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
-                                        </svg>
-                                    </label>
-                                    <select id="selCourseName" aria-label="Select a course">
-                                        <option value="">Select Course</option>
-                                        <option value="CSC3100">CSC3100-001 - Web Development</option>
-                                        <option value="CSC4150">CSC4150-003 - Database Systems</option>
-                                        <option value="CSC2200">CSC2200-005 - Data Structures</option>
-                                    </select>
-                                </div>
-                                <button type="button">Create Group</button>
-                            </form>
-                        </div>
-                    </div>
-
                     <h2>Create New Course</h2>
                     <div class="dashboard-stats">
                         <div id="createCourse">
@@ -287,6 +256,16 @@
                                         </svg>
                                     </label>
                                     <input type="text" id="txtCourseName" placeholder="Enter Course Name" />
+                                </div>
+                                <div>
+                                    <label for="txtCourseNumber">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                        </svg>
+                                    </label>
+                                    <input type="text" id="txtCourseNumber" placeholder="Enter Course Number" />
                                     <h3 class="dash-separator">-</h3>
                                     <input type="text" id="txtCourseSection" name="courseSection"
                                         placeholder="Section" />
@@ -335,26 +314,67 @@
                         </div>
                     </div>
 
+                    <h2>Create New Group</h2>
+                    <div class="dashboard-stats">
+                        <div id="createGroupSection">
+                            <form>
+                                <div>
+                                    <label for="txtGroupName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Z" />
+                                        </svg>
+                                    </label>
+                                    <input type="text" id="txtGroupName" placeholder="Enter Group Name" />
+                                </div>
+                                <div>
+                                    <label for="selCourseName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                        </svg>
+                                    </label>
+                                    <select id="selCourseName" aria-label="Select a course">
+                                        <option value="">Select Course</option>
+                                        <option value="CSC3100">CSC3100-001 - Web Development</option>
+                                        <option value="CSC4150">CSC4150-003 - Database Systems</option>
+                                        <option value="CSC2200">CSC2200-005 - Data Structures</option>
+                                    </select>
+                                </div>
+                                <button type="button" id="btnCreateGroup">Create Group</button>
+                            </form>
+                        </div>
+                    </div>
+
+
+
                 </div>
 
                 <div id="Comments" class="tab-content">
-                    <!-- Settings tab content -->
-                    <h2>View Comments Here</h2>
-                    <div class="settings-options" -->
-                        <!-- Settings options here -->
-                        <!-- this was an example created for our view comment tab-->
-                        <form>
-                            <div class="group card">
-                                <div class="group-header">
-                                    <h3><strong>Brock The Rock</strong></h3>
-                                    <span class="group-code"> Submitted on: April 20, 2025 at 4:20 PM </span>
-                                </div>
-                                <p>"I think the boys did their best, but like next time I think we should just lock in."
-                                </p>
+                    <h2>View Comments</h2>
+                    <div class="comments-container">
+                        <!-- Received Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Received Comments</div>
+                            <div id="receivedComments">
+                                <!-- Received comments will be dynamically added here -->
+                                <div class="empty-comments">No received comments yet</div>
                             </div>
+                        </div>
+                        
+                        <!-- Sent Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Sent Comments</div>
+                            <div id="sentComments">
+                                <!-- Sent comments will be dynamically added here -->
+                                <div class="empty-comments">No sent comments yet</div>
+                            </div>
+                        </div>
                     </div>
-                    </form>
                 </div>
+                
 
                 <div id="addNewComments" class="tab-content">
                     <!-- Settings tab content -->
@@ -475,7 +495,10 @@
             </div>
         </div>
     </div>
-    
+    <!-- Add this right before the closing </body> tag -->
+    <div id="divStudentSurvey" class="survey-modal" style="display:none;">
+        <!-- Survey content will be loaded here -->
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

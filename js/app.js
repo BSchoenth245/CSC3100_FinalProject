@@ -754,21 +754,18 @@ function loadCourses() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// Handle Take Survey button clicks
-	document.querySelectorAll('.group-card .card-actions button').forEach(button => {
-		button.addEventListener('click', (e) => {
-			const btn = e.target;
-			const card = btn.closest('.group-card');
+    // Handle Take Survey button clicks
+    document.querySelectorAll('.group-card .card-actions button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const btn = e.target;
+            const card = btn.closest('.group-card');
 
-			if (btn.textContent === 'Take Survey') {
-				const groupName = card.querySelector('.group-header h3').textContent;
-
-				Swal.fire({
-					title: 'Survey Started',
-					text: `You clicked "Take Survey" for ${groupName}.`,
-					icon: 'info'
-				});
-			}
+            if (btn.textContent === 'Take Survey') {
+                const groupName = card.querySelector('.group-header h3').textContent;
+                
+                // Instead of just showing an alert, call the getSurveyQuestions function
+                getSurveyQuestions(groupName);
+            }
 
 			if (btn.textContent === 'Leave Group') {
 				const groupName = card.querySelector('.group-header h3').textContent;
@@ -801,36 +798,171 @@ document.addEventListener('DOMContentLoaded', () => {
 //   });
 
 // Survey fully created, now we need to add the functionality to the button
-document.querySelector('#btn-take-survey')?.addEventListener('click', () => {
-    getSurveyQuestions()
-})
+// Mock group members for demonstration
+const mockGroupMembers = [
+    { name: "John Smith" },
+    { name: "Sarah Johnson" },
+    { name: "Mike Wilson" },
+    { name: "Emily Davis" }
+];
 
-document.addEventListener('click', (event) => {
-    if (event.target && event.target.id === 'btnBackToDashboardSurvey') {
-        document.querySelector('#divStudentSurvey').querySelectorAll('input, textarea, select').forEach(element => {
-            if (element.type === 'checkbox' || element.type === 'radio') {
-                element.checked = false;
-            } else {
-                element.value = '';
-            }
-        });
-        document.querySelector('#divStudentSurvey').style.display = 'none';
-        document.querySelector('#divStudentDashboard').style.display = 'block';
-    }
-});
-
-function getSurveyQuestions() {
+function getSurveyQuestions(groupName = '') {
     fetch('./survey.html')
     .then(response => response.text())
     .then(data => {
-        document.querySelector('#divStudentSurvey').innerHTML = data
-        let strHTML = '<option disabled selected hidden >Select a group member</option>'
+        // Create a modal container for the survey
+        const modalContainer = document.createElement('div');
+        modalContainer.className = 'survey-modal';
+        modalContainer.innerHTML = `
+            <div class="survey-modal-content">
+                <div class="survey-modal-header">
+                    <h2>Survey for ${groupName}</h2>
+                    <button class="survey-modal-close">&times;</button>
+                </div>
+                <div class="survey-modal-body">
+                    ${data}
+                </div>
+            </div>
+        `;
+        
+        // Add the modal to the body
+        document.body.appendChild(modalContainer);
+        
+        // Populate the group member dropdown
+        let strHTML = '<option disabled selected hidden>Select a group member</option>';
         mockGroupMembers.forEach(member => {
-            strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`
-        })
-        document.querySelector('#selGroupMemberSurvey').innerHTML = strHTML
-        document.querySelector('#divStudentSurvey').style.display = 'block'
-        document.querySelector('#divStudentDashboard').style.display = 'none'
+            strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`;
+        });
+        
+        // Find and populate the select element within the modal
+        const selectElement = modalContainer.querySelector('#selGroupMemberSurvey');
+        if (selectElement) {
+            selectElement.innerHTML = strHTML;
+        }
+        
+        // Add event listener to close button
+        const closeButton = modalContainer.querySelector('.survey-modal-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => {
+                document.body.removeChild(modalContainer);
+            });
+        }
+        
+        // Add event listener to the back button if it exists in the survey
+        const backButton = modalContainer.querySelector('#btnBackToDashboardSurvey');
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                document.body.removeChild(modalContainer);
+            });
+        }
+        
+        // Show the modal with animation
+        setTimeout(() => {
+            modalContainer.classList.add('active');
+        }, 10);
     })
-    .catch(error => console.error('Error loading survey questions:', error))
+    .catch(error => console.error('Error loading survey questions:', error));
 }
+
+// document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
+//     const group = document.querySelector('#selGroup').value;
+//     const feedback = document.querySelector('#txtFeedback').value.trim();
+//     const visibility = document.querySelector('#commentVisibilityValue').value;
+
+//     let blnError = false;
+//     let strMessage = "";
+
+//     if (!feedback) {
+//         blnError = true;
+//         strMessage += "<p>Feedback cannot be empty.</p>";
+//     }
+
+//     if (blnError) {
+//         Swal.fire({
+//             title: "Error",
+//             html: strMessage,
+//             icon: "error"
+//         });
+//         return;
+//     }
+
+//     // Get current date and time
+//     const now = new Date();
+//     const formattedDate = now.toLocaleString("en-US", {
+//         dateStyle: "long",
+//         timeStyle: "short"
+//     });
+
+//     // Create comment element
+//     const commentHTML = `
+//         <div class="comment-card sent-comment">
+//             <div class="comment-header">
+//                 <div class="comment-sender">Brock The Rock</div>
+//                 <div class="comment-timestamp">${formattedDate}</div>
+//             </div>
+//             <div class="comment-group">To: ${group || 'All Groups'}</div>
+//             <div class="comment-text">${feedback}</div>
+//         </div>
+//     `;
+
+//     // Remove empty state message if it exists
+//     const emptyMessage = document.querySelector('#sentComments .empty-comments');
+//     if (emptyMessage) {
+//         emptyMessage.remove();
+//     }
+
+//     // Insert comment into Sent Comments column
+//     document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
+
+//     // Clear form
+//     document.querySelector('#selGroup').value = '';
+//     document.querySelector('#txtFeedback').value = '';
+//     document.querySelector('#commentVisibilityToggle').checked = true;
+//     document.querySelector('#commentVisibilityValue').value = 'public';
+
+//     Swal.fire({
+//         title: "Success!",
+//         text: "Your feedback has been added.",
+//         icon: "success"
+//     });
+// });
+document.addEventListener('DOMContentLoaded', function() {
+    // Add sample received comments
+    const sampleReceivedComments = [
+        {
+            sender: "Jane Smith",
+            timestamp: "April 19, 2025 at 2:30 PM",
+            group: "Team Awesome",
+            text: "Great job on the presentation yesterday! Your explanation of the database schema was very clear."
+        },
+        {
+            sender: "Professor Johnson",
+            timestamp: "April 18, 2025 at 10:15 AM",
+            group: "CSC3100-001",
+            text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
+        }
+    ];
+
+    // Remove empty state message if adding sample comments
+    if (sampleReceivedComments.length > 0) {
+        const emptyMessage = document.querySelector('#receivedComments .empty-comments');
+        if (emptyMessage) {
+            emptyMessage.remove();
+        }
+    }
+
+    // Add sample received comments to the received column
+    sampleReceivedComments.forEach(comment => {
+        const commentHTML = `
+            <div class="comment-card received-comment">
+                <div class="comment-header">
+                    <div class="comment-sender">${comment.sender}</div>
+                    <div class="comment-timestamp">${comment.timestamp}</div>
+                </div>
+                <div class="comment-group">From: ${comment.group}</div>
+                <div class="comment-text">${comment.text}</div>
+            </div>
+        `;
+        document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
+    });
+});
