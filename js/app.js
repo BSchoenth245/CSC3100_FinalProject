@@ -1,5 +1,7 @@
-$("#btnLogin").on('click', function(event) {
-    event.preventDefault();
+$("#btnLogin").on('click', function(e) {
+    // Prevent default form submission
+    e.preventDefault();
+    
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -30,26 +32,6 @@ $("#btnLogin").on('click', function(event) {
     }
     // Success message
     else{
-        // loginUser(strUsername, strPassword).then(data => {
-        //     if (data.error) {
-        //         Swal.fire({
-        //             title: "There's a problem!",
-        //             text: data.error,
-        //             icon: "error"
-        //         })
-        //     } else if (!data.error) {
-        //         Swal.fire({
-        //             title: "Success",
-        //             text: data.message,
-        //             icon: "success"
-        //         })
-                document.querySelector('#Login').style.display = 'none';
-                document.querySelector('#Dashboard').style.display = 'block'
-        //     }
-        // })
-
-        // Clear password input
-    }
         // Show loading indicator
         const loadingBtn = Swal.fire({
             title: 'Logging in...',
@@ -143,10 +125,16 @@ $("#btnLogin").on('click', function(event) {
             // Clear password field for security
             document.querySelector('#txtLogPassword').value = '';
         });
-    });
+    }
+    
+    // Prevent event bubbling
+    return false;
+});
 
 
-$("#btnRegister").on('click',function(){
+$("#btnRegister").on('click',function(e){
+    e.preventDefault(); // Prevent form submission
+    
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
@@ -218,15 +206,17 @@ $("#btnRegister").on('click',function(){
         });
 
         // Clear registration inputs and redirect to login page
-    document.querySelector('#txtRegUsername').value = '';
-    document.querySelector('#txtFirstName').value = '';
-    document.querySelector('#txtLastName').value = '';
-    document.querySelector('#txtRegPassword').value = '';
-    document.querySelector('#txtConfirmPassword').value = '';
+        document.querySelector('#txtRegUsername').value = '';
+        document.querySelector('#txtFirstName').value = '';
+        document.querySelector('#txtLastName').value = '';
+        document.querySelector('#txtRegPassword').value = '';
+        document.querySelector('#txtConfirmPassword').value = '';
+        
+        document.querySelector('#Register').style.display = 'none';
+        document.querySelector('#Login').style.display = 'block';
+    }   
     
-    document.querySelector('#Register').style.display = 'none';
-    document.querySelector('#Login').style.display = 'block';
-}   
+    return false; // Prevent event bubbling
 })
 
 // Reveals/hides password on the login page
