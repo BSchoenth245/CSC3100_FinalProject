@@ -109,32 +109,9 @@ $("#btnLogin").on('click',function(){
                 }
             });
         })
-        .catch(error => {
-            // Close the loading alert when there's an error
-            loadingBtn.close();
-            
-            // Show error message
-            Swal.fire({
-                title: 'Error',
-                text: error.message,
-                icon: 'error'
-            });
-            
-            console.error('Login error:', error);
-        })
-        .finally(() => {
-            // This ensures the loading alert is closed even if something unexpected happens
-            if (Swal.isVisible() && Swal.getTitle().textContent === 'Logging in...') {
-                loadingBtn.close();
-            }
-            
-            // Clear password field for security
-            document.querySelector('#txtLogPassword').value = '';
-        });
+    document.querySelector('#txtLogPassword').value = ''
     }
-});
-
-
+})
 
 $("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/

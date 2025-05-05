@@ -110,37 +110,31 @@ const intSalt = 10;
         const SessionID = uuidv4();
         const strStatus = "Active";
         
-        // Execute both database operations in a single transaction
+        // Update last login time
         await new Promise((resolve, reject) => {
-          db.serialize(() => {
-            db.run('BEGIN TRANSACTION');
-            
-            db.run(
-              `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
-              [currentTime, user.UserID],
-              function(err) {
-                if (err) {
-                  db.run('ROLLBACK');
-                  return reject(err);
-                }
-              }
-            );
-            
-            db.run(
-              `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
-               VALUES (?, ?, ?, ?, ?)`,
-              [SessionID, user.UserID, currentTime, currentTime, strStatus],
-              function(err) {
-                if (err) {
-                  db.run('ROLLBACK');
-                  return reject(err);
-                }
-                db.run('COMMIT');
-                resolve();
-              }
-            );
-          });
+          db.run(
+            `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
+            [currentTime, user.UserID],
+            function(err) {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
         });
+
+        // Create new session
+        await new Promise((resolve, reject) => {
+          db.run(
+            `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
+             VALUES (?, ?, ?, ?, ?)`,
+            [SessionID, user.UserID, currentTime, currentTime, strStatus],
+            function(err) {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
+
         // Send successful response
         return res.status(200).json({
           message: "Login successful",
@@ -151,10 +145,9 @@ const intSalt = 10;
         console.error('Login error:', err);
         return res.status(500).json({ 
           details: err.message
-      })
-    }
-  });
-
+        });
+      }
+});
     /*
 
     Login and registration endpoint
