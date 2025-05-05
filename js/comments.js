@@ -71,3 +71,44 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         icon: "success"
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add sample received comments
+    const sampleReceivedComments = [
+        {
+            sender: "Jane Smith",
+            timestamp: "April 19, 2025 at 2:30 PM",
+            group: "Team Awesome",
+            text: "Great job on the presentation yesterday! Your explanation of the database schema was very clear."
+        },
+        {
+            sender: "Professor Johnson",
+            timestamp: "April 18, 2025 at 10:15 AM",
+            group: "CSC3100-001",
+            text: "Please remember to submit your final project by next Friday. Let me know if you have any questions."
+        }
+    ];
+
+    // Remove empty state message if adding sample comments
+    if (sampleReceivedComments.length > 0) {
+        const emptyMessage = document.querySelector('#receivedComments .empty-comments');
+        if (emptyMessage) {
+            emptyMessage.remove();
+        }
+    }
+
+    // Add sample received comments to the received column
+    sampleReceivedComments.forEach(comment => {
+        const commentHTML = `
+            <div class="comment-card received-comment">
+                <div class="comment-header">
+                    <div class="comment-sender">${comment.sender}</div>
+                    <div class="comment-timestamp">${comment.timestamp}</div>
+                </div>
+                <div class="comment-group">From: ${comment.group}</div>
+                <div class="comment-text">${comment.text}</div>
+            </div>
+        `;
+        document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
+    });
+});
