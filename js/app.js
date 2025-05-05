@@ -780,19 +780,27 @@ function loadCourses() {
 
 document.addEventListener('DOMContentLoaded', () => {
 	// Handle Take Survey button clicks
-	document.querySelectorAll('.group-card .card-actions button').forEach(button => {
+	document.querySelectorAll('.btn-take-survey').forEach(button => {
 		button.addEventListener('click', (e) => {
 			const btn = e.target;
 			const card = btn.closest('.group-card');
 
 			if (btn.textContent === 'Take Survey') {
 				const groupName = card.querySelector('.group-header h3').textContent;
+                const groupId = btn.getAttribute('data-group-id') || 'default';
+
+                // Store the group information for the survey
+                sessionStorage.setItem('currentSurveyGroup', groupName);
+                sessionStorage.setItem('currentSurveyGroupId', groupId);
 
 				Swal.fire({
 					title: 'Survey Started',
 					text: `You clicked "Take Survey" for ${groupName}.`,
 					icon: 'info'
 				});
+
+                // Call the function that loads and displays the survey
+                getSurveyQuestions();
 			}
 
 			if (btn.textContent === 'Leave Group') {
@@ -845,10 +853,28 @@ document.addEventListener('click', (event) => {
 });
 
 function getSurveyQuestions() {
+    // Get the current group information
+    const groupName = sessionStorage.getItem('currentSurveyGroup') || 'Default Group';
+    const groupId = sessionStorage.getItem('currentSurveyGroupId') || 'default';
+
     fetch('./survey.html')
     .then(response => response.text())
     .then(data => {
         document.querySelector('#divStudentSurvey').innerHTML = data
+
+        // Add group name to survey if there's a place for it
+        const groupNameElement = document.querySelector('#surveyGroupName');
+        if (groupNameElement) {
+            groupNameElement.textContent = groupName;
+        }
+        
+        // Store the group ID as a data attribute on the form
+        const surveyForm = document.querySelector('#divStudentSurvey form');
+        if (surveyForm) {
+            surveyForm.setAttribute('data-group-id', groupId);
+        }
+
+
         let strHTML = '<option disabled selected hidden >Select a group member</option>'
         mockGroupMembers.forEach(member => {
             strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`
