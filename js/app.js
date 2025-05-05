@@ -1,4 +1,5 @@
-$("#btnLogin").on('click',function(){
+$("#btnLogin").on('click', function(event) {
+    event.preventDefault();
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -40,7 +41,7 @@ $("#btnLogin").on('click',function(){
             showConfirmButton: false
         });
         
-        fetch('http://localhost:8000/login',{
+        fetch('http://localhost:8000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +51,6 @@ $("#btnLogin").on('click',function(){
                 password: strPassword 
             })
         })
-        
         .then(response => {
             // First check if there's content to parse as JSON
             const contentType = response.headers.get('content-type');
@@ -65,7 +65,7 @@ $("#btnLogin").on('click',function(){
                     throw new Error(`Login failed: ${response.status} ${response.statusText}`);
                 }
             }
-    
+
             // For successful responses, ensure we have JSON before parsing
             if (contentType && contentType.includes('application/json')) {
                 return response.json();
@@ -82,20 +82,12 @@ $("#btnLogin").on('click',function(){
                 text: 'Login successful',
                 icon: 'success',
                 showConfirmButton: true,
-                timer: null
             }).then(() => {
                 console.log("Login success callback triggered");
                 
-                // Get references to elements
-                const loginDiv = document.querySelector('#Login');
-                const dashboardDiv = document.querySelector('#Dashboard');
-                
-                console.log("Login div:", loginDiv);
-                console.log("Dashboard div:", dashboardDiv);
-                
-                // Toggle visibility
-                if (loginDiv) loginDiv.style.display = 'none';
-                if (dashboardDiv) dashboardDiv.style.display = 'block';
+                // Switch visibility of login and dashboard divs
+                document.querySelector('#divLogin').style.display = 'none';
+                document.querySelector('#divDashboard').style.display = 'block';
                 
                 console.log("Display properties set");
                 
@@ -109,9 +101,31 @@ $("#btnLogin").on('click',function(){
                 }
             });
         })
-    document.querySelector('#txtLogPassword').value = ''
+        .catch(error => {
+            // Close the loading alert when there's an error
+            loadingBtn.close();
+            
+            // Show error message
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error'
+            });
+            
+            console.error('Login error:', error);
+        })
+        .finally(() => {
+            // This ensures the loading alert is closed even if something unexpected happens
+            if (Swal.isVisible() && Swal.getTitle().textContent === 'Logging in...') {
+                loadingBtn.close();
+            }
+            
+            // Clear password field for security
+            document.querySelector('#txtLogPassword').value = '';
+        });
     }
-})
+});
+
 
 $("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
