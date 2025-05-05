@@ -29,27 +29,88 @@ $("#btnLogin").on('click',function(){
     }
     // Success message
     else{
-        // loginUser(strUsername, strPassword).then(data => {
-        //     if (data.error) {
-        //         Swal.fire({
-        //             title: "There's a problem!",
-        //             text: data.error,
-        //             icon: "error"
-        //         })
-        //     } else if (!data.error) {
-        //         Swal.fire({
-        //             title: "Success",
-        //             text: data.message,
-        //             icon: "success"
-        //         })
-                 document.querySelector('#Login').style.display = 'none';
-                 document.querySelector('#Dashboard').style.display = 'block'
-        //     }
-        // })
-
-        // Clear password input
+        // Show loading indicator
+        const loadingBtn = Swal.fire({
+            title: 'Logging in...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false
+        });
+        
+        fetch('http://localhost:8000/login',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email: strUsername, 
+                password: strPassword 
+            })
+        })
+        
+.then(response => {
+    // First check if there's content to parse as JSON
+    const contentType = response.headers.get('content-type');
+    
+    if (!response.ok) {
+        // For error responses, handle both JSON and non-JSON responses
+        if (contentType && contentType.includes('application/json')) {
+            return response.json().then(data => {
+                throw new Error(data.error || `Login failed: ${response.status}`);
+            });
+        } else {
+            throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+        }
     }
+    
+    // For successful responses, ensure we have JSON before parsing
+    if (contentType && contentType.includes('application/json')) {
+        return response.json();
+    } else {
+        throw new Error('Server returned non-JSON response');
+    }
+})
+        .then(data => {
+            loadingBtn.close();
+            
+            // Display success and show dashboard
+            Swal.fire({
+                title: 'Success!',
+                text: 'Login successful',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                console.log("Login success callback triggered");
+                
+                // Get references to elements
+                const loginDiv = document.querySelector('#Login');
+                const dashboardDiv = document.querySelector('#Dashboard');
+                
+                console.log("Login div:", loginDiv);
+                console.log("Dashboard div:", dashboardDiv);
+                
+                // Toggle visibility
+                if (loginDiv) loginDiv.style.display = 'none';
+                if (dashboardDiv) dashboardDiv.style.display = 'block';
+                
+                console.log("Display properties set");
+                
+                // Load initial data
+                try {
+                    loadCourses();
+                    loadGroups();
+                    loadUserProfile();
+                } catch (e) {
+                    console.error("Error loading data:", e);
+                }
+            });
+        })
     document.querySelector('#txtLogPassword').value = ''
+    }
 })
 
 $("#btnRegister").on('click',function(){
@@ -201,6 +262,59 @@ $(document).ready(function() {
 
 // function to create user by sending a fetch to the server.js file sending the username and password in the body
 // ensuring the correct content type and catching errors
+function createUser(strUsername, strPassword) {
+
+    fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ strUsername, strPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        Swal.fire({
+            title: "Success",
+            text: data.message,
+            icon: "success"
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+
+function loginUser(strUsername, strPassword) {
+    return fetch('http://localhost:8000/login', { // Add 'return' here
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: strUsername, password: strPassword })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse and return JSON data
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+        throw error; // Re-throw the error so the caller can handle it
+    });
+}
 
 // Adding the collapse menu logic
 function toggleMembers(button) {
@@ -368,8 +482,12 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function(ev
 });
 
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
+<<<<<<< HEAD
 
     fetch('/createcourse', {
+=======
+    fetch('http://localhost:8000/createcourse', {
+>>>>>>> 6ceed59 (fixed some fetch requests and login functionality to app.js)
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -472,7 +590,7 @@ function updateUIForUserRole(userRole) {
 
 // Fetch the user's role from the server when the page loads
 function fetchUserRole() {
-    fetch('/getUserRole')
+    fetch('http://localhost:8000/getUserRole')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -702,7 +820,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function createGroup(groupName, courseName, courseSection, groupCode) {
-    fetch('/creategroup', {
+    fetch('http://localhost:8000/creategroup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -735,7 +853,7 @@ function generateGroupCode() {
 // it will be called when the page loads and when the user clicks on the "Load Courses" button
 // TODO:
 function loadCourses() {
-    fetch('/courses') // ⬅️ adjust this if your endpoint is different
+    fetch('http://localhost:8000/courses') // ⬅️ adjust this if your endpoint is different
     .then(response => {
         if (!response.ok) {
         throw new Error('Failed to fetch courses');
