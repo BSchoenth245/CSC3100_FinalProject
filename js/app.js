@@ -834,7 +834,3 @@ function getSurveyQuestions() {
     })
     .catch(error => console.error('Error loading survey questions:', error))
 }
-
-
-
-
