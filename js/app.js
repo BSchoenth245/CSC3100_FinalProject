@@ -50,7 +50,88 @@ $("#btnLogin").on('click',function(){
 
         // Clear password input
     }
+        // Show loading indicator
+        const loadingBtn = Swal.fire({
+            title: 'Logging in...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false
+        });
+        
+        fetch('http://localhost:8000/login',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email: strUsername, 
+                password: strPassword 
+            })
+        })
+        
+        .then(response => {
+            // First check if there's content to parse as JSON
+            const contentType = response.headers.get('content-type');
+            
+            if (!response.ok) {
+                // For error responses, handle both JSON and non-JSON responses
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || `Login failed: ${response.status}`);
+                    });
+                } else {
+                    throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+                }
+            }
+    
+            // For successful responses, ensure we have JSON before parsing
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response');
+            }
+        })
+        .then(data => {
+            loadingBtn.close();
+            
+            // Display success and show dashboard
+            Swal.fire({
+                title: 'Success!',
+                text: 'Login successful',
+                icon: 'success',
+                showConfirmButton: true,
+                timer: null
+            }).then(() => {
+                console.log("Login success callback triggered");
+                
+                // Get references to elements
+                const loginDiv = document.querySelector('#Login');
+                const dashboardDiv = document.querySelector('#Dashboard');
+                
+                console.log("Login div:", loginDiv);
+                console.log("Dashboard div:", dashboardDiv);
+                
+                // Toggle visibility
+                if (loginDiv) loginDiv.style.display = 'none';
+                if (dashboardDiv) dashboardDiv.style.display = 'block';
+                
+                console.log("Display properties set");
+                
+                // Load initial data
+                try {
+                    loadCourses();
+                    loadGroups();
+                    loadUserProfile();
+                } catch (e) {
+                    console.error("Error loading data:", e);
+                }
+            });
+        })
     document.querySelector('#txtLogPassword').value = ''
+    }
 })
 
 $("#btnRegister").on('click',function(){
@@ -166,15 +247,15 @@ $(document).on('keypress', function(e) {
 });
 
     // Add event listeners to buttons
-    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-            document.querySelector('#Login').style.display = 'none';
-            document.querySelector('#Register').style.display = 'block';
-        })
+document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+        document.querySelector('#Login').style.display = 'none';
+        document.querySelector('#Register').style.display = 'block';
+})
 
-    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    });
+document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+});
     
 $(document).ready(function() {
     // Hide all tab content except the first one initially
@@ -202,6 +283,59 @@ $(document).ready(function() {
 
 // function to create user by sending a fetch to the server.js file sending the username and password in the body
 // ensuring the correct content type and catching errors
+function createUser(strUsername, strPassword) {
+
+    fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ strUsername, strPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        Swal.fire({
+            title: "Success",
+            text: data.message,
+            icon: "success"
+        });
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    });
+}
+
+
+function loginUser(strUsername, strPassword) {
+    return fetch('http://localhost:8000/login', { // Add 'return' here
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: strUsername, password: strPassword })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse and return JSON data
+    })
+    .catch(error => {
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+        throw error; // Re-throw the error so the caller can handle it
+    });
+}
 
 // Adding the collapse menu logic
 function toggleMembers(button) {
@@ -243,13 +377,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+document.querySelector('#btnCreateCourse').addEventListener('click', function(event) {
     let blnError = false;
     let strMessage = "";
 
     if (document.querySelector('#txtCourseName').value.trim().length < 1) {
         blnError = true;
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';
     }
     if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
         blnError = true;
@@ -277,13 +411,14 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
     
     if (document.querySelector('#dateEndDate').value === "") {
+
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
-    else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
-        blnError = true;
-        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
-    }
+    // else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
+    //     blnError = true;
+    //     strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
+    // }
     else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
@@ -335,18 +470,18 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         .then(data => {
             console.log('Success:', data);
             console.log('Course ID:', data.CourseID);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Course created successfully.",
+                icon: "success"
+            });
         })
         .catch(error => {
             console.error('Error:', error);
         });
   
-
-        // #TODO: delete this when the backend is ready
-        Swal.fire({
-            title: "Success!",
-            text: "Course created successfully.",
-            icon: "success"
-        });
+        
         
         // Optionally insert card into DOM here
         
@@ -368,7 +503,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
 });
 
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
-    fetch('/createcourse', {
+    fetch('http://localhost:8000/createcourse', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -471,7 +606,7 @@ function updateUIForUserRole(userRole) {
 
 // Fetch the user's role from the server when the page loads
 function fetchUserRole() {
-    fetch('/getUserRole')
+    fetch('http://localhost:8000/getUserRole')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -522,6 +657,32 @@ $(document).on('click', '.btn-add-contact', function () {
         return;
     }
 
+    // Fetch request to test the addSocial endpoint
+fetch('http://localhost:8000/addSocial', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      SocialType: contactType,
+      Username: contactValue
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        console.error('Error details:', errorData);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    console.log('Social ID:', data.SocialID);
+
+  
+
     // Generate a styled static row
     const staticRow = `
         <div class="contact-row static-contact ${contactType}">
@@ -539,6 +700,11 @@ $(document).on('click', '.btn-add-contact', function () {
     // Clear input row fields
     currentRow.find('.contact-type').val('discord'); // default reset
     currentRow.find('.contact-input').val('');
+
+    })
+    .catch(error => {
+    console.error('Error:', error);
+    });
 });
 
 $(document).on('click', '.btn-delete-contact', function () {
@@ -701,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function createGroup(groupName, courseName, courseSection, groupCode) {
-    fetch('/creategroup', {
+    fetch('http://localhost:8000/creategroup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -734,7 +900,7 @@ function generateGroupCode() {
 // it will be called when the page loads and when the user clicks on the "Load Courses" button
 // TODO:
 function loadCourses() {
-    fetch('/courses') // ⬅️ adjust this if your endpoint is different
+    fetch('http://localhost:8000/courses') // ⬅️ adjust this if your endpoint is different
     .then(response => {
         if (!response.ok) {
         throw new Error('Failed to fetch courses');
