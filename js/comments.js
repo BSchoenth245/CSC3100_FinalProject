@@ -112,29 +112,3 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
     });
 });
-// Add question type toggle functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const questionTypeToggle = document.getElementById('questionTypeToggle');
-    const questionTypeValue = document.getElementById('questionTypeValue');
-    const openResponseLabel = document.getElementById('openResponseLabel');
-    const likertScaleLabel = document.getElementById('likertScaleLabel');
-    
-    if (questionTypeToggle && questionTypeValue) {
-        // Set initial state
-        openResponseLabel.classList.add('active-option');
-        
-        questionTypeToggle.addEventListener('change', function() {
-            // Update hidden value
-            questionTypeValue.value = this.checked ? 'open' : 'scale';
-            
-            // Update active label styling
-            if (this.checked) {
-                openResponseLabel.classList.add('active-option');
-                likertScaleLabel.classList.remove('active-option');
-            } else {
-                openResponseLabel.classList.remove('active-option');
-                likertScaleLabel.classList.add('active-option');
-            }
-        });
-    }
-});
