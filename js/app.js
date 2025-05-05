@@ -710,15 +710,10 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
     const group = document.querySelector('#selGroup').value;
     const feedback = document.querySelector('#txtFeedback').value.trim();
     const visibility = document.querySelector('#commentVisibilityValue').value;
-    const commentsTab = document.querySelector('#Comments');
 
     let blnError = false;
     let strMessage = "";
 
-    // if (!group) {
-    //     blnError = true;
-    //     strMessage += "<p>Please select a group.</p>";
-    // }
     if (!feedback) {
         blnError = true;
         strMessage += "<p>Feedback cannot be empty.</p>";
@@ -740,19 +735,26 @@ document.querySelector('#btnSubmitFeedback').addEventListener('click', function 
         timeStyle: "short"
     });
 
-    // Create comment element
+    // Create comment element with proper classes for sent comments
     const commentHTML = `
-        <div class="group card">
-            <div class="group-header">
-                <h3><strong>Brock The Rock</strong></h3>
-                <span class="group-code"> Submitted on: ${formattedDate} </span>
+        <div class="comment-card sent-comment">
+            <div class="comment-header">
+                <div class="comment-sender">Brock The Rock</div>
+                <div class="comment-timestamp">${formattedDate}</div>
             </div>
-            <p>"${feedback}"</p>
+            <div class="comment-group">To: ${group || 'All Groups'}</div>
+            <div class="comment-text">${feedback}</div>
         </div>
     `;
 
-    // Insert comment into View Comments tab
-    commentsTab.insertAdjacentHTML('beforeend', commentHTML);
+    // Remove empty state message if it exists
+    const emptyMessage = document.querySelector('#sentComments .empty-comments');
+    if (emptyMessage) {
+        emptyMessage.remove();
+    }
+
+    // Insert comment into Sent Comments column
+    document.querySelector('#sentComments').insertAdjacentHTML('afterbegin', commentHTML);
 
     // Clear form
     document.querySelector('#selGroup').value = '';
