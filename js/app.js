@@ -44,7 +44,6 @@ $("#btnLogin").on('click',function(){
         //         })
                 document.querySelector('#Login').style.display = 'none';
                 document.querySelector('#Dashboard').style.display = 'block'
-                loadGroups()
         //     }
         // })
 
@@ -131,7 +130,7 @@ $("#btnLogin").on('click',function(){
             });
         })
     document.querySelector('#txtLogPassword').value = ''
-    }
+    
 })
 
 $("#btnRegister").on('click',function(){
