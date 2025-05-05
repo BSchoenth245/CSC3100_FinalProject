@@ -252,7 +252,7 @@
                                                 d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
                                         </svg>
                                     </label>
-                                    <input type="text" id="txtCourseName" placeholder="Enter Course Number" />
+                                    <input type="text" id="txtCourseName" placeholder="Enter Course Name" />
                                 </div>
                                 <div>
                                     <label for="txtCourseNumber">
@@ -350,23 +350,28 @@
                 </div>
 
                 <div id="Comments" class="tab-content">
-                    <!-- Settings tab content -->
-                    <h2>View Comments Here</h2>
-                    <div class="settings-options" -->
-                        <!-- Settings options here -->
-                        <!-- this was an example created for our view comment tab-->
-                        <form>
-                            <div class="group card">
-                                <div class="group-header">
-                                    <h3><strong>Brock The Rock</strong></h3>
-                                    <span class="group-code"> Submitted on: April 20, 2025 at 4:20 PM </span>
-                                </div>
-                                <p>"I think the boys did their best, but like next time I think we should just lock in."
-                                </p>
+                    <h2>View Comments</h2>
+                    <div class="comments-container">
+                        <!-- Received Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Received Comments</div>
+                            <div id="receivedComments">
+                                <!-- Received comments will be dynamically added here -->
+                                <div class="empty-comments">No received comments yet</div>
                             </div>
+                        </div>
+                        
+                        <!-- Sent Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Sent Comments</div>
+                            <div id="sentComments">
+                                <!-- Sent comments will be dynamically added here -->
+                                <div class="empty-comments">No sent comments yet</div>
+                            </div>
+                        </div>
                     </div>
-                    </form>
                 </div>
+                
 
                 <div id="addNewComments" class="tab-content">
                     <!-- Settings tab content -->
