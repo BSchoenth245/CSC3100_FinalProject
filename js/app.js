@@ -165,7 +165,7 @@ $(document).on('keypress', function(e) {
 });
 
     // Add event listeners to buttons
-   document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
             document.querySelector('#Login').style.display = 'none';
             document.querySelector('#Register').style.display = 'block';
         })
@@ -201,59 +201,6 @@ $(document).ready(function() {
 
 // function to create user by sending a fetch to the server.js file sending the username and password in the body
 // ensuring the correct content type and catching errors
-function createUser(strUsername, strPassword) {
-
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        Swal.fire({
-            title: "Success",
-            text: data.message,
-            icon: "success"
-        });
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
-
-function loginUser(strUsername, strPassword) {
-    return fetch('/login', { // Add 'return' here
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: strUsername, password: strPassword })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Parse and return JSON data
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-        throw error; // Re-throw the error so the caller can handle it
-    });
-}
 
 // Adding the collapse menu logic
 function toggleMembers(button) {
@@ -294,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 
 document.querySelector('#btnCreateCourse').addEventListener('click', function() {
     let blnError = false;
@@ -349,15 +295,42 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         const courseSeason = document.querySelector('#selCourseSeason').value;
         const courseYear = document.querySelector('#txtCourseYear').value;
         const courseTerm = `${courseSeason} ${courseYear}`;
+        const courseName = document.querySelector('#txtCourseName').value;
+        const section = document.querySelector('#txtCourseSection').value;
+        const term = `${document.querySelector('#selCourseSeason').value} ${document.querySelector('#txtCourseYear').value}`;
         
-        // Create course with the collected data
-        // createCourse(
-        //     document.querySelector('#txtCourseName').value,
-        //     document.querySelector('#txtCourseSection').value,
-        //     courseTerm,
-        //     startDate,
-        //     endDate
-        // );
+        // Fetch request to test the createcourse endpoint
+        fetch('http://localhost:8000/createcourse', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            CourseName: courseName,
+            CourseNumber: 'CSC3100',
+            CourseSection: section,
+            CourseTerm: courseTerm,
+            StartDate: startDate,
+            EndDate: endDate
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+            return response.json().then(errorData => {
+                console.error('Error details:', errorData);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            console.log('Course ID:', data.CourseID);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+  
 
         // #TODO: delete this when the backend is ready
         Swal.fire({
@@ -367,9 +340,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         });
         
         // Optionally insert card into DOM here
-        const courseName = document.querySelector('#txtCourseName').value;
-        const section = document.querySelector('#txtCourseSection').value;
-        const term = `${document.querySelector('#selCourseSeason').value} ${document.querySelector('#txtCourseYear').value}`;
+        
         //const endDate = document.querySelector('#dateEndDate').value;
         
         const cardHTML = `
@@ -386,7 +357,6 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         document.querySelector('#groupsList').insertAdjacentHTML('beforeend', cardHTML);
     }
 });
-
 
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
     fetch('/createcourse', {
@@ -460,8 +430,6 @@ function createCourse(courseName, courseSection, courseTerm, startDate, endDate)
         });
     });
 }
-
-
 
 // Function to update UI based on user type
 function updateUIForUserRole(userRole) {
