@@ -754,21 +754,18 @@ function loadCourses() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// Handle Take Survey button clicks
-	document.querySelectorAll('.group-card .card-actions button').forEach(button => {
-		button.addEventListener('click', (e) => {
-			const btn = e.target;
-			const card = btn.closest('.group-card');
+    // Handle Take Survey button clicks
+    document.querySelectorAll('.group-card .card-actions button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const btn = e.target;
+            const card = btn.closest('.group-card');
 
-			if (btn.textContent === 'Take Survey') {
-				const groupName = card.querySelector('.group-header h3').textContent;
-
-				Swal.fire({
-					title: 'Survey Started',
-					text: `You clicked "Take Survey" for ${groupName}.`,
-					icon: 'info'
-				});
-			}
+            if (btn.textContent === 'Take Survey') {
+                const groupName = card.querySelector('.group-header h3').textContent;
+                
+                // Instead of just showing an alert, call the getSurveyQuestions function
+                getSurveyQuestions(groupName);
+            }
 
 			if (btn.textContent === 'Leave Group') {
 				const groupName = card.querySelector('.group-header h3').textContent;
@@ -801,39 +798,72 @@ document.addEventListener('DOMContentLoaded', () => {
 //   });
 
 // Survey fully created, now we need to add the functionality to the button
-document.querySelector('#btn-take-survey')?.addEventListener('click', () => {
-    getSurveyQuestions()
-})
+// Mock group members for demonstration
+const mockGroupMembers = [
+    { name: "John Smith" },
+    { name: "Sarah Johnson" },
+    { name: "Mike Wilson" },
+    { name: "Emily Davis" }
+];
 
-document.addEventListener('click', (event) => {
-    if (event.target && event.target.id === 'btnBackToDashboardSurvey') {
-        document.querySelector('#divStudentSurvey').querySelectorAll('input, textarea, select').forEach(element => {
-            if (element.type === 'checkbox' || element.type === 'radio') {
-                element.checked = false;
-            } else {
-                element.value = '';
-            }
-        });
-        document.querySelector('#divStudentSurvey').style.display = 'none';
-        document.querySelector('#divStudentDashboard').style.display = 'block';
-    }
-});
-
-function getSurveyQuestions() {
+function getSurveyQuestions(groupName = '') {
     fetch('./survey.html')
     .then(response => response.text())
     .then(data => {
-        document.querySelector('#divStudentSurvey').innerHTML = data
-        let strHTML = '<option disabled selected hidden >Select a group member</option>'
+        // Create a modal container for the survey
+        const modalContainer = document.createElement('div');
+        modalContainer.className = 'survey-modal';
+        modalContainer.innerHTML = `
+            <div class="survey-modal-content">
+                <div class="survey-modal-header">
+                    <h2>Survey for ${groupName}</h2>
+                    <button class="survey-modal-close">&times;</button>
+                </div>
+                <div class="survey-modal-body">
+                    ${data}
+                </div>
+            </div>
+        `;
+        
+        // Add the modal to the body
+        document.body.appendChild(modalContainer);
+        
+        // Populate the group member dropdown
+        let strHTML = '<option disabled selected hidden>Select a group member</option>';
         mockGroupMembers.forEach(member => {
-            strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`
-        })
-        document.querySelector('#selGroupMemberSurvey').innerHTML = strHTML
-        document.querySelector('#divStudentSurvey').style.display = 'block'
-        document.querySelector('#divStudentDashboard').style.display = 'none'
+            strHTML += `<option value="${member.name}" aria-label="${member.name}">${member.name}</option>`;
+        });
+        
+        // Find and populate the select element within the modal
+        const selectElement = modalContainer.querySelector('#selGroupMemberSurvey');
+        if (selectElement) {
+            selectElement.innerHTML = strHTML;
+        }
+        
+        // Add event listener to close button
+        const closeButton = modalContainer.querySelector('.survey-modal-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => {
+                document.body.removeChild(modalContainer);
+            });
+        }
+        
+        // Add event listener to the back button if it exists in the survey
+        const backButton = modalContainer.querySelector('#btnBackToDashboardSurvey');
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                document.body.removeChild(modalContainer);
+            });
+        }
+        
+        // Show the modal with animation
+        setTimeout(() => {
+            modalContainer.classList.add('active');
+        }, 10);
     })
-    .catch(error => console.error('Error loading survey questions:', error))
+    .catch(error => console.error('Error loading survey questions:', error));
 }
+
 // document.querySelector('#btnSubmitFeedback').addEventListener('click', function () {
 //     const group = document.querySelector('#selGroup').value;
 //     const feedback = document.querySelector('#txtFeedback').value.trim();
