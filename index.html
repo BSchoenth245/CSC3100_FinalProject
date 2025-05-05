@@ -383,7 +383,23 @@
                 <div id="InstructorSurveys" class="tab-content">
                     <h2>Create Survey Questions</h2>
                 
-                    <div class="form survey-card">
+                    <!-- Step 1: Course dropdown (always visible) -->
+                    <div class="mb-3">
+                        <label for="selSurveyCourse" class="form-label">Select Course</label>
+                        <select class="form-control" id="selSurveyCourse">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                
+                    <!-- Hidden until a course is selected -->
+                    <div id="surveyBuilderSection" class="form survey-card" style="display: none;">
+                        <div class="mb-3">
+                            <label for="selSurveyGroup" class="form-label">Select Group</label>
+                            <select class="form-control" id="selSurveyGroup">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                
                         <div class="survey-input-group">
                             <label for="txtSurveyQuestion">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -392,7 +408,7 @@
                             </label>
                             <input type="text" id="txtSurveyQuestion" placeholder="Enter your survey question...">
                         </div>
-                        
+                
                         <!-- Question Type Toggle -->
                         <div class="question-type-toggle-container">
                             <span class="toggle-label-text" id="openResponseLabel">Open Response</span>
@@ -404,18 +420,16 @@
                                 <input type="hidden" name="questionType" id="questionTypeValue" value="open">
                             </div>
                             <span class="toggle-label-text" id="likertScaleLabel">Likert Scale (1-10)</span>
-                        </div>                                               
-                        
-                        
+                        </div>
+                
                         <button type="button" id="btnAddSurveyQuestion">Add Survey Question</button>
-                        
+                
                         <hr>
                         <h4>Existing Questions</h4>
-                        <div id="surveyQuestionPreviewList">
-                            <!-- Dynamically populated questions will appear here -->
-                        </div>
+                        <div id="surveyQuestionPreviewList"></div>
                     </div>
-                </div>                
+                </div>
+                               
 
                 <!-- Profile tab -->
                 <div id="Profile" class="tab-content">
