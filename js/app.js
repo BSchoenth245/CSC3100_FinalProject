@@ -482,12 +482,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function(ev
 });
 
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
-<<<<<<< HEAD
-
-    fetch('/createcourse', {
-=======
     fetch('http://localhost:8000/createcourse', {
->>>>>>> 6ceed59 (fixed some fetch requests and login functionality to app.js)
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
