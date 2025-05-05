@@ -977,3 +977,35 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
     });
 });
+
+document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
+    loadCourses();
+})
+
+function loadCourses() {
+    fetch('/courses')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch courses');
+        }
+        return response.json();
+    })
+    .then(courses => {
+        const container = document.querySelector('#groupsList');
+        container.innerHTML = ''; // clear any existing cards
+        
+        courses.forEach(course => {
+            const cardHTML = `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>${course.name}</h3>
+                        <p>Section: ${course.section}</p>
+                        <p>Term: ${course.term}</p>
+                        <p>End Date: ${course.endDate}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    });
+}
