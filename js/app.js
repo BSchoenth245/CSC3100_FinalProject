@@ -131,7 +131,6 @@ $("#btnLogin").on('click', function(e) {
     return false;
 });
 
-
 $("#btnRegister").on('click',function(e){
     e.preventDefault(); // Prevent form submission
     
@@ -313,7 +312,6 @@ function createUser(strUsername, strPassword) {
         });
     });
 }
-
 
 function loginUser(strUsername, strPassword) {
     return fetch('http://localhost:8000/login', { // Add 'return' here
@@ -710,7 +708,35 @@ fetch('http://localhost:8000/addSocial', {
 });
 
 $(document).on('click', '.btn-delete-contact', function () {
+    // Fetch request to test the deleteSocial endpoint
+fetch('http://localhost:8000/deleteSocial', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      SocialType: 'Instagram'  // Specify which social media type to delete
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        console.error('Error details:', errorData);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    console.log('Message:', data.message);
     $(this).closest('.contact-row').remove();
+
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  
 });
 
 // Add comments and comment tab functionality
@@ -1114,28 +1140,13 @@ function loadGroups() {
             const cardHTML = `
                 <div class="group-card">
                     <div class="group-header">
-                        <h3>${group.GroupName}</h3>
-                        <span class="group-code">Code: ${group.GroupID}</span>
-                    </div>
-                    <div class="group-info">
-                        <p><strong>Course:</strong> <span class="courseName">${group.CourseName}</span></p>
-                        <p><strong>Section:</strong> <span class="courseSection">${group.CourseSection}</span></p>
-                        <div class="members-section">
-                            <button class="collapse-btn" onclick="toggleMembers(this)">
-                                <strong>Members</strong>
-                                <span class="collapse-icon">▼</span>
-                            </button>
-                            <ul class="member-list collapsed">
-                                <li>Group creator placeholder</li>
-                            </ul>
-                        </div>
-                        <div class="card-actions">
-                            <button type="button">Take Survey</button>
-                            <button type="button">Leave Group</button>
-                        </div>
+                        <h3>${group.name}</h3>
+                        <p>Section: ${group.section}</p>
+                        <p>Term: ${group.term}</p>
+                        <p>End Date: ${group.endDate}</p>
                     </div>
                 </div>
-            `
+            `;
             container.insertAdjacentHTML('beforeend', cardHTML);
         });
     });
