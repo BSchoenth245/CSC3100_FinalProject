@@ -131,7 +131,7 @@
     <div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentSurvey" style="display:none;">
         <!-- Survey will be dynamically added here -->
     </div>
-    <div id="Dashboard" >
+    <div id="Dashboard">
         <div class="wrapper" id="dashboard">
             <div class="tabs">
                 <ul class="nav-tabs">
@@ -140,6 +140,9 @@
                     <!-- <li><a href="#addNewGroup">Create Group</a></li> -->
                     <li><a href="#Comments">Comments</a></li>
                     <li><a href="#addNewComments">Add Comment</a></li>
+                    <!-- survey tab for instructors-->
+                    <li><a href="#InstructorSurveys">Surveys</a></li> 
+
                 </ul>
                 <ul class="profile-tab-container">
                     <li><a href="#Profile">Profile</a></li>
@@ -382,6 +385,31 @@
                                     Feedback</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <div id="InstructorSurveys" class="tab-content">
+                    <h2>Create Survey Questions</h2>
+
+                    <div class="card p-3 mt-3">
+                        <div class="mb-3">
+                            <label for="txtSurveyQuestion" class="form-label">Question Text</label>
+                            <input type="text" class="form-control" id="txtSurveyQuestion" placeholder="Enter your survey question...">
+                        </div>
+                    <div class="mb-3">
+                        <label for="selQuestionType" class="form-label">Question Type</label>
+                        <select class="form-control" id="selQuestionType">
+                            <option value="open">Open Response</option>
+                            <option value="scale">Likert Scale (1–10)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="selSurveyGroup" class="form-label">Select Group</label>
+                        <select class="form-control" id="selSurveyGroup">
+                            <!-- JS will populate available groups -->
+                        </select>
+                    </div>
+                        <button class="btn btn-success col-12" id="btnAddSurveyQuestion">Add Survey Question</button>
                     </div>
                 </div>
 
