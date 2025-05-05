@@ -62,6 +62,8 @@ Main Dashdoard styles
     gap: 20px;
     padding: 20px;
     justify-content: center;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .form-group {
@@ -308,7 +310,12 @@ input[name="courseSection"] { width: 25%; }
     margin: 10px 0;
     color: var(--text-color);
 }
-
+#groupsList #groupsList {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .member-list {
     list-style: none;
     padding: 0;
@@ -349,7 +356,7 @@ input[name="courseSection"] { width: 25%; }
 
 .collapse-btn.active .collapse-icon { transform: rotate(180deg); }
 
-#btn-take-survey, #btn-leave-group {
+.btn-take-survey, .btn-leave-group {
     margin-top: 5px;
     border: none;
     border-radius: 1000px;
@@ -363,8 +370,8 @@ input[name="courseSection"] { width: 25%; }
     transition: 150ms ease;
 }
 
-#btn-take-survey:hover, #btn-leave-group:hover,
-#btn-take-survey:focus, #btn-leave-group:focus {
+.btn-take-survey:hover, .btn-leave-group:hover,
+.btn-take-survey:focus, .btn-leave-group:focus {
     outline: none;
     background-color: var(--text-color);
 }
@@ -404,20 +411,20 @@ input[name="courseSection"] { width: 25%; }
     color: var(--text-color);
 }
 
-.toggle-container {
+.form .toggle-container {
     position: relative;
     display: inline-block;
     margin: 15px 0;
 }
 
-.toggle-input {
+.form .toggle-input {
     opacity: 0;
     width: 0;
     height: 0;
     position: absolute;
 }
 
-.toggle-label {
+.form .toggle-label {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -431,7 +438,7 @@ input[name="courseSection"] { width: 25%; }
     transition: background-color 0.3s;
 }
 
-.toggle-slider {
+.form .toggle-slider {
     position: absolute;
     top: 2px;
     left: 2px;
@@ -443,7 +450,7 @@ input[name="courseSection"] { width: 25%; }
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-icon {
+.form .toggle-icon {
     display: flex;
     align-items: center;
     z-index: 1;
@@ -451,19 +458,26 @@ input[name="courseSection"] { width: 25%; }
     transition: color 0.3s;
 }
 
-.toggle-icon svg { margin-right: 5px; fill: currentColor; }
-.toggle-text { font-size: 14px; font-weight: 500; }
+.form .toggle-icon svg { margin-right: 5px; fill: currentColor; }
+.form .toggle-text { font-size: 14px; font-weight: 500; }
 
-.toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
-.toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
+.form .toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.form .toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
 
-.toggle-input:checked + .toggle-label .public-icon { color: white; }
-.toggle-input:checked + .toggle-label .private-icon { color: var(--text-color); }
-.toggle-input:not(:checked) + .toggle-label .public-icon { color: var(--text-color); }
-.toggle-input:not(:checked) + .toggle-label .private-icon { color: white; }
+.form .toggle-input:checked + .toggle-label .public-icon { color: white; }
+.form .toggle-input:checked + .toggle-label .private-icon { color: var(--text-color); }
+.form .toggle-input:not(:checked) + .toggle-label .public-icon { color: var(--text-color); }
+.form .toggle-input:not(:checked) + .toggle-label .private-icon { color: white; }
 
-.toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
-.toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
+/* Add these specific styles for the student/staff toggle */
+.form .toggle-input:checked + .toggle-label .student-icon { color: white; }
+.form .toggle-input:checked + .toggle-label .staff-icon { color: var(--text-color); }
+.form .toggle-input:not(:checked) + .toggle-label .student-icon { color: var(--text-color); }
+.form .toggle-input:not(:checked) + .toggle-label .staff-icon { color: white; }
+
+
+.form .toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.form .toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
 
 .student-only, .faculty-only { display: none; }
 .no-js .student-only, .no-js .faculty-only { display: block; }
@@ -717,10 +731,12 @@ input[name="courseSection"] { width: 25%; }
     gap: 20px;
     width: 100%;
     margin-top: 20px;
+    justify-content: center;
 }
 
 .comments-column {
     flex: 1;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -786,16 +802,17 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .sent-comment {
-    border-right: 4px solid var(--text-color);
-    text-align: right;
+    border-right: 4px solid var(--accent-color);
+    text-align: center;
 }
 
 .sent-comment .comment-header {
     flex-direction: row-reverse;
+    justify-content: space-between;
 }
 
 .sent-comment .comment-group {
-    text-align: right;
+    text-align: center;
 }
 
 /* Empty state styling */
