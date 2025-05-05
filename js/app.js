@@ -42,8 +42,9 @@ $("#btnLogin").on('click',function(){
         //             text: data.message,
         //             icon: "success"
         //         })
-                 document.querySelector('#Login').style.display = 'none';
-                 document.querySelector('#Dashboard').style.display = 'block'
+                document.querySelector('#Login').style.display = 'none';
+                document.querySelector('#Dashboard').style.display = 'block'
+                loadGroups()
         //     }
         // })
 
@@ -490,20 +491,20 @@ function fetchUserRole() {
 }
 
 // Call this function when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    fetchUserRole();
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetchUserRole();
 
-    // The toggle switch in the registration form should still work for new users
-    const userTypeToggle = document.getElementById('userTypeToggle');
-    const userTypeValue = document.getElementById('userTypeValue');
+//     // The toggle switch in the registration form should still work for new users
+//     const userTypeToggle = document.getElementById('userTypeToggle');
+//     const userTypeValue = document.getElementById('userTypeValue');
 
-    if (userTypeToggle && userTypeValue) {
-        userTypeToggle.addEventListener('change', function() {
-            userTypeValue.value = this.checked ? 'Student' : 'Staff';
-            console.log('Registration user type set to:', userTypeValue.value);
-        });
-    }
-});
+//     if (userTypeToggle && userTypeValue) {
+//         userTypeToggle.addEventListener('change', function() {
+//             userTypeValue.value = this.checked ? 'Student' : 'Staff';
+//             console.log('Registration user type set to:', userTypeValue.value);
+//         });
+//     }
+// });
 
 $(document).on('click', '.btn-add-contact', function () {
     const currentRow = $(this).closest('.contact-row');
@@ -978,30 +979,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
-    loadCourses();
-})
-
-function loadCourses() {
-    fetch('/courses')
+function loadGroups() {
+    fetch('/groups')
     .then(response => {
         if (!response.ok) {
-            throw new Error('Failed to fetch courses');
+            throw new Error('Failed to fetch groups');
         }
         return response.json();
     })
-    .then(courses => {
+    .then(groups => {
         const container = document.querySelector('#groupsList');
         container.innerHTML = ''; // clear any existing cards
         
-        courses.forEach(course => {
+        groups.forEach(group => {
             const cardHTML = `
                 <div class="group-card">
                     <div class="group-header">
-                        <h3>${course.name}</h3>
-                        <p>Section: ${course.section}</p>
-                        <p>Term: ${course.term}</p>
-                        <p>End Date: ${course.endDate}</p>
+                        <h3>${group.name}</h3>
+                        <p>Section: ${group.section}</p>
+                        <p>Term: ${group.term}</p>
+                        <p>End Date: ${group.endDate}</p>
                     </div>
                 </div>
             `;
