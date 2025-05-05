@@ -77,86 +77,77 @@ const intSalt = 10;
 })
 
   app.post('/login', async (req, res) => {
-
-    const { email, password } = req.body;
-
-    console.log('Login attempt:', email);
-
-    try {
-        // 1. Get user by email
-        const getUserByEmail = (email) => {
-            return new Promise((resolve, reject) => {
-                const sql = `SELECT UserID, Password FROM tblUsers WHERE Email = ?`;
-                db.get(sql, [email], (err, row) => {
-                    if (err) return reject(err);
-                    resolve(row);
-                });
+      try {
+        const { email, password } = req.body;
+        
+        // Use a promise-based approach with proper error handling
+        const getUserByEmail = () => {
+          return new Promise((resolve, reject) => {
+            const sql = `SELECT UserID, Password FROM tblUsers WHERE Email = ?`;
+            db.get(sql, [email], (err, row) => {
+              if (err) reject(err);
+              else resolve(row);
             });
+          });
         };
-
-        const user = await getUserByEmail(email);
-
+    
+        // Get user from database
+        const user = await getUserByEmail();
+        
+        // Check if user exists
         if (!user) {
-            console.log('No user found with email:', email);
-            return res.status(404).json({ error: 'Invalid email or password.' });
+          return res.status(404).json({ error: "Invalid email or password." });
         }
-
-        // 2. Check password
+        
+        // Verify password
         const match = await bcrypt.compare(password, user.Password);
         if (!match) {
-            console.log('Password mismatch for user ID:', user.UserID);
-            return res.status(401).json({ error: 'Invalid email or password.' });
+          return res.status(401).json({ error: "Invalid email or password" });
         }
-
-        // 3. Proceed with login
+        
+        // If we reach here, login is successful
         const currentTime = new Date().toISOString();
         const SessionID = uuidv4();
-        const status = 'Active';
+        const strStatus = "Active";
+        
+        // Update last login time
+        await new Promise((resolve, reject) => {
+          db.run(
+            `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
+            [currentTime, user.UserID],
+            function(err) {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
 
-        // 4. Update last login time
-        const updateLastLogin = () => {
-            return new Promise((resolve, reject) => {
-                const sql = `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`;
-                db.run(sql, [currentTime, user.UserID], function (err) {
-                    if (err) return reject(err);
-                    resolve();
-                });
-            });
-        };
+        // Create new session
+        await new Promise((resolve, reject) => {
+          db.run(
+            `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
+             VALUES (?, ?, ?, ?, ?)`,
+            [SessionID, user.UserID, currentTime, currentTime, strStatus],
+            function(err) {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
 
-        await updateLastLogin();
-
-        // 5. Insert session
-        const insertSession = () => {
-            return new Promise((resolve, reject) => {
-                const sql = `
-                    INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
-                    VALUES (?, ?, ?, ?, ?)`;
-                db.run(sql, [SessionID, user.UserID, currentTime, currentTime, status], function (err) {
-                    if (err) return reject(err);
-                    resolve();
-                });
-            });
-        };
-
-        await insertSession();
-
-        // 6. Respond with success
-        console.log('Login successful for user ID:', user.UserID);
+        // Send successful response
         return res.status(200).json({
-            message: 'Login successful',
-            userId: user.UserID
+          message: "Login successful",
+          userId: user.UserID
         });
-
-    } catch (err) {
+        
+      } catch (err) {
         console.error('Login error:', err);
-        return res.status(500).json({
-            error: 'An internal server error occurred.',
-            details: err.message
+        return res.status(500).json({ 
+          details: err.message
         });
-    }
+      }
 });
-
     /*
 
     Login and registration endpoint

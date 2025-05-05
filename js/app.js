@@ -44,84 +44,58 @@ $("#btnLogin").on('click',function(e){
         fetch('http://localhost:8000/login',{
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
-                email: strUsername, 
-                password: strPassword 
+              email: strUsername, 
+              password: strPassword 
             })
-        })
-        
-.then(response => {
-    // First check if there's content to parse as JSON
-    const contentType = response.headers.get('content-type');
-    
-    if (!response.ok) {
-        // For error responses, handle both JSON and non-JSON responses
-        if (contentType && contentType.includes('application/json')) {
-            return response.json().then(data => {
-                throw new Error(data.error || `Login failed: ${response.status}`);
-            });
-        } else {
-            throw new Error(`Login failed: ${response.status} ${response.statusText}`);
-        }
-    }
-    
-    // For successful responses, ensure we have JSON before parsing
-    if (contentType && contentType.includes('application/json')) {
-        return response.json();
-    } else {
-        throw new Error('Server returned non-JSON response');
-    }
-})
-        .then(data => {
-            loadingBtn.close();
-            
-            // Display success and show dashboard
+          })
+          .then(async (response) => {
+            const contentType = response.headers.get('content-type');
+          
+            if (!response.ok) {
+              let errorMsg = `Login failed: ${response.status}`;
+              if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                errorMsg = data.error || errorMsg;
+              }
+              throw new Error(errorMsg);
+            }
+          
+            if (contentType && contentType.includes('application/json')) {
+              return response.json();
+            } else {
+              throw new Error('Server returned non-JSON response');
+            }
+          })
+          .then(data => {
             Swal.fire({
-                title: 'Success!',
-                text: 'Login successful',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1500
+              title: 'Success!',
+              text: 'Login successful',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
             }).then(() => {
-                console.log("Login success callback triggered");
-                
-                // Get references to elements
-                const loginDiv = document.querySelector('#Login');
-                const dashboardDiv = document.querySelector('#Dashboard');
-                
-                console.log("Login div:", loginDiv);
-                console.log("Dashboard div:", dashboardDiv);
-                
-                // Toggle visibility
-                if (loginDiv) loginDiv.style.display = 'none';
-                if (dashboardDiv) dashboardDiv.style.display = 'block';
-                
-                console.log("Display properties set");
-                
-                // Load initial data
-                try {
-                    // loadCourses();
-                    // loadGroups();
-                    // loadUserProfile();
-                } catch (e) {
-                    console.error("Error loading data:", e);
-                }
+              $('#Login').hide();
+              $('#Dashboard').show();
+          
+            //   loadCourses?.();
+            //   loadGroups?.();
+            //   loadUserProfile?.();
             });
-        })
-        .catch(error => {
-            loadingBtn.close();
-            console.error('Error:', error);
+          })
+          .catch(error => {
             Swal.fire({
-                title: 'Error',
-                text: error.message,
-                icon: 'error'
+              title: 'Login Failed',
+              text: error.message,
+              icon: 'error'
             });
-        });
-    document.querySelector('#txtLogPassword').value = ''
-    }
-})
+          });
+        }
+    // Clear login inputs
+    document.querySelector('#txtLogPassword').value = '';
+    })
 
 $("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -219,6 +193,12 @@ function ViewLogPass() {
         x.type = "password";
     }
 }
+$('#txtLogPassword, #txtLogUser').on('keypress', function(e) {
+    if (e.which === 13) {
+        e.preventDefault(); // block Enter key from reloading the page
+        $('#btnLogin').click(); // optionally trigger login manually
+    }
+});
 
 $(document).on('keypress', function(e) {
     if (e.which === 13) { // Enter key code
@@ -269,62 +249,6 @@ $(document).ready(function() {
     });
 
 });
-
-// function to create user by sending a fetch to the server.js file sending the username and password in the body
-// ensuring the correct content type and catching errors
-function createUser(strUsername, strPassword) {
-
-    fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        Swal.fire({
-            title: "Success",
-            text: data.message,
-            icon: "success"
-        });
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
-
-function loginUser(strUsername, strPassword) {
-    return fetch('http://localhost:8000/login', { // Add 'return' here
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: strUsername, password: strPassword })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Parse and return JSON data
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-        throw error; // Re-throw the error so the caller can handle it
-    });
-}
 
 // Adding the collapse menu logic
 function toggleMembers(button) {
