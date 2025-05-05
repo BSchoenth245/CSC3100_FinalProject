@@ -924,6 +924,27 @@ function loadCourses() {
         Swal.fire('Error', 'Could not load courses', 'error');
     });
 }
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Use event delegation for dynamically added buttons
+//     document.querySelector('#Groups').addEventListener('click', function(e) {
+//         // Check if the clicked element is a Take Survey button
+//         if (e.target.classList.contains('btn-take-survey') || 
+//             (e.target.parentElement && e.target.parentElement.classList.contains('btn-take-survey'))) {
+            
+//             const btn = e.target.classList.contains('btn-take-survey') ? e.target : e.target.parentElement;
+//             const card = btn.closest('.group-card');
+//             const groupName = card.querySelector('.group-header h3').textContent;
+            
+//             // Call the survey function
+//             getSurveyQuestions(groupName);
+//         }
+        
+//         // Check if the clicked element is a Leave Group button
+//         if (e.target.classList.contains('btn-leave-group') || 
+//             (e.target.parentElement && e.target.parentElement.classList.contains('btn-leave-group'))) {
+            
+//             const btn = e.target.classList.contains('btn-leave-group') ? e.target : e.target.parentElement;
+//             const card = btn.closest('.group-card');
 
 document.addEventListener('DOMContentLoaded', () => {
     // Handle Take Survey button clicks
