@@ -14,7 +14,7 @@
     <div id="Login">
         <div class="wrapper">
             <h1>Login</h1>
-            <form>
+            <div class ="form">
                 <div>
                     <label for="txtLogUser">
                         <span>@</span>
@@ -33,7 +33,7 @@
                         aria-label="password">
                 </div>
                 <button type="button" id="btnLogin">Login</button>
-            </form>
+            </div >
             <p>
                 Need an account?
                 <button type="button" class="btn btn-link" id="btnSwapLogin"> Register here!</button>
@@ -43,7 +43,7 @@
     <div id="Register" style="display: none;">
         <div class="wrapper">
             <h1>Register</h1>
-            <form>
+            <div class ="form">
                 <div>
                     <label for="txtFirstName">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 <button type="button" id="btnRegister">Register</button>
-            </form>
+            </div>
             <p>
                 Already have an Account?
                 <button class="btn btn-link" type="button" id="btnSwapRegister">Back to Login</a>
@@ -232,7 +232,7 @@
                     <!-- Add your dashboard widgets, stats, or content here -->
                     <!-- <div id="joinGroupSection">
                                 <h3>Join a Group</h3>
-                                <form>
+                                <div class ="form">
                                     <div>
                                         <label for="txtGroupCode">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
@@ -240,13 +240,13 @@
                                         <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
                                     </div>
                                     <button type="button">Join Group</button>
-                                </form> 
+                                </div> 
                             </div>
                     </div> -->
                     <h2>Create New Course</h2>
                     <div class="dashboard-stats">
                         <div id="createCourse">
-                            <form>
+                            <div class ="form">
                                 <div>
                                     <label for="txtCourseName">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -309,7 +309,7 @@
                                     </div>
                                 </div>
                                 <span class="input-note">Start date will be set automatically to today's date</span>
-                            </form>
+                            </div>
                             <button type="button" id="btnCreateCourse">Create Course</button>
                         </div>
                     </div>
@@ -317,7 +317,7 @@
                     <h2>Create New Group</h2>
                     <div class="dashboard-stats">
                         <div id="createGroupSection">
-                            <form>
+                            <div class ="form">
                                 <div>
                                     <label for="txtGroupName">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -344,7 +344,7 @@
                                     </select>
                                 </div>
                                 <button type="button" id="btnCreateGroup">Create Group</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
@@ -382,7 +382,7 @@
                     <div class="settings-options">
                         <div>
                             <h3>Student Feedback Form</h3>
-                            <form>
+                            <div class ="form">
                                 <div>
                                     <label for="selGroup">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -435,7 +435,7 @@
                                 </div>
                                 <button type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit
                                     Feedback</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -456,7 +456,7 @@
                         <!-- Additional rows will be inserted here dynamically with javascript-->
                         <div id="additionalContacts"></div>
                         <!-- Contact Entry Row -->
-                        <form>
+                        <div class ="form">
                             <div class="contact-row">
                                 <!-- Here the user can select between a few options and this is subject to change, however it should be easy to add svg's with this method from my assumption -->
                                 <div class="contact-type-container">
@@ -489,7 +489,7 @@
                                     🗑️ <!-- This is just an emoji as an example, the plan was to add a separate svg-->
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
