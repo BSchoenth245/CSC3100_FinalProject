@@ -482,8 +482,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             </ul>
                         </div>
                         <div class="card-actions">
-                            <button type="button">Take Survey</button>
-                            <button type="button">Leave Group</button>
+                            <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
+                            <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
                         </div>
                     </div>
                 </div>
@@ -563,45 +563,71 @@ function loadCourses() {
         Swal.fire('Error', 'Could not load courses', 'error');
     });
 }
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Use event delegation for dynamically added buttons
+//     document.querySelector('#Groups').addEventListener('click', function(e) {
+//         // Check if the clicked element is a Take Survey button
+//         if (e.target.classList.contains('btn-take-survey') || 
+//             (e.target.parentElement && e.target.parentElement.classList.contains('btn-take-survey'))) {
+            
+//             const btn = e.target.classList.contains('btn-take-survey') ? e.target : e.target.parentElement;
+//             const card = btn.closest('.group-card');
+//             const groupName = card.querySelector('.group-header h3').textContent;
+            
+//             // Call the survey function
+//             getSurveyQuestions(groupName);
+//         }
+        
+//         // Check if the clicked element is a Leave Group button
+//         if (e.target.classList.contains('btn-leave-group') || 
+//             (e.target.parentElement && e.target.parentElement.classList.contains('btn-leave-group'))) {
+            
+//             const btn = e.target.classList.contains('btn-leave-group') ? e.target : e.target.parentElement;
+//             const card = btn.closest('.group-card');
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Handle Take Survey button clicks
-    document.querySelectorAll('.group-card .card-actions button').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const btn = e.target;
+    // Use event delegation for dynamically added buttons
+    document.querySelector('#Groups').addEventListener('click', function(e) {
+        // Check if the clicked element is a Take Survey button
+        if (e.target.classList.contains('btn-take-survey') || 
+            (e.target.parentElement && e.target.parentElement.classList.contains('btn-take-survey'))) {
+            
+            const btn = e.target.classList.contains('btn-take-survey') ? e.target : e.target.parentElement;
             const card = btn.closest('.group-card');
-
-            if (btn.textContent === 'Take Survey') {
-                const groupName = card.querySelector('.group-header h3').textContent;
-                
-                // Instead of just showing an alert, call the getSurveyQuestions function
-                getSurveyQuestions(groupName);
-            }
-
-			if (btn.textContent === 'Leave Group') {
-				const groupName = card.querySelector('.group-header h3').textContent;
-
-				Swal.fire({
-					title: 'Are you sure?',
-					text: `Do you want to leave "${groupName}"?`,
-					icon: 'warning',
-					showCancelButton: true,
-					confirmButtonText: 'Yes, leave group',
-					cancelButtonText: 'Cancel'
-				}).then((result) => {
-					if (result.isConfirmed) {
-						card.remove();
-
-						Swal.fire({
-							title: 'Left Group',
-							text: `You have left "${groupName}".`,
-							icon: 'success'
-						});
-					}
-				});
-			}
-		});
-	});
+            const groupName = card.querySelector('.group-header h3').textContent;
+            
+            // Call the survey function
+            getSurveyQuestions(groupName);
+        }
+        
+        // Check if the clicked element is a Leave Group button
+        if (e.target.classList.contains('btn-leave-group') || 
+            (e.target.parentElement && e.target.parentElement.classList.contains('btn-leave-group'))) {
+            
+            const btn = e.target.classList.contains('btn-leave-group') ? e.target : e.target.parentElement;
+            const card = btn.closest('.group-card');
+            const groupName = card.querySelector('.group-header h3').textContent;
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you want to leave "${groupName}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, leave group',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    card.remove();
+                    
+                    Swal.fire({
+                        title: 'Left Group',
+                        text: `You have left "${groupName}".`,
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+    });
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
