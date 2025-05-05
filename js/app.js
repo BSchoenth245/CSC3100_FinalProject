@@ -42,14 +42,96 @@ $("#btnLogin").on('click',function(){
         //             text: data.message,
         //             icon: "success"
         //         })
-                 document.querySelector('#Login').style.display = 'none';
-                 document.querySelector('#Dashboard').style.display = 'block'
+                document.querySelector('#Login').style.display = 'none';
+                document.querySelector('#Dashboard').style.display = 'block'
+                loadGroups()
         //     }
         // })
 
         // Clear password input
     }
+        // Show loading indicator
+        const loadingBtn = Swal.fire({
+            title: 'Logging in...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false
+        });
+        
+        fetch('http://localhost:8000/login',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email: strUsername, 
+                password: strPassword 
+            })
+        })
+        
+        .then(response => {
+            // First check if there's content to parse as JSON
+            const contentType = response.headers.get('content-type');
+            
+            if (!response.ok) {
+                // For error responses, handle both JSON and non-JSON responses
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || `Login failed: ${response.status}`);
+                    });
+                } else {
+                    throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+                }
+            }
+    
+            // For successful responses, ensure we have JSON before parsing
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response');
+            }
+        })
+        .then(data => {
+            loadingBtn.close();
+            
+            // Display success and show dashboard
+            Swal.fire({
+                title: 'Success!',
+                text: 'Login successful',
+                icon: 'success',
+                showConfirmButton: true,
+                timer: null
+            }).then(() => {
+                console.log("Login success callback triggered");
+                
+                // Get references to elements
+                const loginDiv = document.querySelector('#Login');
+                const dashboardDiv = document.querySelector('#Dashboard');
+                
+                console.log("Login div:", loginDiv);
+                console.log("Dashboard div:", dashboardDiv);
+                
+                // Toggle visibility
+                if (loginDiv) loginDiv.style.display = 'none';
+                if (dashboardDiv) dashboardDiv.style.display = 'block';
+                
+                console.log("Display properties set");
+                
+                // Load initial data
+                try {
+                    loadCourses();
+                    loadGroups();
+                    loadUserProfile();
+                } catch (e) {
+                    console.error("Error loading data:", e);
+                }
+            });
+        })
     document.querySelector('#txtLogPassword').value = ''
+    }
 })
 
 $("#btnRegister").on('click',function(){
@@ -165,15 +247,15 @@ $(document).on('keypress', function(e) {
 });
 
     // Add event listeners to buttons
-   document.querySelector('#btnSwapLogin').addEventListener('click', function() {
-            document.querySelector('#Login').style.display = 'none';
-            document.querySelector('#Register').style.display = 'block';
-        })
+document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+        document.querySelector('#Login').style.display = 'none';
+        document.querySelector('#Register').style.display = 'block';
+})
 
-    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
-        document.querySelector('#Register').style.display = 'none';
-        document.querySelector('#Login').style.display = 'block';
-    });
+document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+});
     
 $(document).ready(function() {
     // Hide all tab content except the first one initially
@@ -203,7 +285,7 @@ $(document).ready(function() {
 // ensuring the correct content type and catching errors
 function createUser(strUsername, strPassword) {
 
-    fetch('/login', {
+    fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -232,7 +314,7 @@ function createUser(strUsername, strPassword) {
 
 
 function loginUser(strUsername, strPassword) {
-    return fetch('/login', { // Add 'return' here
+    return fetch('http://localhost:8000/login', { // Add 'return' here
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -295,14 +377,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
-document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+document.querySelector('#btnCreateCourse').addEventListener('click', function(event) {
     let blnError = false;
     let strMessage = "";
 
     if (document.querySelector('#txtCourseName').value.trim().length < 1) {
         blnError = true;
-        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';            
+        strMessage += '<p class="mb-0 mt-0">Course Name Cannot Be Blank. <br></p>';
     }
     if (document.querySelector('#txtCourseSection').value.trim().length < 1) {
         blnError = true;
@@ -330,8 +411,17 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
     
     if (document.querySelector('#dateEndDate').value === "") {
+
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
+    }
+    // else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
+    //     blnError = true;
+    //     strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
+    // }
+    else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
+        blnError = true;
+        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
     }
 
     if (blnError) {
@@ -349,27 +439,52 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         const courseSeason = document.querySelector('#selCourseSeason').value;
         const courseYear = document.querySelector('#txtCourseYear').value;
         const courseTerm = `${courseSeason} ${courseYear}`;
-        
-        // Create course with the collected data
-        // createCourse(
-        //     document.querySelector('#txtCourseName').value,
-        //     document.querySelector('#txtCourseSection').value,
-        //     courseTerm,
-        //     startDate,
-        //     endDate
-        // );
-
-        // #TODO: delete this when the backend is ready
-        Swal.fire({
-            title: "Success!",
-            text: "Course created successfully.",
-            icon: "success"
-        });
-        
-        // Optionally insert card into DOM here
         const courseName = document.querySelector('#txtCourseName').value;
         const section = document.querySelector('#txtCourseSection').value;
         const term = `${document.querySelector('#selCourseSeason').value} ${document.querySelector('#txtCourseYear').value}`;
+        
+        // Fetch request to test the createcourse endpoint
+        fetch('http://localhost:8000/createcourse', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            CourseName: courseName,
+            CourseNumber: 'CSC3100',
+            CourseSection: section,
+            CourseTerm: courseTerm,
+            StartDate: startDate,
+            EndDate: endDate
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+            return response.json().then(errorData => {
+                console.error('Error details:', errorData);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            console.log('Course ID:', data.CourseID);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Course created successfully.",
+                icon: "success"
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+  
+        
+        
+        // Optionally insert card into DOM here
+        
         //const endDate = document.querySelector('#dateEndDate').value;
         
         const cardHTML = `
@@ -387,9 +502,8 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
 });
 
-
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
-    fetch('/createcourse', {
+    fetch('http://localhost:8000/createcourse', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -461,8 +575,6 @@ function createCourse(courseName, courseSection, courseTerm, startDate, endDate)
     });
 }
 
-
-
 // Function to update UI based on user type
 function updateUIForUserRole(userRole) {
     // Hide all role-specific elements first
@@ -494,7 +606,7 @@ function updateUIForUserRole(userRole) {
 
 // Fetch the user's role from the server when the page loads
 function fetchUserRole() {
-    fetch('/getUserRole')
+    fetch('http://localhost:8000/getUserRole')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -514,20 +626,20 @@ function fetchUserRole() {
 }
 
 // Call this function when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    fetchUserRole();
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetchUserRole();
 
-    // The toggle switch in the registration form should still work for new users
-    const userTypeToggle = document.getElementById('userTypeToggle');
-    const userTypeValue = document.getElementById('userTypeValue');
+//     // The toggle switch in the registration form should still work for new users
+//     const userTypeToggle = document.getElementById('userTypeToggle');
+//     const userTypeValue = document.getElementById('userTypeValue');
 
-    if (userTypeToggle && userTypeValue) {
-        userTypeToggle.addEventListener('change', function() {
-            userTypeValue.value = this.checked ? 'Student' : 'Staff';
-            console.log('Registration user type set to:', userTypeValue.value);
-        });
-    }
-});
+//     if (userTypeToggle && userTypeValue) {
+//         userTypeToggle.addEventListener('change', function() {
+//             userTypeValue.value = this.checked ? 'Student' : 'Staff';
+//             console.log('Registration user type set to:', userTypeValue.value);
+//         });
+//     }
+// });
 
 $(document).on('click', '.btn-add-contact', function () {
     const currentRow = $(this).closest('.contact-row');
@@ -544,6 +656,32 @@ $(document).on('click', '.btn-add-contact', function () {
         });
         return;
     }
+
+    // Fetch request to test the addSocial endpoint
+fetch('http://localhost:8000/addSocial', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      SocialType: contactType,
+      Username: contactValue
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        console.error('Error details:', errorData);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    console.log('Social ID:', data.SocialID);
+
+  
 
     // Generate a styled static row
     const staticRow = `
@@ -562,6 +700,11 @@ $(document).on('click', '.btn-add-contact', function () {
     // Clear input row fields
     currentRow.find('.contact-type').val('discord'); // default reset
     currentRow.find('.contact-input').val('');
+
+    })
+    .catch(error => {
+    console.error('Error:', error);
+    });
 });
 
 $(document).on('click', '.btn-delete-contact', function () {
@@ -681,6 +824,25 @@ document.addEventListener('DOMContentLoaded', function () {
             // Extract course and section from courseText (e.g., "CSC3100-001 - Web Development")
             const [courseCode, courseSection] = courseText.split(' - ')[0].split('-');
 
+            //UNCOMMENT THIS WHEN THE BACKEND IS READY!!
+            // createGroup(groupName, courseCode, courseSection, generateGroupCode()).then(data => {
+            //     if (data.error) {
+            //         Swal.fire({
+            //             title: "Error",
+            //             message: data.error,
+            //             icon: "error"
+            //         })
+            //     } else {
+            //         Swal.fire({
+            //             title: "Success",
+            //             text: "Group created successfully",
+            //             icon: "success"
+            //         });
+            //     }
+            // })
+
+
+
             // Build group card HTML
             const groupHTML = `
                 <div class="group-card">
@@ -718,6 +880,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+function createGroup(groupName, courseName, courseSection, groupCode) {
+    fetch('http://localhost:8000/creategroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({groupName, courseName, courseSection, groupCode})
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+}
+
 // Utility function to generate a random group code (like ABC123)
 function generateGroupCode() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -736,7 +914,7 @@ function generateGroupCode() {
 // it will be called when the page loads and when the user clicks on the "Load Courses" button
 // TODO:
 function loadCourses() {
-    fetch('/courses') // ⬅️ adjust this if your endpoint is different
+    fetch('http://localhost:8000/courses') // ⬅️ adjust this if your endpoint is different
     .then(response => {
         if (!response.ok) {
         throw new Error('Failed to fetch courses');
@@ -917,3 +1095,31 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#receivedComments').insertAdjacentHTML('afterbegin', commentHTML);
     });
 });
+
+function loadGroups() {
+    fetch('/groups')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch groups');
+        }
+        return response.json();
+    })
+    .then(groups => {
+        const container = document.querySelector('#groupsList');
+        container.innerHTML = ''; // clear any existing cards
+        
+        groups.forEach(group => {
+            const cardHTML = `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3>${group.name}</h3>
+                        <p>Section: ${group.section}</p>
+                        <p>Term: ${group.term}</p>
+                        <p>End Date: ${group.endDate}</p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    });
+}
