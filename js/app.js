@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.querySelector('#btnCreateCourse').addEventListener('click', function() {
+document.querySelector('#btnCreateCourse').addEventListener('click', function(event) {
     let blnError = false;
     let strMessage = "";
 
@@ -276,13 +276,14 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
     
     if (document.querySelector('#dateEndDate').value === "") {
+
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
-    else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
-        blnError = true;
-        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
-    }
+    // else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
+    //     blnError = true;
+    //     strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
+    // }
     else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
@@ -334,18 +335,18 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         .then(data => {
             console.log('Success:', data);
             console.log('Course ID:', data.CourseID);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Course created successfully.",
+                icon: "success"
+            });
         })
         .catch(error => {
             console.error('Error:', error);
         });
   
-
-        // #TODO: delete this when the backend is ready
-        Swal.fire({
-            title: "Success!",
-            text: "Course created successfully.",
-            icon: "success"
-        });
+        
         
         // Optionally insert card into DOM here
         
@@ -367,6 +368,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
 });
 
 function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
+
     fetch('/createcourse', {
         method: 'POST',
         headers: {
