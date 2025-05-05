@@ -47,7 +47,7 @@ h1{
     text-transform: uppercase;
 }
 
-form{
+.form{
     width: min(400px, 100%);
     margin-top: 20px;
     margin-bottom: 50px;
@@ -57,13 +57,13 @@ form{
     gap: 10px;
 }
 
-form > div{
+.form > div{
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-form label{
+.form label{
     flex-shrink: 0;
     height: 50px;
     width: 50px;
@@ -78,7 +78,7 @@ form label{
     font-weight: 500;
 }
 
-form input{
+.form input{
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -92,11 +92,11 @@ form input{
     transition: 150ms ease;
 }
 
-form input:hover{
+.form input:hover{
     border-color: var(--accent-color);
 }
 
-form input:focus{
+.form input:focus{
     outline: none;
     border-color: var(--text-color);
 }
@@ -107,11 +107,11 @@ div:has(textarea:focus) > label{
     background-color: var(--text-color);
 }
 
-form input::placeholder{
+.form input::placeholder{
     color: var(--text-color);
 }
 
-form button{
+.form button{
     margin-top: 10px;
     border: none;
     border-radius: 1000px;
@@ -125,11 +125,11 @@ form button{
     transition: 150ms ease;
 }
 
-form button:hover{
+.form button:hover{
     background-color: var(--text-color);
 }
 
-form button:focus{
+.form button:focus{
     outline: none;
     background-color: var(--text-color);
 }

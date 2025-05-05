@@ -143,11 +143,11 @@ select:focus, textarea:focus,
     border-color: var(--text-color);
 }
 
-form div:has(textarea) {
+.form div:has(textarea) {
     align-items: stretch;
 }
 
-form div:has(textarea) label {
+.form div:has(textarea) label {
     height: auto;
     min-height: 120px;
     align-items: center;
@@ -697,7 +697,7 @@ input[name="courseSection"] { width: 25%; }
 }
 
 /* Ensure consistent spacing between form and additional contacts */
-#profileContacts form {
+#profileContacts .form {
     margin-bottom: 20px;
 }
 

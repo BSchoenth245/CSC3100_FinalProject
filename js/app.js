@@ -132,7 +132,7 @@ $("#btnLogin").on('click',function(){
         })
     document.querySelector('#txtLogPassword').value = ''
     }
-})
+)
 
 $("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
