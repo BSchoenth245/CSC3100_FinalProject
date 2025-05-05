@@ -1,4 +1,5 @@
-$("#btnLogin").on('click',function(){
+$("#btnLogin").on('click',function(e){
+    e.preventDefault()
     // Regular expression for emails
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -101,14 +102,23 @@ $("#btnLogin").on('click',function(){
                 
                 // Load initial data
                 try {
-                    loadCourses();
-                    loadGroups();
-                    loadUserProfile();
+                    // loadCourses();
+                    // loadGroups();
+                    // loadUserProfile();
                 } catch (e) {
                     console.error("Error loading data:", e);
                 }
             });
         })
+        .catch(error => {
+            loadingBtn.close();
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error'
+            });
+        });
     document.querySelector('#txtLogPassword').value = ''
     }
 })
@@ -605,7 +615,7 @@ function fetchUserRole() {
 
 // Call this function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    fetchUserRole();
+    //fetchUserRole();
 
     // The toggle switch in the registration form should still work for new users
     const userTypeToggle = document.getElementById('userTypeToggle');
