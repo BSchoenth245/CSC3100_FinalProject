@@ -1111,13 +1111,28 @@ function loadGroups() {
             const cardHTML = `
                 <div class="group-card">
                     <div class="group-header">
-                        <h3>${group.name}</h3>
-                        <p>Section: ${group.section}</p>
-                        <p>Term: ${group.term}</p>
-                        <p>End Date: ${group.endDate}</p>
+                        <h3>${group.GroupName}</h3>
+                        <span class="group-code">Code: ${group.GroupID}</span>
+                    </div>
+                    <div class="group-info">
+                        <p><strong>Course:</strong> <span class="courseName">${group.CourseName}</span></p>
+                        <p><strong>Section:</strong> <span class="courseSection">${group.CourseSection}</span></p>
+                        <div class="members-section">
+                            <button class="collapse-btn" onclick="toggleMembers(this)">
+                                <strong>Members</strong>
+                                <span class="collapse-icon">▼</span>
+                            </button>
+                            <ul class="member-list collapsed">
+                                <li>Group creator placeholder</li>
+                            </ul>
+                        </div>
+                        <div class="card-actions">
+                            <button type="button">Take Survey</button>
+                            <button type="button">Leave Group</button>
+                        </div>
                     </div>
                 </div>
-            `;
+            `
             container.insertAdjacentHTML('beforeend', cardHTML);
         });
     });
