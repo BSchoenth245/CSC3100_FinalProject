@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div id="Login">
+    <div id="Login" style="display: none;">
         <div class="wrapper">
             <h1>Login</h1>
             <div class ="form">
@@ -131,7 +131,7 @@
     <div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentSurvey" style="display:none;">
         <!-- Survey will be dynamically added here -->
     </div>
-    <div id="Dashboard" style="display: none;">
+    <div id="Dashboard" >
         <div class="wrapper" id="dashboard">
             <div class="tabs">
                 <ul class="nav-tabs">
@@ -154,61 +154,6 @@
                             <!-- Dynamic group/course cards will be injected here -->
                         </div>
                         <!-- First Group Card -->
-                        <div class="group-card">
-                            <div class="group-header">
-                                <h3>Team Awesome</h3>
-                                <span class="group-code">Code: XYZ789</span>
-                            </div>
-                            <div class="group-info">
-                                <p><strong>Course:</strong> <span class="courseName">CSC3100</span></p>
-                                <p><strong>Section:</strong> <span class="courseSection">001</span></p>
-                                <div class="members-section">
-                                    <button class="collapse-btn" onclick="toggleMembers(this)">
-                                        <strong>Members</strong>
-                                        <span class="collapse-icon">▼</span>
-                                    </button>
-                                    <ul class="member-list collapsed">
-                                        <li>John Smith</li>
-                                        <li>Sarah Johnson</li>
-                                        <li>Mike Wilson</li>
-                                        <li>Emily Davis</li>
-                                    </ul>
-                                </div>
-                                <div class="card-actions">
-                                    <!-- make the data group id dynamic -->
-                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
-
-                                    <button type="button" class="btn-leave-group">Leave Group</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Second Group Card (with same button structure) -->
-                        <div class="group-card">
-                            <div class="group-header">
-                                <h3>Database Masters</h3>
-                                <span class="group-code">Code: ABC123</span>
-                            </div>
-                            <div class="group-info">
-                                <p><strong>Course:</strong> <span class="courseName">CSC4150</span></p>
-                                <p><strong>Section:</strong> <span class="courseSection">002</span></p>
-                                <div class="members-section">
-                                    <button class="collapse-btn" onclick="toggleMembers(this)">
-                                        <strong>Members</strong>
-                                        <span class="collapse-icon">▼</span>
-                                    </button>
-                                    <ul class="member-list collapsed">
-                                        <li>Alex Turner</li>
-                                        <li>Jessica Lee</li>
-                                        <li>David Chen</li>
-                                    </ul>
-                                </div>
-                                <div class="card-actions">
-                                    <!-- make the data-group-id dynamic -->
-                                    <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
-                                    <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -309,8 +254,8 @@
                                     </div>
                                 </div>
                                 <span class="input-note">Start date will be set automatically to today's date</span>
+                                <button type="button" id="btnCreateCourse">Create Course</button>
                             </div>
-                            <button type="button" id="btnCreateCourse">Create Course</button>
                         </div>
                     </div>
 
