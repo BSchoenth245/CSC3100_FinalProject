@@ -92,9 +92,11 @@ $("#btnLogin").on('click', function () {
 					console.log("[Login] Toggled to dashboard");
 
 					try {
-						loadCourses();
 						loadGroups();
 						loadUserProfile();
+                        if (data.isFaculty == '1') {
+                            loadCourses()
+                        }
 					} catch (e) {
 						console.error("[Login] Error loading post-login data:", e);
 					}

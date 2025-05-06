@@ -124,7 +124,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         })
         .then(response => {
             if (!response.ok) {
-            return response.json().then(errorData => {
+                return response.json().then(errorData => {
                 console.error('Error details:', errorData);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             });
@@ -543,17 +543,27 @@ function loadCourses() {
         return response.json();
     })
     .then(courses => {
+        console.log('Courses loaded:', courses);
         const container = document.querySelector('#groupsList');
         container.innerHTML = ''; // clear any existing cards
+        let strSection = ''
         
-        courses.forEach(course => {
+        
+        courses.courses.forEach(course => {
+            console.log(course.CourseSection);
+            if (course.CourseSection < 10) {
+                strSection = '00' + course.CourseSection;
+            }
+            if (course.CourseSection >= 10 && course.CourseSection < 100) {
+                strSection = '0' + course.CourseSection;
+            }
         const cardHTML = `
             <div class="group-card">
             <div class="group-header">
-                <h3>${course.name}</h3>
-                <p>Section: ${course.section}</p>
-                <p>Term: ${course.term}</p>
-                <p>End Date: ${course.endDate}</p>
+                <h3>${course.CourseName}<br></h3>
+                <p>Section: ${strSection}<br></p>
+                <p>Term: ${course.CourseTerm}<br></p>
+                <p>End Date: ${course.EndDate}<br></p>
             </div>
             </div>
         `;
@@ -632,9 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     loadCourses();
-//   });
+document.addEventListener('DOMContentLoaded', () => {
+    loadCourses();
+  });
 
 // Survey fully created, now we need to add the functionality to the button
 // Mock group members for demonstration
@@ -644,39 +654,3 @@ const mockGroupMembers = [
     { name: "Mike Wilson" },
     { name: "Emily Davis" }
 ];
-
-
-
-
-document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
-    loadCourses();
-})
-
-function loadCourses() {
-    fetch('/courses')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch courses');
-        }
-        return response.json();
-    })
-    .then(courses => {
-        const container = document.querySelector('#groupsList');
-        container.innerHTML = ''; // clear any existing cards
-        
-        courses.forEach(course => {
-            const cardHTML = `
-                <div class="group-card">
-                    <div class="group-header">
-                        <h3>${course.name}</h3>
-                        <p>Section: ${course.section}</p>
-                        <p>Term: ${course.term}</p>
-                        <p>End Date: ${course.endDate}</p>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
-        });
-    });
-}
-
