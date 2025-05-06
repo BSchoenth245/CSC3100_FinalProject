@@ -261,7 +261,6 @@ app.delete('/deleteCourse', async (req, res) => {
   })
 
 
-
   app.post('/creategroup', async (req, res) => {
     try {
       const { GroupName, CourseName, CourseSection, groupCode } = req.body

@@ -365,24 +365,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Extract course and section from courseText (e.g., "CSC3100-001 - Web Development")
             const [courseCode, courseSection] = courseText.split(' - ')[0].split('-');
+            let groupCode = generateGroupCode()
 
-            //UNCOMMENT THIS WHEN THE BACKEND IS READY!!
-            // createGroup(groupName, courseCode, courseSection, generateGroupCode()).then(data => {
-            //     if (data.error) {
-            //         Swal.fire({
-            //             title: "Error",
-            //             message: data.error,
-            //             icon: "error"
-            //         })
-            //     } else {
-            //         Swal.fire({
-            //             title: "Success",
-            //             text: "Group created successfully",
-            //             icon: "success"
-            //         });
-            //     }
-            // })
-
+            fetch('http://localhost:8000/creategroup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({groupName, courseValue, courseSection, groupCode})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
 
 
             // Build group card HTML
@@ -390,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="group-card">
                     <div class="group-header">
                         <h3>${groupName}</h3>
-                        <span class="group-code">Code: ${generateGroupCode()}</span>
+                        <span class="group-code">Code: ${groupCode}</span>
                     </div>
                     <div class="group-info">
                         <p><strong>Course:</strong> <span class="courseName">${courseCode}</span></p>
@@ -421,21 +418,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function createGroup(groupName, courseName, courseSection, groupCode) {
-    fetch('http://localhost:8000/creategroup', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({groupName, courseName, courseSection, groupCode})
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-}
+// function createGroup(groupName, courseName, courseSection, groupCode) {
+    
+// }
 
 // Utility function to generate a random group code (like ABC123)
 function generateGroupCode() {

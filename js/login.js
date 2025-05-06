@@ -1,122 +1,128 @@
-$("#btnLogin").on('click', function () {
-	// Debug: Triggered login button
-	console.log('[Login] Login button clicked');
+$("#btnLogin").on('click', function(event) {
+    if (event) event.preventDefault(); // Prevent form submission
+    
+    // Regular expression for emails
+    const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    
+    // Captures necessary Login data
+    let strUsername = $('#txtLogUser').val();
+    const strPassword = $('#txtLogPassword').val();
+    let blnError = false;
+    let strMessage = "";
 
-	const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-
-	let strUsername = document.querySelector('#txtLogUser').value;
-	const strPassword = $('#txtLogPassword').val();
-	let blnError = false;
-	let strMessage = '';
-
-	strUsername = strUsername.toLowerCase();
-
-	if (!regEmail.test(strUsername)) {
-		blnError = true;
-		strMessage += '<p class="mb-0 mt-0">Username must be an email address</p>';
-	}
-
-	if (strPassword.length < 8) {
-		blnError = true;
-		strMessage += "<p>Password must be at least 8 characters</p>";
-	}
-
-	if (blnError) {
-		Swal.fire({
-			title: "Oh no, you have an error!",
-			html: strMessage,
-			icon: "error"
-		});
-		console.warn('[Login] Validation failed:', strMessage);
-	} else {
-		console.log('[Login] Passed validation, sending fetch request...');
-
-		const loadingSwal = Swal.fire({
-			title: 'Logging in...',
-			didOpen: () => Swal.showLoading(),
-			allowOutsideClick: false,
-			allowEscapeKey: false,
-			showConfirmButton: false
-		});
-
-		fetch('http://localhost:8000/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				email: strUsername,
-				password: strPassword
-			})
-		})
-			.then(response => {
-				console.log('[Login] Fetch response status:', response.status);
-
-				const contentType = response.headers.get('content-type');
-
-				if (!response.ok) {
-					if (contentType && contentType.includes('application/json')) {
-						return response.json().then(data => {
-							console.error('[Login] Backend returned JSON error:', data);
-							throw new Error(data.error || `Login failed: ${response.status}`);
-						});
-					} else {
-						throw new Error(`Login failed: ${response.status} ${response.statusText}`);
-					}
-				}
-
-				if (contentType && contentType.includes('application/json')) {
-					return response.json();
-				} else {
-					throw new Error('Server returned non-JSON response');
-				}
-			})
-			.then(data => {
-				console.log('[Login] Login success response:', data);
-
-				Swal.fire({
-					title: 'Success!',
-					text: 'Login successful',
-					icon: 'success',
-					showConfirmButton: false,
-					timer: 1500
-			 }).then(() => {
-					console.log("[Login] Success dialog confirmed");
-
-					const loginDiv = document.querySelector('#Login');
-					const dashboardDiv = document.querySelector('#Dashboard');
-
-					if (loginDiv) loginDiv.style.display = 'none';
-					if (dashboardDiv) dashboardDiv.style.display = 'block';
-
-					console.log("[Login] Toggled to dashboard");
-
-					try {
-						loadGroups();
-						loadUserProfile();
-                        if (data.isFaculty == '1') {
-                            loadCourses()
-                        }
-					} catch (e) {
-						console.error("[Login] Error loading post-login data:", e);
-					}
-				});
-			})
-			.catch(error => {
-				console.error('[Login] Fetch error:', error);
-
-				Swal.fire({
-					title: 'Error',
-					text: error.message,
-					icon: 'error'
-				});
-			})
-			.finally(() => {
-				console.log("[Login] Cleaning up login form...");
-				document.querySelector('#txtLogPassword').value = '';
-			});
-	}
+    strUsername = strUsername.toLowerCase();
+    
+    // Input validation for login
+    if(!regEmail.test(strUsername)){
+        blnError = true;
+        strMessage+='<p class ="mb-0 mt-0">Username must be an email address</p>';
+    }
+    if(strPassword.length < 8){
+        blnError = true;
+        strMessage+="<p>Password must be at least 8 characters</p>";
+    }
+    
+    // Error message
+    if(blnError == true){
+        Swal.fire({
+            title: "Oh no, you have an error!",
+            html: strMessage,
+            icon: "error"
+        });
+    }
+    // Success message
+    else{
+        // Show loading indicator WITHOUT a timer
+        const loadingBtn = Swal.fire({
+            title: 'Logging in...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false
+        });
+        
+        fetch('http://localhost:8000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email: strUsername, 
+                password: strPassword 
+            })
+        })
+        .then(res => {
+            // Get the JSON data
+            console.log('Raw response:', res);
+            
+            // Check if the response is ok (status in the 200-299 range)
+            if (!res.ok) {
+                return res.json().then(errorData => {
+                    throw new Error(errorData.error || errorData.details || `Login failed: ${res.status}`);
+                }).catch(jsonError => {
+                    // If JSON parsing fails, throw a generic error
+                    throw new Error(`Login failed: ${res.status} ${res.statusText}`);
+                });
+            }
+            
+            return res.json();
+        })
+        .then(data => {
+            // Close the loading indicator
+            loadingBtn.close();
+            
+            console.log('Login successful!', data);
+            
+            // Store user ID if available
+            if (data.userId) {
+                console.log("User ID received:", data.userId);
+                localStorage.setItem('currentUserId', data.userId);
+                console.log("User ID stored:", data.userId);
+            }
+            
+            // SIMPLIFIED APPROACH: Directly show dashboard without SweetAlert
+            console.log("Directly showing dashboard");
+            
+            // Get references to elements
+            const loginDiv = document.querySelector('#Login');
+            const dashboardDiv = document.querySelector('#Dashboard');
+            
+            console.log("Login div:", loginDiv);
+            console.log("Dashboard div:", dashboardDiv);
+            
+            // Toggle visibility with !important to override any CSS
+            if (loginDiv) {
+                loginDiv.style.display = 'none';
+            }
+            if (dashboardDiv) {
+                dashboardDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            // Close the loading indicator when there's an error
+            loadingBtn.close();
+            
+            // Show error message
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error'
+            });
+            
+            console.error('Login error:', error);
+        })
+        .finally(() => {
+            // Clear password field for security
+            $('#txtLogPassword').val('');
+        });
+    }
+    
+    // Prevent event bubbling
+    return false;
 });
+
 
 function loadUserProfile() {
 	console.log('[loadUserProfile] called');
