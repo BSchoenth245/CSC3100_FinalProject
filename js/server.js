@@ -1,9 +1,12 @@
 const express = require('express')
 const cors = require('cors')
 const {v4:uuidv4} = require('uuid')
-const sqlite3 = require('sqlite3').verbose()
+const sqlite3 = require('sqlite3')
 const bcrypt = require('bcrypt')
 const intSalt = 10;
+
+/*assuming an express app is declared here*/
+
 
   const dbSource = "groupApp.db"
   const HTTP_PORT = 8000
@@ -11,8 +14,10 @@ const intSalt = 10;
   const currentUser = 'test'
 
   var app = express()
-  app.use(cors())
   app.use(express.json())
+  app.use(cors())
+
+
 
     /*
 
@@ -76,84 +81,80 @@ const intSalt = 10;
     }
 })
 
-  app.post('/login', async (req, res) => {
-      try {
-        const { email, password } = req.body;
-        
-        // Use a promise-based approach with proper error handling
-        const getUserByEmail = () => {
-          return new Promise((resolve, reject) => {
-            const sql = `SELECT UserID, Password FROM tblUsers WHERE Email = ?`;
-            db.get(sql, [email], (err, row) => {
-              if (err) reject(err);
-              else resolve(row);
-            });
-          });
-        };
+app.post('/login', (req, res) => {
+  try {
+    console.log(req.body);
+    const { email, password } = req.body;
     
-        // Get user from database
-        const user = await getUserByEmail();
-        
-        // Check if user exists
-        if (!user) {
-          return res.status(404).json({ error: "Invalid email or password." });
-        }
-        
-        // Verify password
-        const match = await bcrypt.compare(password, user.Password);
-        if (!match) {
-          return res.status(401).json({ error: "Invalid email or password" });
-        }
-        
-        // If we reach here, login is successful
-        const currentTime = new Date().toISOString();
-        const SessionID = uuidv4();
-        const strStatus = "Active";
-        
-        // Execute both database operations in a single transaction
-        await new Promise((resolve, reject) => {
-          db.serialize(() => {
-            db.run('BEGIN TRANSACTION');
-            
-            db.run(
-              `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
-              [currentTime, user.UserID],
-              function(err) {
-                if (err) {
-                  db.run('ROLLBACK');
-                  return reject(err);
-                }
+    // Get user from database
+    const sql = `SELECT UserID, Password FROM tblUsers WHERE Email = ?`;
+    db.get(sql, [email], (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      // Check if user exists
+      if (!user) {
+        return res.status(404).json({ error: "Invalid email or password." });
+      }
+
+      // Verify password
+      const match = bcrypt.compareSync(password, user.Password);
+      if (!match) {
+        return res.status(401).json({ error: "Invalid email or password" });
+      }
+
+      // If we reach here, login is successful
+      const currentTime = new Date().toISOString();
+      const SessionID = uuidv4();
+      const strStatus = "Active";
+
+      // Update last login time
+      db.run(
+        `UPDATE tblUsers SET LastLogDateTime = ? WHERE UserID = ?`,
+        [currentTime, user.UserID],
+        (err) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+
+          // Create new session
+          db.run(
+            `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
+             VALUES (?, ?, ?, ?, ?)`,
+            [SessionID, user.UserID, currentTime, currentTime, strStatus],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: err.message });
               }
-            );
-            
-            db.run(
-              `INSERT INTO tblSession (SessionID, UserID, StartDateTime, LastUsedDateTime, Status)
-               VALUES (?, ?, ?, ?, ?)`,
-              [SessionID, user.UserID, currentTime, currentTime, strStatus],
-              function(err) {
-                if (err) {
-                  db.run('ROLLBACK');
-                  return reject(err);
-                }
-                db.run('COMMIT');
-                resolve();
-              }
-            );
-          });
-        });
-        // Send successful response
-        return res.status(200).json({
-          message: "Login successful",
-          userId: user.UserID
-        });
-        
-      } catch (err) {
-        console.error('Login error:', err);
-        return res.status(500).json({ 
-          details: err.message
-      })
-    }
-  });
+
+              // Send successful response - explicitly set content type and status
+              console.log("Login successful for user:", user.UserID);
+              const responseData = { 
+                status: 200, 
+                message: "Login successful", 
+                userId: user.UserID,
+                timestamp: new Date().toISOString() // Add extra data to ensure non-empty response
+              };
+              console.log("Sending response:", responseData);
+              
+              // Set headers explicitly
+              res.setHeader('Content-Type', 'application/json');
+              res.status(200);
+              return res.send(JSON.stringify(responseData));
+            }
+          );
+        }
+      );
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.status(500).json({
+      details: err.message
+    });
+  }
+});
+
 
     /*
 
@@ -260,12 +261,10 @@ app.delete('/deleteCourse', async (req, res) => {
   })
 
 
-
   app.post('/creategroup', async (req, res) => {
     try {
-      const { GroupName, CourseName, CourseSection } = req.body
+      const { GroupName, CourseName, CourseSection, groupCode } = req.body
       const GroupID = uuidv4()
-      const groupCode = uuidv4().substring(0, 6)
 
       const comSelect = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseSection = ?`
       const comInsert = `INSERT INTO tblCourseGroups (GroupID, GroupName, CourseID, groupCode)
@@ -416,7 +415,7 @@ app.delete('/deleteCourse', async (req, res) => {
       return res.status(400).json({ error: "User not authenticated" });
     }
   
-    const sqlGroups = `SELECT DISTINCT GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
+    const sqlGroups = `SELECT DISTINCT tblCourseGroups.GroupID, GroupName, CourseName, CourseNumber, CourseSection, CourseTerm, StartDate, EndDate 
                       FROM tblGroupMembers 
                       LEFT JOIN tblCourseGroups ON tblGroupMembers.GroupID = tblCourseGroups.GroupID 
                       LEFT JOIN tblCourses ON tblCourseGroups.CourseID = tblCourses.CourseID
@@ -522,10 +521,9 @@ app.get('/members', (req,res) => {
 
     */
 
-
   app.post('/addSocial', async (req, res) => {
     try {
-      const { SocialType, Username, isPrivate } = req.body
+      const { SocialType, Username } = req.body
       const SocialID = uuidv4()
       const insertSql = `INSERT INTO tblSocials VALUES (?,?,?,?)`
       
@@ -690,6 +688,7 @@ app.get('/members', (req,res) => {
       })
     })
   })
+
     /*
 
     Socials and comments endpoints
@@ -827,50 +826,78 @@ app.get('/members', (req,res) => {
 
     */
 
-app.post("/AddAssessment", (req, res) => {
-  const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
-  const AssessmentID = uuidv4()
+  app.post("/AddAssessment", (req, res) => {
+    const { CourseName, CourseNumber, CourseSection, StartDate, EndDate, Name } = req.body
+    const AssessmentID = uuidv4()
 
-  const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?)`
-  const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
+    const Assessmentsql = `INSERT INTO tblAssessments VALUES (?,?,?,?,?,?)`
+    const CourseIDsql = `SELECT CourseID FROM tblCourses WHERE CourseName = ? AND CourseNumber = ? AND CourseSection = ?`
 
-  db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
-    if (err) {
-      return res.status(400).json({ error: err.message })
-    }
-    if (!rows) {
-      return res.status(404).json({ error: "Course not found" })
-    }
-    db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name], (err) => {
+    db.all(CourseIDsql, [CourseName, CourseNumber, CourseSection], (err, rows) => {
       if (err) {
         return res.status(400).json({ error: err.message })
       }
-      return res.status(201).json({
-        AssessmentID: AssessmentID,
-        message: "Assessment added successfully"
+      if (!rows) {
+        return res.status(404).json({ error: "Course not found" })
+      }
+      db.run(Assessmentsql, [AssessmentID, rows[0].CourseID, StartDate, EndDate, Name, currentUser], (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message })
+        }
+        return res.status(201).json({
+          AssessmentID: AssessmentID,
+          message: "Assessment added successfully"
+        })
       })
     })
   })
-})
 
-app.get('/getAssessments', (req, res) => {
-  const Assessmentsql = `SELECT * FROM tblAssessments WHERE owner = ?`
-  db.all(Assessmentsql, [currentUser], (err, rows) => {
-    if (err) {
-      return res.status(400).json({ error: err.message })
-    }
-    if (!rows) {
-      return res.status(404).json({ error: "Assessment not found" })
-    }
-    return res.status(200).json({
-      message: "Assessments retrieved successfully",
-      count: rows.length,
-      assessments: rows
+  app.get('/getAssessments', (req, res) => {
+    const Assessmentsql = `SELECT * FROM tblAssessments WHERE owner = ?`
+    db.all(Assessmentsql, [currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Assessment not found" })
+      }
+      return res.status(200).json({
+        message: "Assessments retrieved successfully",
+        count: rows.length,
+        assessments: rows
+      })
     })
   })
-})
 
-app.post('/addAssessmentQuestion', (req,res) => {
+  app.patch('/updateAssessment', (req, res) => {
+    const { StartDate, EndDate, Name, OGName } = req.body
+
+    const updateSQL = `UPDATE tblAssessments SET StartDate = ?, EndDate = ?, Name = ? WHERE Name = ? AND owner = ?`
+    db.run(updateSQL, [StartDate, EndDate, Name, OGName, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Assessment updated successfully"
+      })
+    })
+
+  })
+
+  app.delete('/deleteAssessment', (req, res) => {
+    const { Name } = req.body
+    const deleteSQL = `DELETE FROM tblAssessments WHERE Name = ? AND owner = ?`
+    db.run(deleteSQL, [Name, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Assessment deleted successfully"
+      })
+    })
+  })
+
+  app.post('/addAssessmentQuestion', (req,res) => {
   const { AssessmentName, QType, Options, Narrative, QNumber } = req.body
   const QuestionID = uuidv4()
 
@@ -896,6 +923,54 @@ app.post('/addAssessmentQuestion', (req,res) => {
       })
     })
   })
+  })
+
+  app.post('/getAssessmentQuestions', (req, res) => {
+    const { Name } = req.body
+    const Questionsql = `SELECT * FROM tblAssessmentQuestions WHERE AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.all(Questionsql, [Name, currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Question not found" })
+      }
+      return res.status(200).json({
+        message: "Questions retrieved successfully",
+        count: rows.length,
+        questions: rows
+      })
+    })
+  })
+
+  app.patch('/updateAssessmentQuestion', (req, res) => {
+    const { QType, Options, Narrative, QNumber, OGQNumber, AssessmentName } = req.body
+
+    const updateSQL = `UPDATE tblAssessmentQuestions SET QuestionType = ?, Options = ?, QuestionNarrative = ?, QuestionNumber = ? WHERE QuestionNumber = ? AND AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.run(updateSQL, [QType, Options, Narrative, QNumber, OGQNumber, AssessmentName, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Question updated successfully"
+      })
+    })
+  })
+
+  app.delete('/deleteAssessmentQuestion', (req, res) => {
+    const { QNumber, AssessmentName } = req.body
+    const deleteSQL = `DELETE FROM tblAssessmentQuestions WHERE QuestionNumber = ? AND AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?)`
+    db.run(deleteSQL, [QNumber, AssessmentName, currentUser], (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      return res.status(200).json({
+        message: "Question deleted successfully"
+      })
+    })
   })
 
   app.post('/addAssessmentResponse', (req, res) => {
@@ -927,13 +1002,31 @@ app.post('/addAssessmentQuestion', (req,res) => {
     })
   })
 
+  app.post('/getAssessmentResponses', (req, res) => {
+    const { AssessmentName } = req.body
+    const Responsesql = `SELECT * FROM tblAssessmentResponses WHERE QuestionID IN
+                          (SELECT QuestionID FROM tblAssessmentQuestions WHERE AssessmentID =
+                          (SELECT AssessmentID FROM tblAssessments WHERE Name = ? and owner = ?))`
+    db.all(Responsesql, [AssessmentName, currentUser], (err, rows) => {
+      if (err) {
+        return res.status(400).json({ error: err.message })
+      }
+      if (!rows) {
+        return res.status(404).json({ error: "Response not found" })
+      }
+      return res.status(200).json({
+        message: "Responses retrieved successfully",
+        count: rows.length,
+        responses: rows
+      })
+    })
+  })
+
     /*
 
     Assessment Related Endpoint
 
     */
-
-
 
   app.listen(HTTP_PORT, () => {
       console.log(`Server running on port ${HTTP_PORT}`)

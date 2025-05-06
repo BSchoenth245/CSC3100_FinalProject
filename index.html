@@ -14,7 +14,7 @@
     <div id="Login">
         <div class="wrapper">
             <h1>Login</h1>
-            <form>
+            <div class ="form">
                 <div>
                     <label for="txtLogUser">
                         <span>@</span>
@@ -33,7 +33,7 @@
                         aria-label="password">
                 </div>
                 <button type="button" id="btnLogin">Login</button>
-            </form>
+            </div >
             <p>
                 Need an account?
                 <button type="button" class="btn btn-link" id="btnSwapLogin"> Register here!</button>
@@ -43,7 +43,7 @@
     <div id="Register" style="display: none;">
         <div class="wrapper">
             <h1>Register</h1>
-            <form>
+            <div class ="form">
                 <div>
                     <label for="txtFirstName">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -119,7 +119,7 @@
                     </div>
                 </div>
                 <button type="button" id="btnRegister">Register</button>
-            </form>
+            </div>
             <p>
                 Already have an Account?
                 <button class="btn btn-link" type="button" id="btnSwapRegister">Back to Login</a>
@@ -127,11 +127,7 @@
         </div>
     </div>
     <!-- Survey Container -->
-    <!-- BOOTSTRAP USED HERE: Replace card layout and spacing (card, col-12, col-md-6, col-lg-4, mt-5, mb-5) -->
-    <div class="card col-12 col-md-6 col-lg-4 mt-5 mb-5" id="divStudentSurvey" style="display:none;">
-        <!-- Survey will be dynamically added here -->
-    </div>
-    <div id="Dashboard" style="display: none;">
+    <div id="Dashboard" style="display: none">
         <div class="wrapper" id="dashboard">
             <div class="tabs">
                 <ul class="nav-tabs">
@@ -140,6 +136,9 @@
                     <!-- <li><a href="#addNewGroup">Create Group</a></li> -->
                     <li><a href="#Comments">Comments</a></li>
                     <li><a href="#addNewComments">Add Comment</a></li>
+                    <!-- survey tab for instructors-->
+                    <li><a href="#InstructorSurveys">Surveys</a></li> 
+
                 </ul>
                 <ul class="profile-tab-container">
                     <li><a href="#Profile">Profile</a></li>
@@ -148,60 +147,15 @@
             <div class="content-area">
                 <div id="Groups" class="tab-content active">
                     <h2>View Active Groups</h2>
-                    <div class="dashboard-stats">
+                    <div class="dashboard-stats" id="">
+                        <!-- only a test will be deleted TODO: -->
+                        <div id="groupsList">
+                            <!-- Dynamic group/course cards will be injected here -->
+                        </div>
+                        <div id="courseList">
+
+                        </div>
                         <!-- First Group Card -->
-                        <div class="group-card">
-                            <div class="group-header">
-                                <h3>Team Awesome</h3>
-                                <span class="group-code">Code: XYZ789</span>
-                            </div>
-                            <div class="group-info">
-                                <p><strong>Course:</strong> <span class="courseName">CSC3100</span></p>
-                                <p><strong>Section:</strong> <span class="courseSection">001</span></p>
-                                <div class="members-section">
-                                    <button class="collapse-btn" onclick="toggleMembers(this)">
-                                        <strong>Members</strong>
-                                        <span class="collapse-icon">▼</span>
-                                    </button>
-                                    <ul class="member-list collapsed">
-                                        <li>John Smith</li>
-                                        <li>Sarah Johnson</li>
-                                        <li>Mike Wilson</li>
-                                        <li>Emily Davis</li>
-                                    </ul>
-                                </div>
-                                <div class="card-actions">
-                                    <button type="button" id="btn-take-survey">Take Survey</button>
-                                    <button type="button" id="btn-leave-group">Leave Group</button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Second Group Card (with same button structure) -->
-                        <div class="group-card">
-                            <div class="group-header">
-                                <h3>Database Masters</h3>
-                                <span class="group-code">Code: ABC123</span>
-                            </div>
-                            <div class="group-info">
-                                <p><strong>Course:</strong> <span class="courseName">CSC4150</span></p>
-                                <p><strong>Section:</strong> <span class="courseSection">002</span></p>
-                                <div class="members-section">
-                                    <button class="collapse-btn" onclick="toggleMembers(this)">
-                                        <strong>Members</strong>
-                                        <span class="collapse-icon">▼</span>
-                                    </button>
-                                    <ul class="member-list collapsed">
-                                        <li>Alex Turner</li>
-                                        <li>Jessica Lee</li>
-                                        <li>David Chen</li>
-                                    </ul>
-                                </div>
-                                <div class="card-actions">
-                                    <button type="button" id="btn-take-survey">Take Survey</button>
-                                    <button type="button" id="btn-leave-group">Leave Group</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -225,7 +179,7 @@
                     <!-- Add your dashboard widgets, stats, or content here -->
                     <!-- <div id="joinGroupSection">
                                 <h3>Join a Group</h3>
-                                <form>
+                                <div class ="form">
                                     <div>
                                         <label for="txtGroupCode">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-560q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm2 520L320-200l80-80-80-80 80-80v-14q-72-25-116-87t-44-139q0-100 70-170t170-70q100 0 170 70t70 170q0 81-46 141.5T560-454v334l-78 80Z"/></svg>
@@ -233,47 +187,13 @@
                                         <input type="text" id="txtGroupCode" placeholder="Enter Group Code" />
                                     </div>
                                     <button type="button">Join Group</button>
-                                </form> 
+                                </div> 
                             </div>
                     </div> -->
-                    <h2>Create New Group</h2>
-                    <div class="dashboard-stats">
-                        <div id="createGroupSection">
-                            <form>
-                                <div>
-                                    <label for="txtGroupName">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                            width="24px" fill="#e8eaed">
-                                            <path
-                                                d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Z" />
-                                        </svg>
-                                    </label>
-                                    <input type="text" id="txtGroupName" placeholder="Enter Group Name" />
-                                </div>
-                                <div>
-                                    <label for="selCourseName">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                            width="24px" fill="#e8eaed">
-                                            <path
-                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
-                                        </svg>
-                                    </label>
-                                    <select id="selCourseName" aria-label="Select a course">
-                                        <option value="">Select Course</option>
-                                        <option value="CSC3100">CSC3100-001 - Web Development</option>
-                                        <option value="CSC4150">CSC4150-003 - Database Systems</option>
-                                        <option value="CSC2200">CSC2200-005 - Data Structures</option>
-                                    </select>
-                                </div>
-                                <button type="button">Create Group</button>
-                            </form>
-                        </div>
-                    </div>
-
                     <h2>Create New Course</h2>
                     <div class="dashboard-stats">
                         <div id="createCourse">
-                            <form>
+                            <div class ="form">
                                 <div>
                                     <label for="txtCourseName">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -283,6 +203,16 @@
                                         </svg>
                                     </label>
                                     <input type="text" id="txtCourseName" placeholder="Enter Course Name" />
+                                </div>
+                                <div>
+                                    <label for="txtCourseNumber">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                        </svg>
+                                    </label>
+                                    <input type="text" id="txtCourseNumber" placeholder="Enter Course Number" />
                                     <h3 class="dash-separator">-</h3>
                                     <input type="text" id="txtCourseSection" name="courseSection"
                                         placeholder="Section" />
@@ -327,30 +257,68 @@
                                 </div>
                                 <span class="input-note">Start date will be set automatically to today's date</span>
                                 <button type="button" id="btnCreateCourse">Create Course</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
+                    <h2>Create New Group</h2>
+                    <div class="dashboard-stats">
+                        <div id="createGroupSection">
+                            <div class ="form">
+                                <div>
+                                    <label for="txtGroupName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Z" />
+                                        </svg>
+                                    </label>
+                                    <input type="text" id="txtGroupName" placeholder="Enter Group Name" />
+                                </div>
+                                <div>
+                                    <label for="selCourseName">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                        </svg>
+                                    </label>
+                                    <select id="selCourseName" aria-label="Select a course">
+                                        <!-- <option value="">Select Course</option> -->
+                                        <!-- <option value="CSC3100">CSC3100-001 - Web Development</option>
+                                        <option value="CSC4150">CSC4150-003 - Database Systems</option>
+                                        <option value="CSC2200">CSC2200-005 - Data Structures</option> -->
+                                    </select>
+                                </div>
+                                <button type="button" id="btnCreateGroup">Create Group</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="Comments" class="tab-content">
-                    <!-- Settings tab content -->
-                    <h2>View Comments Here</h2>
-                    <div class="settings-options" -->
-                        <!-- Settings options here -->
-                        <!-- this was an example created for our view comment tab-->
-                        <form>
-                            <div class="group card">
-                                <div class="group-header">
-                                    <h3><strong>Brock The Rock</strong></h3>
-                                    <span class="group-code"> Submitted on: April 20, 2025 at 4:20 PM </span>
-                                </div>
-                                <p>"I think the boys did their best, but like next time I think we should just lock in."
-                                </p>
+                    <h2>View Comments</h2>
+                    <div class="comments-container">
+                        <!-- Received Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Received Comments</div>
+                            <div id="receivedComments">
+                                <!-- Received comments will be dynamically added here -->
+                                <div class="empty-comments">No received comments yet</div>
                             </div>
+                        </div>
+                        
+                        <!-- Sent Comments Column -->
+                        <div class="comments-column">
+                            <div class="comments-column-header">Sent Comments</div>
+                            <div id="sentComments">
+                                <!-- Sent comments will be dynamically added here -->
+                                <div class="empty-comments">No sent comments yet</div>
+                            </div>
+                        </div>
                     </div>
-                    </form>
                 </div>
+                
 
                 <div id="addNewComments" class="tab-content">
                     <!-- Settings tab content -->
@@ -358,7 +326,7 @@
                     <div class="settings-options">
                         <div>
                             <h3>Student Feedback Form</h3>
-                            <form>
+                            <div class ="form">
                                 <div>
                                     <label for="selGroup">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
@@ -409,9 +377,67 @@
                                             value="public">
                                     </div>
                                 </div>
-                                <button type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit
-                                    Feedback</button>
-                            </form>
+                                <button type="button" id="btnSubmitFeedback" aria-label="Submit Feedback">Submit Feedback</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="InstructorSurveys" class="tab-content">
+                    <h2>Create Survey Questions</h2>
+    
+                    <div class="form" id="courseSelectionSection">
+                        <div class="survey-input-group">
+                            <label for="selCourse">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                    width="24px" fill="#e8eaed">
+                                    <path
+                                        d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                </svg>
+                            </label>
+                            <select id="selCourse" aria-label="Select a course">
+                                <option value="">Select Course</option>
+                                <option value="CSC3100">CSC3100-001 - Web Development</option>
+                                <option value="CSC4150">CSC4150-003 - Database Systems</option>
+                                <option value="CSC2200">CSC2200-005 - Data Structures</option>
+                            </select>
+                        </div>
+                        <button type="button" id="btnCreateSurvey">Create Survey</button>
+                    </div>
+                
+                    <!-- Hidden until a course is selected -->
+                    <div id="surveyBuilderSection" class="form survey-card" style="display: none;">
+                        <div class="survey-input-group">
+                            <label for="txtSurveyQuestion">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M160-40v-80h640v80H160Zm0-800v-80h640v80H160Zm320 400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z" />
+                                </svg>
+                            </label>
+                            <input type="text" id="txtSurveyQuestion" placeholder="Enter your survey question...">
+                        </div>
+                
+                        <!-- Question Type Toggle -->
+                        <div class="question-type-toggle-container">
+                            <span class="toggle-label-text" id="openResponseLabel">Open Response</span>
+                            <div class="question-type-toggle">
+                                <input type="checkbox" id="questionTypeToggle" class="toggle-input">
+                                <label for="questionTypeToggle" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <input type="hidden" name="questionType" id="questionTypeValue" value="open">
+                            </div>
+                            <span class="toggle-label-text" id="likertScaleLabel">Likert Scale (1-10)</span>
+                        </div>
+                
+                        <button type="button" id="btnAddSurveyQuestion">Add Survey Question</button>
+                
+                        
+                    </div>
+                    <div id="surveyQuestionPreview" class="form survey-card" style="display: none;">
+                        <h4>Existing Questions</h4>
+                        <hr>
+                        <div id="surveyQuestionPreviewList">
+                            <!-- Populated Dynamically -->
                         </div>
                     </div>
                 </div>
@@ -432,7 +458,7 @@
                         <!-- Additional rows will be inserted here dynamically with javascript-->
                         <div id="additionalContacts"></div>
                         <!-- Contact Entry Row -->
-                        <form>
+                        <div class ="form">
                             <div class="contact-row">
                                 <!-- Here the user can select between a few options and this is subject to change, however it should be easy to add svg's with this method from my assumption -->
                                 <div class="contact-type-container">
@@ -465,16 +491,24 @@
                                     🗑️ <!-- This is just an emoji as an example, the plan was to add a separate svg-->
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Add this right before the closing body tag-->
+    <div id="divStudentSurvey" class="survey-modal" style="display:none;">
+        <!-- Survey content will be loaded here -->
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/app.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/comments.js"></script>
+    <script src="js/survey.js"></script>
+
 
 </body>
 

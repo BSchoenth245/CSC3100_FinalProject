@@ -1,0 +1,25 @@
+<!-- Survey Section -->
+<div class="card-body">
+    <h1 class="text-center mb-4">Group Member Assessment</h1>
+  
+    <form id="frmSurvey">
+      
+      <!-- Member Selector -->
+      <div class="mb-3">
+        <label for="selGroupMemberSurvey" class="form-label">Select Group Member</label>
+        <select class="form-control" id="selGroupMemberSurvey" aria-label="Select a group member to assess">
+          <!-- Group members will be added dynamically -->
+        </select>
+      </div>
+  
+      <!-- Survey Questions Rendered Here -->
+      <div id="dynamicSurveyQuestions" class="mb-4">
+        <!-- Dynamic questions (open or scale) will be injected here via JS -->
+      </div>
+  
+      <!-- Submit Buttons -->
+      <button class="btn btn-primary col-12 mt-3" type="button" id="btnSubmitSurvey" aria-label="Submit Survey">Submit Survey</button>
+      <button class="btn btn-link col-12 mt-2" type="button" id="btnBackToDashboardSurvey" aria-label="Go Back to Dashboard">Back to Dashboard</button>
+    </form>
+  </div>
+  
