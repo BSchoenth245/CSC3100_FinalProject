@@ -405,8 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </ul>
                         </div>
                         <div class="card-actions">
-                            <button type="button" class="btn-take-survey" data-group-id="XYZ789">Take Survey</button>
-                            <button type="button" class="btn-leave-group" data-group-id="XYZ789">Leave Group</button>
+                            <button type="button" class="btn-leave-group" data-group-id="XYZ789">Delete Group</button>
                         </div>
                     </div>
                 </div>
