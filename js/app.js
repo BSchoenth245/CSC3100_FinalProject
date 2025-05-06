@@ -439,45 +439,76 @@ function generateGroupCode() {
 // this function will load the courses from the server and display them in the dashboard
 // it will be called when the page loads and when the user clicks on the "Load Courses" button
 // TODO:
+// this function will load the courses from the server and display them in the dashboard
+// it will be called when the page loads and when the user clicks on the "Load Courses" button
 function loadCourses() {
     fetch('http://localhost:8000/courses') // ⬅️ adjust this if your endpoint is different
     .then(response => {
         if (!response.ok) {
-        throw new Error('Failed to fetch courses');
+            throw new Error('Failed to fetch courses');
         }
         return response.json();
     })
     .then(courses => {
+        // Update the course cards in the dashboard
         const container = document.querySelector('#courseList');
         container.innerHTML = ''; // clear any existing cards
-        let strSection = ''
         
-        
+        // Create course cards
         courses.courses.forEach(course => {
+            let strSection = '';
+            
             if (course.CourseSection < 10) {
                 strSection = '00' + course.CourseSection;
-            }
-            if (course.CourseSection >= 10 && course.CourseSection < 100) {
+            } else if (course.CourseSection >= 10 && course.CourseSection < 100) {
                 strSection = '0' + course.CourseSection;
+            } else {
+                strSection = course.CourseSection;
             }
-        const cardHTML = `
-            <div class="group-card">
-            <div class="group-header">
-                <h3>${course.CourseName}<br></h3>
-                <p>Section: ${strSection}<br></p>
-                <p>Term: ${course.CourseTerm}<br></p>
-                <p>End Date: ${course.EndDate}<br></p>
-            </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', cardHTML);
+            
+            // Create course card for the dashboard
+            const cardHTML = `
+                <div class="group-card">
+                <div class="group-header">
+                    <h3>${course.CourseName}<br></h3>
+                    <p>Section: ${strSection}<br></p>
+                    <p>Term: ${course.CourseTerm}<br></p>
+                    <p>End Date: ${course.EndDate}<br></p>
+                </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
         });
+        
+        // Update the course select dropdown using string concatenation
+        let strSelectCourseHTML = '<option value="">Select a course</option>';
+        
+        courses.courses.forEach(course => {
+            let strSection = '';
+            
+            if (course.CourseSection < 10) {
+                strSection = '00' + course.CourseSection;
+            } else if (course.CourseSection >= 10 && course.CourseSection < 100) {
+                strSection = '0' + course.CourseSection;
+            } else {
+                strSection = course.CourseSection;
+            }
+            
+            strSelectCourseHTML += `<option value="${course.CourseID}">${course.CourseNumber}-${strSection} - ${course.CourseName}</option>`;
+        });
+        
+        // Set the innerHTML of the select element
+        document.querySelector('#selCourseName').innerHTML = strSelectCourseHTML;
+        
+        console.log('Courses loaded and select options updated');
     })
     .catch(error => {
         console.error('Error loading courses:', error);
         Swal.fire('Error', 'Could not load courses', 'error');
     });
 }
+
+
 // document.addEventListener('DOMContentLoaded', () => {
 //     // Use event delegation for dynamically added buttons
 //     document.querySelector('#Groups').addEventListener('click', function(e) {

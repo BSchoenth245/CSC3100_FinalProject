@@ -165,9 +165,6 @@ function loadUserProfile() {
 		});
 }
 
-
-
-
 $("#btnRegister").on('click',function(){
     const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -290,63 +287,7 @@ $(document).on('keypress', function(e) {
         document.querySelector('#Register').style.display = 'none';
         document.querySelector('#Login').style.display = 'block';
     });
-    
 
-// function to create user by sending a fetch to the server.js file sending the username and password in the body
-// ensuring the correct content type and catching errors
-function createUser(strUsername, strPassword) {
-
-    fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ strUsername, strPassword })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        Swal.fire({
-            title: "Success",
-            text: data.message,
-            icon: "success"
-        });
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
-
-function loginUser(strUsername, strPassword) {
-    return fetch('http://localhost:8000/login', { // Add 'return' here
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: strUsername, password: strPassword })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Parse and return JSON data
-    })
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-        throw error; // Re-throw the error so the caller can handle it
-    });
-}
 
 // Student/Staff Toggle JavaScript registration 
 document.addEventListener('DOMContentLoaded', function() {
