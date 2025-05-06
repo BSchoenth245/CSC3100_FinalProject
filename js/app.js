@@ -103,6 +103,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         const courseYear = document.querySelector('#txtCourseYear').value;
         const courseTerm = `${courseSeason} ${courseYear}`;
         const courseName = document.querySelector('#txtCourseName').value;
+        const courseNumber = document.querySelector('#txtCourseNumber').value;
         const section = document.querySelector('#txtCourseSection').value;
         const term = `${document.querySelector('#selCourseSeason').value} ${document.querySelector('#txtCourseYear').value}`;
         
@@ -114,7 +115,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
             },
             body: JSON.stringify({
             CourseName: courseName,
-            CourseNumber: 'CSC3100',
+            CourseNumber: courseNumber,
             CourseSection: section,
             CourseTerm: courseTerm,
             StartDate: startDate,
