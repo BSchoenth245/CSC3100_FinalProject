@@ -37,10 +37,6 @@ function toggleMembers(button) {
 }
 
 
-
-
-
-
 document.querySelector('#btnCreateCourse').addEventListener('click', function() {
     let blnError = false;
     let strMessage = "";
@@ -78,10 +74,6 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Blank. </p>';
     }
-    else if (new Date(document.querySelector('#dateEndDate').value) < new Date(document.querySelector('#dateStartDate').value)) {   
-        blnError = true;
-        strMessage += '<p class="mb-0 mt-0">End Date Cannot Be Before Start Date. </p>';
-    }
     else if (new Date(document.querySelector('#dateEndDate').value) < new Date()) {
         blnError = true;
         strMessage += '<p class="mb-0 mt-0">End Date Cannot Be In The Past. </p>';
@@ -113,12 +105,12 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
             'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-            CourseName: courseName,
-            CourseNumber: 'CSC3100',
-            CourseSection: section,
-            CourseTerm: courseTerm,
-            StartDate: startDate,
-            EndDate: endDate
+                CourseName: courseName,
+                CourseNumber: 'CSC3100',
+                CourseSection: section,
+                CourseTerm: courseTerm,
+                StartDate: startDate,
+                EndDate: endDate
             })
         })
         .then(response => {
@@ -137,8 +129,6 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         .catch(error => {
             console.error('Error:', error);
         });
-  
-
         // #TODO: delete this when the backend is ready
         Swal.fire({
             title: "Success!",
