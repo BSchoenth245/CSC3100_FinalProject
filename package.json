@@ -19,6 +19,8 @@
   "homepage": "https://github.com/BSchoenth245/CSC3100_FinalProject#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.9.1",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "sqlite3": "^5.1.7",

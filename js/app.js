@@ -1,4 +1,269 @@
+document.querySelector('#btnLogin').addEventListener('click', function(event) {
+    event.preventDefault();
+    
+    // Regular expression for emails
+    const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    
+    // Captures necessary Login data
+    let strUsername = $('#txtLogUser').val();
+    const strPassword = $('#txtLogPassword').val();
+    let blnError = false;
+    let strMessage = "";
 
+    strUsername = strUsername.toLowerCase();
+    
+    // Input validation for login
+    if(!regEmail.test(strUsername)){
+        blnError = true;
+        strMessage+='<p class ="mb-0 mt-0">Username must be an email address</p>';
+    }
+    if(strPassword.length < 8){
+        blnError = true;
+        strMessage+="<p>Password must be at least 8 characters</p>";
+    }
+    
+    // Error message
+    if(blnError == true){
+        Swal.fire({
+            title: "Oh no, you have an error!",
+            html: strMessage,
+            icon: "error"
+        });
+    }
+    // Success message
+    else{
+        // Show loading indicator WITHOUT a timer
+        const loadingBtn = Swal.fire({
+            title: 'Logging in...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false
+        });
+        
+        fetch('http://localhost:8000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                email: strUsername, 
+                password: strPassword 
+            })
+        })
+        .then(res => {
+            // Get the JSON data
+            console.log('Raw response:', res);
+            
+            // Check if the response is ok (status in the 200-299 range)
+            if (!res.ok) {
+                return res.json().then(errorData => {
+                    throw new Error(errorData.error || errorData.details || `Login failed: ${res.status}`);
+                }).catch(jsonError => {
+                    // If JSON parsing fails, throw a generic error
+                    throw new Error(`Login failed: ${res.status} ${res.statusText}`);
+                });
+            }
+            
+            return res.json();
+        })
+        .then(data => {
+            // Close the loading indicator
+            loadingBtn.close();
+            
+            console.log('Login successful!', data);
+            
+            // Store user ID if available
+            if (data.userId) {
+                console.log("User ID received:", data.userId);
+                localStorage.setItem('currentUserId', data.userId);
+                console.log("User ID stored:", data.userId);
+            }
+            
+            // SIMPLIFIED APPROACH: Directly show dashboard without SweetAlert
+            console.log("Directly showing dashboard");
+            
+            // Get references to elements
+            const loginDiv = document.querySelector('#Login');
+            const dashboardDiv = document.querySelector('#Dashboard');
+            
+            console.log("Login div:", loginDiv);
+            console.log("Dashboard div:", dashboardDiv);
+            
+            // Toggle visibility with !important to override any CSS
+            if (loginDiv) {
+                loginDiv.style.cssText = 'display: none !important';
+                console.log("Login div style set to:", loginDiv.style.display);
+            }
+            if (dashboardDiv) {
+                dashboardDiv.style.cssText = 'display: block !important';
+                console.log("Dashboard div style set to:", dashboardDiv.style.display);
+            }
+            
+            // Check if the display was actually changed
+            setTimeout(() => {
+                console.log("After timeout - Login display:", document.querySelector('#Login').style.display);
+                console.log("After timeout - Dashboard display:", document.querySelector('#Dashboard').style.display);
+            }, 100);
+            
+            // Comment out these calls temporarily to isolate the issue
+            // try {
+            //     loadCourses();
+            //     loadGroups();
+            //     loadUserProfile();
+            // } catch (e) {
+            //     console.error("Error loading data:", e);
+            // }
+        })
+        .catch(error => {
+            // Close the loading indicator when there's an error
+            loadingBtn.close();
+            
+            // Show error message
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error'
+            });
+            
+            console.error('Login error:', error);
+        })
+        .finally(() => {
+            // Clear password field for security
+            $('#txtLogPassword').val('');
+        });
+    }
+    
+    // Prevent event bubbling
+    return false;
+});
+
+
+$("#btnRegister").on('click',function(){
+    const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    //const regPass = ~/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
+
+    // Captures necessary Login data
+    let strUsername = document.querySelector('#txtRegUsername').value
+    let strFirst = document.querySelector('#txtFirstName').value
+    let strLast = document.querySelector('#txtLastName').value
+
+    const strPassword = $('#txtRegPassword').val()
+    const strConPassword = $('#txtConfirmPassword').val()
+    const isFaculty = document.getElementById('commentVisibilityValue');
+
+    let blnError = false
+    let strMessage = ""
+
+    strUsername = strUsername.toLowerCase()
+    // Input validation for login
+    if(strFirst.trim().length < 1){
+        blnError = true
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'            
+    }
+    if(strLast.trim().length < 1){
+        blnError = true
+        strMessage += '<p class="mb-0 mt-0">First Name Cannot Be Blank. </p>'
+    }
+    if(!regEmail.test(strUsername)){
+        blnError = true
+        strMessage+='<p class ="mb-0 mt-0">Username must be an email address. </p>'
+    }
+    if(strPassword.length < 8){
+        blnError = true
+        strMessage+="<p>Password cannot be blank. </p>"
+    }
+    if(strConPassword != strPassword){
+        blnError = true
+        strMessage+="<p>Passwords must match.</p>"
+    }
+    // Error message
+    if(blnError == true){
+        Swal.fire({
+            title: "Oh no, you have an error!",
+            html: strMessage,
+            icon: "error"
+        })
+    }
+    else{
+        fetch('http://localhost:8000/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: strFirst,
+                lastName: strLast,
+                email: strUsername,
+                password: strPassword,
+                isFaculty: isFaculty
+            })
+        })
+        .then(response => {
+            console.log('Status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Registration response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        // Clear registration inputs and redirect to login page
+    document.querySelector('#txtRegUsername').value = '';
+    document.querySelector('#txtFirstName').value = '';
+    document.querySelector('#txtLastName').value = '';
+    document.querySelector('#txtRegPassword').value = '';
+    document.querySelector('#txtConfirmPassword').value = '';
+    
+    document.querySelector('#Register').style.display = 'none';
+    document.querySelector('#Login').style.display = 'block';
+}   
+})
+
+// Reveals/hides password on the login page
+function ViewLogPass() {
+    var x = document.getElementById("txtLogPassword");
+    if (x.type === "password") {
+        $('#btnViewLogPass').removeClass('bi-eye')
+        document.querySelector('#btnViewLogPass').classList.add('bi-eye-slash')
+        x.type = "text";
+    } else {
+        $('#btnViewLogPass').removeClass('bi-eye-slash')
+        document.querySelector('#btnViewLogPass').classList.add('bi-eye')
+        x.type = "password";
+    }
+}
+
+$(document).on('keypress', function(e) {
+    if (e.which === 13) { // Enter key code
+        if (Swal.isVisible()) {
+            // If SweetAlert is open, let the default SweetAlert Enter key handling work
+            return;
+        } else if ($('#Login').is(':visible')) {
+            // Only trigger login button if SweetAlert is not open
+            $('#btnLogin').click();
+        } else if ($('#Register').is(':visible')) {
+            // Only trigger register button if SweetAlert is not open
+            $('#btnRegister').click();
+        }
+    }
+});
+
+    // Add event listeners to buttons
+    document.querySelector('#btnSwapLogin').addEventListener('click', function() {
+            document.querySelector('#Login').style.display = 'none';
+            document.querySelector('#Register').style.display = 'block';
+        })
+
+    document.querySelector('#btnSwapRegister').addEventListener('click', function() {
+        document.querySelector('#Register').style.display = 'none';
+        document.querySelector('#Login').style.display = 'block';
+    });
+    
 $(document).ready(function() {
     // Hide all tab content except the first one initially
     $('.tab-content:not(:first)').hide();
@@ -124,7 +389,7 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
         })
         .then(response => {
             if (!response.ok) {
-            return response.json().then(errorData => {
+                return response.json().then(errorData => {
                 console.error('Error details:', errorData);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             });
@@ -166,79 +431,6 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
 });
 
-function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
-    fetch('http://localhost:8000/createcourse', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            CourseName: courseName,
-            CourseNumber: courseName, // You might want to separate course number and name
-            CourseSection: courseSection,
-            CourseTerm: courseTerm,
-            StartDate: startDate,
-            EndDate: endDate
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        Swal.fire({
-            title: "Success",
-            text: "Course created successfully",
-            icon: "success"
-        });
-
-        //// #TODO: delete this when the backend is ready Create a new group card UI element dynamically (demo only) need to change all of this to get it talking with the backend
-    const groupCard = document.createElement('div');
-    groupCard.className = 'group-card';
-    groupCard.innerHTML = `
-        <div class="group-header">
-            <h3>${courseName}</h3>
-            <span class="group-code">Code: TBD</span>
-        </div>
-        <div class="group-info">
-            <p><strong>Course:</strong> <span class="courseName">${courseName}</span></p>
-            <p><strong>Section:</strong> <span class="courseSection">${courseSection}</span></p>
-            <div class="members-section">
-                <button class="collapse-btn" onclick="toggleMembers(this)">
-                    <strong>Members</strong>
-                    <span class="collapse-icon">▼</span>
-                </button>
-                <ul class="member-list collapsed">
-                    <li>You (creator)</li>
-                </ul>
-            </div>
-            <div class="card-actions">
-                <button type="button">Take Survey</button>
-                <button type="button">Leave Group</button>
-            </div>
-        </div>
-    `;
-    document.querySelector('#Groups .dashboard-stats').appendChild(groupCard);
-
-        // Reset form fields
-        document.querySelector('#txtCourseName').value = '';
-        document.querySelector('#txtCourseSection').value = '';
-        document.querySelector('#selCourseSeason').value = '';
-        document.querySelector('#txtCourseYear').value = '';
-        document.querySelector('#dateEndDate').value = '';
-    })
-
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
 // Function to update UI based on user type
 function updateUIForUserRole(userRole) {
     // Hide all role-specific elements first
@@ -270,7 +462,8 @@ function updateUIForUserRole(userRole) {
 
 // Fetch the user's role from the server when the page loads
 function fetchUserRole() {
-    fetch('http://localhost:8000/getUserRole')
+    console.log('Fetching user role...');
+    return fetch('http://localhost:8000/getUserRole') // Return the fetch call
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -278,7 +471,9 @@ function fetchUserRole() {
             return response.json();
         })
         .then(data => {
-            updateUIForUserRole(data.userRole);
+            console.log('User role fetched:', data.userRole);
+            updateUIForUserRole(data.userRole); // Update the UI based on the role
+            return data.userRole; // Return the user role for further use
         })
         .catch(error => {
             console.error('Error fetching user role:', error);
@@ -286,6 +481,7 @@ function fetchUserRole() {
             document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
                 element.style.display = '';
             });
+            return null; // Return null if an error occurs
         });
 }
 
@@ -543,17 +739,25 @@ function loadCourses() {
         return response.json();
     })
     .then(courses => {
-        const container = document.querySelector('#groupsList');
+        const container = document.querySelector('#courseList');
         container.innerHTML = ''; // clear any existing cards
+        let strSection = ''
         
-        courses.forEach(course => {
+        
+        courses.courses.forEach(course => {
+            if (course.CourseSection < 10) {
+                strSection = '00' + course.CourseSection;
+            }
+            if (course.CourseSection >= 10 && course.CourseSection < 100) {
+                strSection = '0' + course.CourseSection;
+            }
         const cardHTML = `
             <div class="group-card">
             <div class="group-header">
-                <h3>${course.name}</h3>
-                <p>Section: ${course.section}</p>
-                <p>Term: ${course.term}</p>
-                <p>End Date: ${course.endDate}</p>
+                <h3>${course.CourseName}<br></h3>
+                <p>Section: ${strSection}<br></p>
+                <p>Term: ${course.CourseTerm}<br></p>
+                <p>End Date: ${course.EndDate}<br></p>
             </div>
             </div>
         `;
@@ -632,9 +836,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     loadCourses();
-//   });
+document.addEventListener('DOMContentLoaded', () => {
+    fetchUserRole().then(result => {
+    console.log('User role:', result); // Debugging line to check the user role
+    // Call loadCourses() only if the user role is 'Staff'
+    if (result === 'Staff') {
+        loadCourses();
+    }
+    }).catch(error => {
+        console.error('Error fetching user role:', error);
+    });
+})
 
 // Survey fully created, now we need to add the functionality to the button
 // Mock group members for demonstration
@@ -644,39 +856,53 @@ const mockGroupMembers = [
     { name: "Mike Wilson" },
     { name: "Emily Davis" }
 ];
+function loadGroups() {
+    fetch('http://localhost:8000/groups') // Adjust the endpoint if necessary
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch user groups');
+            }
+            return response.json();
+        })
+        .then(groups => {
+            console.log(groups); // Debugging line to check the structure of the response
+            const container = document.querySelector('#groupsList');
+            container.innerHTML = ''; // Clear any existing cards
 
+            groups.groups.forEach(group => {
+                const cardHTML = `
+                    <div class="group-card">
+                        <div class="group-header">
+                            <h3>${group.GroupName}</h3>
+                            <span class="group-code">Code: ${group.GroupCode}</span>
+                        </div>
+                        <div class="group-info">
+                            <p><strong>Course:</strong> ${group.CourseName}</p>
+                            <p><strong>Section:</strong> ${group.CourseSection}</p>
+                            <div class="members-section">
+                                <button class="collapse-btn" onclick="toggleMembers(this)">
+                                    <strong>Members</strong>
+                                    <span class="collapse-icon">▼</span>
+                                </button>
 
-
-
-document.querySelector('#Groups').addEventListener('DOMContentLoaded', function() {
-    loadCourses();
-})
-
-function loadCourses() {
-    fetch('/courses')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch courses');
-        }
-        return response.json();
-    })
-    .then(courses => {
-        const container = document.querySelector('#groupsList');
-        container.innerHTML = ''; // clear any existing cards
-        
-        courses.forEach(course => {
-            const cardHTML = `
-                <div class="group-card">
-                    <div class="group-header">
-                        <h3>${course.name}</h3>
-                        <p>Section: ${course.section}</p>
-                        <p>Term: ${course.term}</p>
-                        <p>End Date: ${course.endDate}</p>
+                            </div>
+                            <div class="card-actions">
+                                <button type="button" class="btn-take-survey" data-group-id="${group.GroupID}">Take Survey</button>
+                                <button type="button" class="btn-leave-group" data-group-id="${group.GroupID}">Leave Group</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading user groups:', error);
+            Swal.fire('Error', 'Could not load user groups', 'error');
         });
-    });
 }
 
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    loadGroups();
+});
