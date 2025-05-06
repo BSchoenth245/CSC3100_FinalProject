@@ -325,3 +325,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Add functionality to the Create Survey button
+document.addEventListener('DOMContentLoaded', function() {
+    const createSurveyBtn = document.getElementById('btnCreateSurvey');
+    const courseSelectionSection = document.getElementById('courseSelectionSection');
+    const surveyBuilderSection = document.getElementById('surveyBuilderSection');
+    const surveyQuestionPreview = document.getElementById('surveyQuestionPreview');
+    
+    if (createSurveyBtn && courseSelectionSection && surveyBuilderSection) {
+        createSurveyBtn.addEventListener('click', function() {
+            const selectedCourse = document.getElementById('selCourse').value;
+            
+            if (!selectedCourse) {
+                // Show error if no course is selected
+                Swal.fire({
+                    title: "Error",
+                    text: "Please select a course first.",
+                    icon: "error"
+                });
+                return;
+            }
+            
+            // Hide course selection and show survey builder
+            courseSelectionSection.style.display = 'none';
+            surveyBuilderSection.style.display = 'block';
+            surveyQuestionPreview.style.display = 'block';
+            
+            // Check if course header already exists to avoid duplicates
+            if (!document.querySelector('.course-header')) {
+                // Create a small header with course info and back button
+                const courseTitle = document.createElement('div');
+                courseTitle.className = 'course-header';
+                courseTitle.innerHTML = `
+                    <h3>Course: ${document.getElementById('selCourse').options[document.getElementById('selCourse').selectedIndex].text}</h3>
+                    <button type="button" id="btnBackToCourses" class="btn-back">Back</button>
+                `;
+                
+                // Insert at the top of the survey builder section
+                surveyBuilderSection.insertBefore(courseTitle, surveyBuilderSection.firstChild);
+                
+                // Add event listener to the back button
+                document.getElementById('btnBackToCourses').addEventListener('click', function() {
+                    // Remove the course title element
+                    courseTitle.remove();
+                    
+                    // Show course selection and hide survey builder
+                    courseSelectionSection.style.display = 'block';
+                    surveyBuilderSection.style.display = 'none';
+                    surveyQuestionPreview.style.display = 'none';
+                });
+            }
+        });
+    }
+});

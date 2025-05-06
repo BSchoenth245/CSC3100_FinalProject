@@ -1,14 +1,8 @@
-
-/* 
-
-Main Dashdoard styles 
-
-*/
 #Dashboard .wrapper {
     position: fixed; bottom: 0; left: 0; right: 0;
     width: 100%; height: 80vh;
     border-radius: 10px 10px 0 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255,255,255,.9);
 }
 
 #Dashboard .nav-tabs {
@@ -24,18 +18,18 @@ Main Dashdoard styles
     padding: 10px 20px;
     text-decoration: none;
     color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255,255,255,.9);
     border: 1px solid #ddd;
-    border-bottom: none;
+    border-bottom: 0;
     border-radius: 6px 6px 0 0;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: .3s ease;
 }
 
 #Dashboard .nav-tabs li.active a {
-    background-color: white;
+    background: #fff;
     color: var(--accent-color);
-    border-bottom: none;
+    border-bottom: 0;
     padding-bottom: 11px;
 }
 
@@ -47,7 +41,7 @@ Main Dashdoard styles
     margin-top: -1px;
 }
 
-#Dashboard .nav-tabs a:hover { background-color: white; }
+#Dashboard .nav-tabs a:hover { background: #fff; }
 
 .content-area .tab-content {
     display: none;
@@ -106,27 +100,11 @@ textarea, select {
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
+    border-left: 0;
+    background: var(--dashboard-input-color);
     color: var(--text-color);
-    transition: 150ms ease;
+    transition: .15s;
 }
-/* Auto-expanding textarea */
-/* .auto-expand-textarea {
-    overflow: hidden; 
-    resize: none; 
-    min-height: 120px; 
-    transition: height 0.2s ease; 
-} */
-
-/* Auto-expanding textarea */
-/* .auto-expand-textarea {
-    overflow: hidden; 
-    resize: none; 
-    min-height: 120px; 
-    transition: height 0.2s ease; 
-} */
-
 
 textarea {
     min-height: 120px;
@@ -135,13 +113,15 @@ textarea {
 }
 
 select:hover, textarea:hover,
-#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover,#txtCourseNumber:hover, #selCourseSeason:hover {
+#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover,
+#txtCourseNumber:hover, #selCourseSeason:hover {
     border-color: var(--accent-color);
 }
 
 select:focus, textarea:focus,
-#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus, #txtCourseNumber:focus, #selCourseSeason:focus {
-    outline: none;
+#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus,
+#txtCourseNumber:focus, #selCourseSeason:focus {
+    outline: 0;
     border-color: var(--text-color);
 }
 
@@ -157,9 +137,8 @@ select:focus, textarea:focus,
 
 input[name="courseSection"] { width: 25%; }
 
-#txtCourseName, div:has(#txtCourseName) > label { margin-top: 15px; }
+#txtCourseName, div:has(#txtCourseName) > label,
 #txtCourseNumber, div:has(#txtCourseNumber) > label { margin-top: 15px; }
-
 
 #txtCourseSection, #contact-input {
     box-sizing: border-box;
@@ -171,8 +150,8 @@ input[name="courseSection"] { width: 25%; }
     font: inherit;
     border-radius: 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    transition: 150ms ease;
+    background: var(--dashboard-input-color);
+    transition: .15s;
 }
 
 .dash-separator {
@@ -186,17 +165,16 @@ input[name="courseSection"] { width: 25%; }
 #selCourseName, div:has(#selCourseName) > label { margin-top: 8px; }
 
 #txtCourseName, #txtGroupName, #txtCourseNumber {
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     border: 2px solid var(--dashboard-input-color);
 }
 
 .input-note {
     display: block;
-    font-size: 0.8em;
+    font-size: .8em;
     color: var(--text-color);
-    opacity: 0.8;
-    margin-top: 5px;
-    margin-left: 50px;
+    opacity: .8;
+    margin: 5px 0 0 50px;
 }
 
 .course-term-group {
@@ -217,12 +195,12 @@ input[name="courseSection"] { width: 25%; }
     font: inherit;
     border-radius: 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    transition: 150ms ease;
+    background: var(--dashboard-input-color);
+    transition: .15s;
 }
 
 #txtCourseYear:hover { border-color: var(--accent-color); }
-#txtCourseYear:focus { outline: none; border-color: var(--text-color); }
+#txtCourseYear:focus { outline: 0; border-color: var(--text-color); }
 
 .date-inputs-container {
     display: flex;
@@ -240,7 +218,7 @@ input[name="courseSection"] { width: 25%; }
     flex-shrink: 0;
     height: 50px;
     width: 50px;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     fill: var(--base-color);
     color: var(--base-color);
     border-radius: 10px 0 0 10px;
@@ -259,12 +237,12 @@ input[name="courseSection"] { width: 25%; }
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
-    transition: 150ms ease;
+    transition: .15s;
 }
 
-.date-input-year { flex: 0.7; }
+.date-input-year { flex: .7; }
 
 .date-input-year input {
     width: 100%;
@@ -273,14 +251,14 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .group-card {
-    background-color: var(--input-color);
+    background: var(--input-color);
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
     width: 400px;
     height: fit-content;
     align-self: flex-start;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
 .card-actions {
@@ -303,26 +281,28 @@ input[name="courseSection"] { width: 25%; }
 
 .group-code {
     color: var(--accent-color);
-    font-size: 0.9em;
+    font-size: .9em;
 }
 
 .group-info p {
     margin: 10px 0;
     color: var(--text-color);
 }
+
 #groupsList #groupsList {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .member-list {
     list-style: none;
     padding: 0;
     margin: 0;
     max-height: 200px;
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height .3s ease-out;
 }
 
 .member-list.collapsed { max-height: 0; }
@@ -337,8 +317,8 @@ input[name="courseSection"] { width: 25%; }
     width: 100%;
     text-align: center;
     padding: 10px;
-    background-color: var(--input-color);
-    border: none;
+    background: var(--input-color);
+    border: 0;
     color: var(--text-color);
     cursor: pointer;
     display: flex;
@@ -347,33 +327,33 @@ input[name="courseSection"] { width: 25%; }
     border-radius: 10px;
 }
 
-.collapse-btn:hover { background-color: var(--accent-color); }
+.collapse-btn:hover { background: var(--accent-color); }
 
 .collapse-icon {
     display: inline-block;
-    transition: transform 0.3s ease;
+    transition: transform .3s;
 }
 
 .collapse-btn.active .collapse-icon { transform: rotate(180deg); }
 
 .btn-take-survey, .btn-leave-group {
     margin-top: 5px;
-    border: none;
+    border: 0;
     border-radius: 1000px;
-    padding: .30em 3em;
-    background-color: var(--accent-color);
+    padding: .3em 3em;
+    background: var(--accent-color);
     color: var(--base-color);
     font: inherit;
     font-weight: 500;
     text-transform: uppercase;
     cursor: pointer;
-    transition: 150ms ease;
+    transition: .15s;
 }
 
 .btn-take-survey:hover, .btn-leave-group:hover,
 .btn-take-survey:focus, .btn-leave-group:focus {
-    outline: none;
-    background-color: var(--text-color);
+    outline: 0;
+    background: var(--text-color);
 }
 
 .tabs {
@@ -396,17 +376,17 @@ input[name="courseSection"] { width: 25%; }
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
-    background-color: var(--text-color);
+    background: var(--text-color);
     color: var(--accent-color);
     border: 1px solid var(--text-color);
-    border-bottom: none;
+    border-bottom: 0;
     border-radius: 6px 6px 0 0;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: .3s;
 }
 
 .profile-tab-container a:hover {
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     border-color: var(--accent-color);
     color: var(--text-color);
 }
@@ -431,11 +411,11 @@ input[name="courseSection"] { width: 25%; }
     cursor: pointer;
     width: 200px;
     height: 40px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     border-radius: 100px;
     position: relative;
     padding: 0 10px;
-    transition: background-color 0.3s;
+    transition: .3s;
 }
 
 .form .toggle-slider {
@@ -445,9 +425,9 @@ input[name="courseSection"] { width: 25%; }
     width: 100px;
     height: 36px;
     border-radius: 45px;
-    transition: 0.3s;
-    background-color: var(--accent-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: .3s;
+    background: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
 }
 
 .form .toggle-icon {
@@ -455,7 +435,7 @@ input[name="courseSection"] { width: 25%; }
     align-items: center;
     z-index: 1;
     color: var(--text-color);
-    transition: color 0.3s;
+    transition: .3s;
 }
 
 .form .toggle-icon svg { margin-right: 5px; fill: currentColor; }
@@ -464,17 +444,17 @@ input[name="courseSection"] { width: 25%; }
 .form .toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
 .form .toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
 
-.form .toggle-input:checked + .toggle-label .public-icon { color: white; }
-.form .toggle-input:checked + .toggle-label .private-icon { color: var(--text-color); }
-.form .toggle-input:not(:checked) + .toggle-label .public-icon { color: var(--text-color); }
-.form .toggle-input:not(:checked) + .toggle-label .private-icon { color: white; }
+.form .toggle-input:checked + .toggle-label .public-icon,
+.form .toggle-input:checked + .toggle-label .student-icon { color: #fff; }
 
-/* Add these specific styles for the student/staff toggle */
-.form .toggle-input:checked + .toggle-label .student-icon { color: white; }
+.form .toggle-input:checked + .toggle-label .private-icon,
 .form .toggle-input:checked + .toggle-label .staff-icon { color: var(--text-color); }
-.form .toggle-input:not(:checked) + .toggle-label .student-icon { color: var(--text-color); }
-.form .toggle-input:not(:checked) + .toggle-label .staff-icon { color: white; }
 
+.form .toggle-input:not(:checked) + .toggle-label .public-icon,
+.form .toggle-input:not(:checked) + .toggle-label .student-icon { color: var(--text-color); }
+
+.form .toggle-input:not(:checked) + .toggle-label .private-icon,
+.form .toggle-input:not(:checked) + .toggle-label .staff-icon { color: #fff; }
 
 .form .toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
 .form .toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
@@ -521,7 +501,7 @@ input[name="courseSection"] { width: 25%; }
     flex-shrink: 0;
     height: 50px;
     width: 50px;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     fill: var(--base-color);
     color: var(--base-color);
     border-radius: 10px 0 0 10px;
@@ -534,11 +514,11 @@ input[name="courseSection"] { width: 25%; }
     height: 50px;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
+    border-left: 0;
     min-width: 130px;
     max-width: 150px;
     padding: 0 10px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
     font: inherit;
 }
@@ -549,7 +529,7 @@ input[name="courseSection"] { width: 25%; }
     border-radius: 10px;
     padding: 0 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
     font: inherit;
 }
@@ -559,17 +539,16 @@ input[name="courseSection"] { width: 25%; }
     width: 50px;
     padding: 0;
     border-radius: 50%;
-    background-color: var(--accent-color);
-    color: white;
+    background: var(--accent-color);
+    color: #fff;
     font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
+    border: 0;
     cursor: pointer;
 }
 
-/* Fix alignment with minimal code */
 #profileContacts .contact-row > *,
 #profileContacts .contact-type-container > *,
 #profileContacts .contact-input,
@@ -579,15 +558,12 @@ input[name="courseSection"] { width: 25%; }
     vertical-align: middle;
 }
 
-/* Ensure the select and input are properly aligned */
 #profileContacts select,
 #profileContacts input {
     vertical-align: middle;
     margin: 0;
 }
 
-
-/* Style for the additionalContacts container */
 #additionalContacts {
     display: flex;
     flex-direction: column;
@@ -596,7 +572,6 @@ input[name="courseSection"] { width: 25%; }
     margin-bottom: 20px;
 }
 
-/* Style for dynamically added contact rows */
 #additionalContacts .contact-row {
     display: flex;
     align-items: center;
@@ -605,38 +580,34 @@ input[name="courseSection"] { width: 25%; }
     max-width: 550px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     border-radius: 10px;
-    transition: all 0.2s ease;
+    transition: .2s;
 }
 
-/* Hover effect for contact rows */
 #additionalContacts .contact-row:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,.1);
     transform: translateY(-2px);
 }
 
-/* Style for the contact display container */
 #additionalContacts .contact-display {
     display: flex;
     align-items: center;
     flex: 1;
     gap: 15px;
-    overflow: hidden; /* Prevent text overflow */
+    overflow: hidden;
 }
 
-/* Style for contact type label */
 #additionalContacts .contact-label {
     font-weight: 600;
     color: var(--accent-color);
     min-width: 100px;
     padding: 5px 10px;
     border-radius: 5px;
-    background-color: rgba(134, 114, 255, 0.1);
+    background: rgba(134,114,255,.1);
     text-align: center;
 }
 
-/* Style for contact value */
 #additionalContacts .contact-value {
     flex: 1;
     color: var(--text-color);
@@ -646,86 +617,51 @@ input[name="courseSection"] { width: 25%; }
     padding: 0 10px;
 }
 
-/* Style for delete button in added contacts */
 #additionalContacts .btn-delete-contact {
     height: 40px;
     width: 40px;
     padding: 0;
     border-radius: 50%;
-    background-color: transparent;
+    background: transparent;
     color: var(--text-color);
     font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
+    border: 0;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: .2s;
 }
 
-/* Hover effect for delete button */
 #additionalContacts .btn-delete-contact:hover {
-    background-color: rgba(255, 77, 77, 0.1);
+    background: rgba(255,77,77,.1);
     color: #ff4d4d;
 }
 
-/* Add specific styling for different contact types */
-#additionalContacts .discord {
-    border-left: 4px solid #7289DA;
-}
+#additionalContacts .discord { border-left: 4px solid #7289DA; }
+#additionalContacts .phone { border-left: 4px solid #28a745; }
+#additionalContacts .email { border-left: 4px solid #007bff; }
+#additionalContacts .instagram { border-left: 4px solid #E1306C; }
+#additionalContacts .linkedin { border-left: 4px solid #0077B5; }
+#additionalContacts .custom { border-left: 4px solid #6c757d; }
 
-#additionalContacts .phone {
-    border-left: 4px solid #28a745;
-}
-
-#additionalContacts .email {
-    border-left: 4px solid #007bff;
-}
-
-#additionalContacts .instagram {
-    border-left: 4px solid #E1306C;
-}
-
-#additionalContacts .linkedin {
-    border-left: 4px solid #0077B5;
-}
-
-#additionalContacts .custom {
-    border-left: 4px solid #6c757d;
-}
-
-/* Animation for newly added contacts */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-#additionalContacts .contact-row {
-    animation: fadeIn 0.3s ease-out forwards;
-}
+#additionalContacts .contact-row { animation: fadeIn .3s ease-out forwards; }
 
-/* Ensure consistent spacing between form and additional contacts */
-#profileContacts .form {
-    margin-bottom: 20px;
-}
-
-/* Empty state styling */
 #additionalContacts:empty::before {
     content: "No contacts added yet";
     display: block;
     color: var(--text-color);
-    opacity: 0.6;
+    opacity: .6;
     padding: 20px;
     text-align: center;
     font-style: italic;
 }
-/* Comments Section Styles */
+
 .comments-container {
     display: flex;
     gap: 20px;
@@ -743,7 +679,7 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .comments-column-header {
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     color: var(--base-color);
     padding: 10px 15px;
     border-radius: 10px 10px 0 0;
@@ -752,16 +688,16 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .comment-card {
-    background-color: var(--input-color);
+    background: var(--input-color);
     border-radius: 10px;
     padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    transition: .2s;
 }
 
 .comment-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0,0,0,.15);
 }
 
 .comment-header {
@@ -779,13 +715,13 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .comment-timestamp {
-    font-size: 0.8em;
+    font-size: .8em;
     color: var(--text-color);
-    opacity: 0.8;
+    opacity: .8;
 }
 
 .comment-group {
-    font-size: 0.9em;
+    font-size: .9em;
     color: var(--accent-color);
     margin-bottom: 8px;
 }
@@ -796,10 +732,7 @@ input[name="courseSection"] { width: 25%; }
     white-space: pre-wrap;
 }
 
-/* Styling differences between received and sent comments */
-.received-comment {
-    border-left: 4px solid var(--accent-color);
-}
+.received-comment { border-left: 4px solid var(--accent-color); }
 
 .sent-comment {
     border-right: 4px solid var(--accent-color);
@@ -811,33 +744,30 @@ input[name="courseSection"] { width: 25%; }
     justify-content: space-between;
 }
 
-.sent-comment .comment-group {
-    text-align: center;
-}
+.sent-comment .comment-group { text-align: center; }
 
-/* Empty state styling */
 .empty-comments {
     text-align: center;
     padding: 30px;
     color: var(--text-color);
-    opacity: 0.7;
+    opacity: .7;
     font-style: italic;
 }
-/* Survey Modal Styles */
+
 .survey-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0,0,0,.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: .3s;
 }
 
 .survey-modal.active {
@@ -846,76 +776,83 @@ input[name="courseSection"] { width: 25%; }
 }
 
 .survey-modal-content {
-    background-color: var(--base-color, white);
+    background: var(--base-color);
     border-radius: 10px;
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
     transform: translateY(20px);
-    transition: transform 0.3s ease;
+    transition: .3s;
 }
 
-.survey-modal.active .survey-modal-content {
-    transform: translateY(0);
-}
+.survey-modal.active .survey-modal-content { transform: translateY(0); }
 
 .survey-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid var(--accent-color, #ddd);
+    border-bottom: 1px solid var(--accent-color);
 }
 
 .survey-modal-header h2 {
     margin: 0;
-    color: var(--text-color, #333);
+    color: var(--text-color);
 }
 
 .survey-modal-close {
-    background: none;
-    border: none;
+    background: 0;
+    border: 0;
     font-size: 24px;
     cursor: pointer;
-    color: var(--text-color, #333);
+    color: var(--text-color);
 }
 
-.survey-modal-body {
-    padding: 20px;
-}
+.survey-modal-body { padding: 20px; }
 
-/* Make sure form elements inside the modal look good */
 .survey-modal input,
 .survey-modal select,
 .survey-modal textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 15px;
-    border: 1px solid var(--dashboard-input-color, #ddd);
+    border: 1px solid var(--dashboard-input-color);
     border-radius: 4px;
 }
 
 .survey-modal button {
     padding: 10px 15px;
-    background-color: var(--accent-color, #4CAF50);
-    color: white;
-    border: none;
+    background: var(--accent-color);
+    color: #fff;
+    border: 0;
     border-radius: 4px;
     cursor: pointer;
 }
 
-.survey-modal button:hover {
-    background-color: var(--text-color, #45a049);
+.survey-modal button:hover { background: var(--text-color); }
+#InstructorSurveys {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-/* Survey Question Styling */
 #InstructorSurveys .survey-card {
-    background-color: var(--input-color);
+    background: var(--input-color);
     border-radius: 10px;
     padding: 20px;
     margin: 20px 0;
+}
+#InstructorSurveys > div {
+    width: min(400px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+#InstructorSurveys #surveyBuilderSection,
+#InstructorSurveys #courseSelectionSection {
+    width: min(400px, 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #InstructorSurveys .survey-input-group {
@@ -929,7 +866,7 @@ input[name="courseSection"] { width: 25%; }
     flex-shrink: 0;
     height: 50px;
     width: 50px;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     fill: var(--base-color);
     color: var(--base-color);
     border-radius: 10px 0 0 10px;
@@ -948,71 +885,83 @@ input[name="courseSection"] { width: 25%; }
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
+    border-left: 0;
+    background: var(--dashboard-input-color);
     color: var(--text-color);
-    transition: 150ms ease;
+    transition: .15s;
 }
 
 #InstructorSurveys .survey-input-group input:hover,
-#InstructorSurveys .survey-input-group select:hover {
-    border-color: var(--accent-color);
-}
+#InstructorSurveys .survey-input-group select:hover { border-color: var(--accent-color); }
 
 #InstructorSurveys .survey-input-group input:focus,
 #InstructorSurveys .survey-input-group select:focus {
-    outline: none;
+    outline: 0;
     border-color: var(--text-color);
 }
 
 #InstructorSurveys div:has(input:focus) > label,
-#InstructorSurveys div:has(select:focus) > label {
-    background-color: var(--text-color);
-}
+#InstructorSurveys div:has(select:focus) > label { background: var(--text-color); }
 
 #InstructorSurveys #btnAddSurveyQuestion {
     margin-top: 10px;
-    border: none;
+    border: 0;
     border-radius: 1000px;
     padding: .85em 4em;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     color: var(--base-color);
     font: inherit;
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
-    transition: 150ms ease;
+    transition: .15s;
     width: 100%;
 }
 
-#InstructorSurveys #btnAddSurveyQuestion:hover {
-    background-color: var(--text-color);
-}
-
+#InstructorSurveys #btnAddSurveyQuestion:hover,
 #InstructorSurveys #btnAddSurveyQuestion:focus {
-    outline: none;
-    background-color: var(--text-color);
+    outline: 0;
+    background: var(--text-color);
 }
 
 #InstructorSurveys hr {
-    margin: 20px 0;
-    border: none;
-    border-top: 1px solid var(--dashboard-input-color);
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid var(--accent-color);
+}
+#InstructorSurveys h4 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+    padding-left: 5px;
+    border-left: 4px solid var(--accent-color);
 }
 
-/* Survey question preview styling */
 #surveyQuestionPreviewList {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 15px;
+    margin-top: 0px;
+    background-color: var(--input-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0,.1);
 }
 
 .survey-question-card {
-    background-color: var(--dashboard-input-color);
-    border-radius: 10px;
+    background: var(--base-color);
+    border-radius: 8px;
     padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0,.1);
+    border-left: 4px solid var(--accent-color);
+    transition: tranform 0.2s ease, box-shadow 0.2s ease;
+}
+.survey-question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .survey-question-header {
@@ -1026,18 +975,16 @@ input[name="courseSection"] { width: 25%; }
     color: var(--accent-color);
 }
 
-.survey-question-text {
-    margin-bottom: 10px;
-}
+.survey-question-text { margin-bottom: 10px; }
 
 .survey-question-group {
-    font-size: 0.9em;
+    font-size: .9em;
     color: var(--text-color);
-    opacity: 0.8;
+    opacity: .8;
 }
 
 .survey-question-visibility {
-    font-size: 0.8em;
+    font-size: .8em;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1049,7 +996,7 @@ input[name="courseSection"] { width: 25%; }
     height: 16px;
     fill: var(--text-color);
 }
-/* Question Type Toggle Styling */
+
 .question-type-toggle-container {
     margin: 25px auto;
     display: flex;
@@ -1063,19 +1010,17 @@ input[name="courseSection"] { width: 25%; }
     color: var(--text-color);
 }
 
-.question-type-toggle {
-    position: relative;
-}
+.question-type-toggle { position: relative; }
 
 .question-type-toggle .toggle-label {
     display: block;
     width: 60px;
     height: 30px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     border-radius: 30px;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.3s;
+    transition: .3s;
 }
 
 .question-type-toggle .toggle-slider {
@@ -1085,28 +1030,63 @@ input[name="courseSection"] { width: 25%; }
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    transition: 0.3s;
-    background-color: var(--accent-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: .3s;
+    background: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
 }
 
-/* When toggle is checked (Open Response) */
-.question-type-toggle .toggle-input:checked + .toggle-label .toggle-slider {
-    transform: translateX(0);
+.question-type-toggle .toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.question-type-toggle .toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(50px); }
+.question-type-toggle .toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.question-type-toggle-container .active-option { color: var(--accent-color); font-weight: 600; }
+
+/* Fix for centering the survey builder section */
+#surveyBuilderSection {
+    width: min(400px, 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* When toggle is not checked (Likert Scale) */
-.question-type-toggle .toggle-input:not(:checked) + .toggle-label .toggle-slider {
-    transform: translateX(50px);
+#courseSelectionSection {
+    width: min(400px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Back button styling */
+.btn-back {
+    display: flex;
+    background: none;
+    border: none;
+    width: 10%;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 3px 4px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: background-color 0.2s;
 }
 
-/* Focus styles for accessibility */
-.question-type-toggle .toggle-input:focus + .toggle-label {
-    box-shadow: 0 0 1px var(--accent-color);
+.btn-back:hover {
+    background-color: var(--dashboard-input-color);
 }
 
-/* Active state styling */
-.question-type-toggle-container .active-option {
-    color: var(--accent-color);
-    font-weight: 600;
+/* Course header styling */
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--dashboard-input-color);
+    width: 100%;
+}
+
+.course-header h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1rem;
 }

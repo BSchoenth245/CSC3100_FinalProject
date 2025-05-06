@@ -1,52 +1,35 @@
-/* 
-
-Main Dashdoard styles 
-
-*/
 #Dashboard .wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 80vh; 
+    position: fixed; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 80vh;
     border-radius: 10px 10px 0 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255,255,255,.9);
 }
 
 #Dashboard .nav-tabs {
-    position: absolute;
-    top: -55px; 
-    left: 20px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 2px;
-    z-index: 1;
+    position: absolute; top: -55px; left: 20px;
+    list-style: none; padding: 0; margin: 0;
+    display: flex; gap: 2px; z-index: 1;
 }
 
-#Dashboard .nav-tabs li {
-    margin-bottom: -1px;
-}
+#Dashboard .nav-tabs li { margin-bottom: -1px; }
 
 #Dashboard .nav-tabs a {
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
     color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255,255,255,.9);
     border: 1px solid #ddd;
-    border-bottom: none;
+    border-bottom: 0;
     border-radius: 6px 6px 0 0;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: .3s ease;
 }
 
 #Dashboard .nav-tabs li.active a {
-    background-color: white;
+    background: #fff;
     color: var(--accent-color);
-    border-bottom: none;
+    border-bottom: 0;
     padding-bottom: 11px;
 }
 
@@ -58,18 +41,14 @@ Main Dashdoard styles
     margin-top: -1px;
 }
 
-#Dashboard .nav-tabs a:hover {
-    background-color: white;
-}
+#Dashboard .nav-tabs a:hover { background: #fff; }
 
 .content-area .tab-content {
     display: none;
     padding: 20px;
 }
 
-.content-area .tab-content.active {
-    display: block;
-}
+.content-area .tab-content.active { display: block; }
 
 .dashboard-stats {
     display: flex;
@@ -77,6 +56,8 @@ Main Dashdoard styles
     gap: 20px;
     padding: 20px;
     justify-content: center;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .form-group {
@@ -94,43 +75,23 @@ Main Dashdoard styles
     border: 1px solid #ddd;
     border-radius: 4px;
 }
-/* 
 
-Individual element styles
-
-*/
-
-#joinGroupSection {
+#joinGroupSection, #createGroupSection, #createCourse {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 10px; 
+    gap: 10px;
     width: 100%;
 }
 
-#joinGroupSection > * {
+#joinGroupSection > *, #createGroupSection > *, #createCourse > * {
     display: block;
     width: 100%;
     margin-bottom: 10px;
 }
 
-textarea {
-    box-sizing: border-box;
-    flex-grow: 1;
-    min-width: 0;
-    height: 50px;
-    padding: 1em;
-    font: inherit;
-    border-radius: 0 10px 10px 0;
-    border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
-    color: var(--text-color);
-    transition: 150ms ease;
-}
-
-select {
+textarea, select {
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -139,55 +100,47 @@ select {
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
+    border-left: 0;
+    background: var(--dashboard-input-color);
     color: var(--text-color);
-    transition: 150ms ease;
+    transition: .15s;
 }
 
 textarea {
     min-height: 120px;
     resize: vertical;
+    padding: 1em;
 }
 
-select:hover, textarea:hover {
+select:hover, textarea:hover,
+#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover,
+#txtCourseNumber:hover, #selCourseSeason:hover {
     border-color: var(--accent-color);
-    outline: none;
 }
 
-select:focus, textarea:focus {
-    outline: none;
+select:focus, textarea:focus,
+#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus,
+#txtCourseNumber:focus, #selCourseSeason:focus {
+    outline: 0;
     border-color: var(--text-color);
 }
 
-form div:has(textarea) {
+.form div:has(textarea) {
     align-items: stretch;
 }
 
-form div:has(textarea) label {
+.form div:has(textarea) label {
     height: auto;
     min-height: 120px;
-    align-items: center; 
+    align-items: center;
 }
 
-textarea {
-    min-height: 120px;
-    resize: vertical;
-}
+input[name="courseSection"] { width: 25%; }
 
-input[name="courseSection"] {
-    width: 25%;
-}
+#txtCourseName, div:has(#txtCourseName) > label,
+#txtCourseNumber, div:has(#txtCourseNumber) > label { margin-top: 15px; }
 
-#txtCourseName{
-    margin-top: 15px;
-}
-
-div:has(#txtCourseName) > label {
-    margin-top: 15px;
-}
-
-#txtCourseSection, #contact-input{
+#txtCourseSection, #contact-input {
     box-sizing: border-box;
     flex-grow: 1;
     min-width: 0;
@@ -197,62 +150,33 @@ div:has(#txtCourseName) > label {
     font: inherit;
     border-radius: 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    transition: 150ms ease;
-}
-
-#txtCourseSection:hover, #txtCourseName:hover, #txtGroupName:hover, #contact-input:hover {
-    border-color: var(--accent-color);
-}
-
-#txtCourseSection:focus, #txtCourseName:focus, #txtGroupName:focus, #contact-input:focus {
-    outline: none;
-    border-color: var(--text-color);
+    background: var(--dashboard-input-color);
+    transition: .15s;
 }
 
 .dash-separator {
     display: flex;
-    align-items: center; 
-    padding: 0 10px; 
-    height: 50px; 
+    align-items: center;
+    padding: 0 10px;
+    height: 50px;
     margin-top: 15px;
 }
-#selCourseName {
-    margin-top: 10px;
-}
 
-div:has(#selCourseName) > label {
-    margin-top: 10px;
-}
+#selCourseName, div:has(#selCourseName) > label { margin-top: 8px; }
 
-#createGroupSection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createGroupSection > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-#txtCourseName, #txtGroupName {
-    background-color: var(--dashboard-input-color);
+#txtCourseName, #txtGroupName, #txtCourseNumber {
+    background: var(--dashboard-input-color);
     border: 2px solid var(--dashboard-input-color);
 }
+
 .input-note {
     display: block;
-    font-size: 0.8em;
+    font-size: .8em;
     color: var(--text-color);
-    opacity: 0.8;
-    margin-top: 5px;
-    margin-left: 50px; /* Aligns with the input field */
+    opacity: .8;
+    margin: 5px 0 0 50px;
 }
-/* Course term input group styling */
+
 .course-term-group {
     display: flex;
     align-items: center;
@@ -260,9 +184,7 @@ div:has(#selCourseName) > label {
 }
 
 .course-term-group select,
-.course-term-group input {
-    flex: 1;
-}
+.course-term-group input { flex: 1; }
 
 #txtCourseYear {
     width: 100px;
@@ -273,33 +195,13 @@ div:has(#selCourseName) > label {
     font: inherit;
     border-radius: 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    transition: 150ms ease;
+    background: var(--dashboard-input-color);
+    transition: .15s;
 }
 
-#txtCourseYear:hover {
-    border-color: var(--accent-color);
-}
+#txtCourseYear:hover { border-color: var(--accent-color); }
+#txtCourseYear:focus { outline: 0; border-color: var(--text-color); }
 
-#txtCourseYear:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-#createCourse {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createCourse > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-/* Container for date inputs on one line */
 .date-inputs-container {
     display: flex;
     width: 100%;
@@ -307,7 +209,6 @@ div:has(#selCourseName) > label {
     margin-top: 15px;
 }
 
-/* Style for the season select and end date groups */
 .date-input-group {
     display: flex;
     flex: 1;
@@ -317,7 +218,7 @@ div:has(#selCourseName) > label {
     flex-shrink: 0;
     height: 50px;
     width: 50px;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     fill: var(--base-color);
     color: var(--base-color);
     border-radius: 10px 0 0 10px;
@@ -327,7 +228,8 @@ div:has(#selCourseName) > label {
 }
 
 .date-input-group select,
-.date-input-group input {
+.date-input-group input,
+.date-input-year input {
     flex-grow: 1;
     min-width: 0;
     height: 50px;
@@ -335,81 +237,28 @@ div:has(#selCourseName) > label {
     font: inherit;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
-    transition: 150ms ease;
+    transition: .15s;
 }
 
-/* Style for the year input without label */
-.date-input-year {
-    flex: 0.7;
-}
+.date-input-year { flex: .7; }
 
 .date-input-year input {
     width: 100%;
-    height: 50px;
-    padding: 0 1em;
-    font: inherit;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
-    color: var(--text-color);
-    transition: 150ms ease;
 }
-
-/* Hover and focus states */
-.date-input-group select:hover,
-.date-input-group input:hover,
-.date-input-year input:hover {
-    border-color: var(--accent-color);
-}
-
-.date-input-group select:focus,
-.date-input-group input:focus,
-.date-input-year input:focus {
-    outline: none;
-    border-color: var(--text-color);
-}
-
-/* Make the note appear below all inputs */
-.input-note {
-    display: block;
-    font-size: 0.8em;
-    color: var(--text-color);
-    opacity: 0.8;
-    margin-top: 5px;
-    width: 100%;
-    text-align: right;
-}
-
-/* Make createCourse section consistent with createGroupSection */
-#createCourse {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px; 
-    width: 100%;
-}
-
-#createCourse > * {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
 
 .group-card {
-    background-color: var(--input-color);
+    background: var(--input-color);
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
     width: 400px;
     height: fit-content;
     align-self: flex-start;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
 .card-actions {
@@ -432,7 +281,7 @@ div:has(#selCourseName) > label {
 
 .group-code {
     color: var(--accent-color);
-    font-size: 0.9em;
+    font-size: .9em;
 }
 
 .group-info p {
@@ -440,40 +289,36 @@ div:has(#selCourseName) > label {
     color: var(--text-color);
 }
 
+#groupsList #groupsList {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .member-list {
     list-style: none;
-    padding-left: 20px;
-    margin: 10px 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    margin: 0;
     padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow: hidden;
+    transition: max-height .3s ease-out;
 }
 
-.member-list.collapsed {
-    max-height: 0;
-}
-
-.member-list:not(.collapsed) {
-    max-height: 500px;
-}
+.member-list.collapsed { max-height: 0; }
+.member-list:not(.collapsed) { max-height: 500px; }
 
 .member-list li {
     color: var(--text-color);
     padding: 5px 0;
 }
 
-.members-section {
-    margin-top: 10px;
-}
-
 .collapse-btn {
     width: 100%;
     text-align: center;
     padding: 10px;
-    background-color: var(--input-color);
-    border: none;
+    background: var(--input-color);
+    border: 0;
     color: var(--text-color);
     cursor: pointer;
     display: flex;
@@ -482,53 +327,35 @@ div:has(#selCourseName) > label {
     border-radius: 10px;
 }
 
-.collapse-btn:hover {
-    background-color: var(--accent-color);
-}
-
-.member-list {
-    max-height: 200px;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-.member-list.collapsed {
-    max-height: 0;
-}
+.collapse-btn:hover { background: var(--accent-color); }
 
 .collapse-icon {
     display: inline-block;
-    transition: transform 0.3s ease;
+    transition: transform .3s;
 }
 
-.collapse-btn.active .collapse-icon {
-    transform: rotate(180deg);
-}
+.collapse-btn.active .collapse-icon { transform: rotate(180deg); }
 
-#btn-take-survey, #btn-leave-group{
+.btn-take-survey, .btn-leave-group {
     margin-top: 5px;
-    border: none;
+    border: 0;
     border-radius: 1000px;
-    padding: .30em 3em;
-    background-color: var(--accent-color);
+    padding: .3em 3em;
+    background: var(--accent-color);
     color: var(--base-color);
     font: inherit;
     font-weight: 500;
     text-transform: uppercase;
     cursor: pointer;
-    transition: 150ms ease;
+    transition: .15s;
 }
 
-#btn-take-survey:hover, #btn-leave-group:hover{
-    background-color: var(--text-color);
+.btn-take-survey:hover, .btn-leave-group:hover,
+.btn-take-survey:focus, .btn-leave-group:focus {
+    outline: 0;
+    background: var(--text-color);
 }
 
-#btn-take-survey:focus, #btn-leave-group:focus{
-    outline: none;
-    background-color: var(--text-color);
-}
-
-/* Profile Tab Positioning */
 .tabs {
     position: relative;
     display: flex;
@@ -543,158 +370,98 @@ div:has(#selCourseName) > label {
     z-index: 2;
 }
 
-.profile-tab-container li {
-    list-style: none;
-    margin-bottom: -1px;
-}
+.profile-tab-container li { list-style: none; margin-bottom: -1px; }
 
 .profile-tab-container a {
     display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ddd;
-    border-bottom: none;
+    background: var(--text-color);
+    color: var(--accent-color);
+    border: 1px solid var(--text-color);
+    border-bottom: 0;
     border-radius: 6px 6px 0 0;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: .3s;
 }
 
 .profile-tab-container a:hover {
-    background-color: white;
-    color: var(--accent-color);
-}
-
-/* Make the profile tab visually distinct */
-.profile-tab-container a {
-    background-color: var(--text-color);
-    color: var(--accent-color);
-    border-color: var(--text-color);
-}
-
-.profile-tab-container a:hover {
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     border-color: var(--accent-color);
     color: var(--text-color);
 }
-/* Toggle Switch Styles */
-.toggle-container {
+
+.form .toggle-container {
     position: relative;
     display: inline-block;
     margin: 15px 0;
 }
 
-.toggle-input {
+.form .toggle-input {
     opacity: 0;
     width: 0;
     height: 0;
     position: absolute;
 }
 
-.toggle-label {
+.form .toggle-label {
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     width: 200px;
     height: 40px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     border-radius: 100px;
     position: relative;
     padding: 0 10px;
-    transition: background-color 0.3s;
+    transition: .3s;
 }
 
-.toggle-slider {
+.form .toggle-slider {
     position: absolute;
     top: 2px;
     left: 2px;
     width: 100px;
     height: 36px;
     border-radius: 45px;
-    transition: 0.3s;
-    background-color: var(--accent-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: .3s;
+    background: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
 }
 
-.toggle-icon {
+.form .toggle-icon {
     display: flex;
     align-items: center;
     z-index: 1;
     color: var(--text-color);
-    transition: color 0.3s;
+    transition: .3s;
 }
 
-.toggle-icon svg {
-    margin-right: 5px;
-    fill: currentColor;
-}
+.form .toggle-icon svg { margin-right: 5px; fill: currentColor; }
+.form .toggle-text { font-size: 14px; font-weight: 500; }
 
-.toggle-text {
-    font-size: 14px;
-    font-weight: 500;
-}
+.form .toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.form .toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(116px); }
 
-/* When toggle is checked (public/student) */
-.toggle-input:checked + .toggle-label .toggle-slider {
-    transform: translateX(0);
-}
+.form .toggle-input:checked + .toggle-label .public-icon,
+.form .toggle-input:checked + .toggle-label .student-icon { color: #fff; }
 
-.toggle-input:checked + .toggle-label .public-icon {
-    color: white;
-}
+.form .toggle-input:checked + .toggle-label .private-icon,
+.form .toggle-input:checked + .toggle-label .staff-icon { color: var(--text-color); }
 
-.toggle-input:checked + .toggle-label .private-icon {
-    color: var(--text-color);
-}
+.form .toggle-input:not(:checked) + .toggle-label .public-icon,
+.form .toggle-input:not(:checked) + .toggle-label .student-icon { color: var(--text-color); }
 
-/* When toggle is not checked (private/Faculty) */
-.toggle-input:not(:checked) + .toggle-label .toggle-slider {
-    transform: translateX(116px);
-}
+.form .toggle-input:not(:checked) + .toggle-label .private-icon,
+.form .toggle-input:not(:checked) + .toggle-label .staff-icon { color: #fff; }
 
-.toggle-input:not(:checked) + .toggle-label .public-icon {
-    color: var(--text-color);
-}
+.form .toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.form .toggle-input:focus + .toggle-label .toggle-text { font-weight: 600; }
 
-.toggle-input:not(:checked) + .toggle-label .private-icon {
-    color: white;
-}
+.student-only, .faculty-only { display: none; }
+.no-js .student-only, .no-js .faculty-only { display: block; }
 
-/* Focus styles for accessibility */
-.toggle-input:focus + .toggle-label {
-    box-shadow: 0 0 1px var(--accent-color);
-}
-/* Text color changes when toggle has focus */
-.toggle-input:focus:checked + .toggle-label .public-icon,
-.toggle-input:focus:checked + .toggle-label .student-icon {
-    color: #ffffff; 
-}
-.toggle-input:focus:not(:checked) + .toggle-label .private-icon,
-.toggle-input:focus:not(:checked) + .toggle-label .staff-icon {
-    color: #ffffff; 
-}
-.toggle-input:focus + .toggle-label .toggle-text {
-    font-weight: 600; /* Make text slightly bolder when focused */
-}
-/* Role-specific visibility */
-.student-only, .faculty-only {
-    display: none; /* Hidden by default, will be shown via JavaScript */
-}
-
-/* When JavaScript is disabled, show everything as fallback */
-.no-js .student-only, .no-js .faculty-only {
-    display: block;
-}
-
-/* Reset all form elements to ensure consistent styling */
-#profileContacts form * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-/* Center the entire contacts section */
 #profileContacts {
     display: flex;
     flex-direction: column;
@@ -703,14 +470,8 @@ div:has(#selCourseName) > label {
     margin-top: 20px;
 }
 
-/* Center the form within the contacts section */
-#profileContacts form {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
+#profileContacts form { display: flex; justify-content: center; width: 100%; }
 
-/* Center the additionalContacts section */
 #additionalContacts {
     display: flex;
     flex-direction: column;
@@ -718,8 +479,10 @@ div:has(#selCourseName) > label {
     width: 100%;
 }
 
-/* Style for any dynamically added contact rows */
-#additionalContacts .contact-row {
+#Profile h3 { text-align: center; margin-bottom: 20px; }
+#Profile hr { width: 80%; margin: 20px auto; }
+
+.contact-row {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -729,39 +492,16 @@ div:has(#selCourseName) > label {
     max-width: 550px;
 }
 
-/* Center the Profile tab content */
-#Profile h3 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#Profile hr {
-    width: 80%;
-    margin: 20px auto;
-}
-/* Style the contact row with flexbox for alignment */
-#profileContacts .contact-row {
-    display: flex;
-    align-items: center; /* Change from stretch to center */
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    width: 100%;
-    max-width: 550px;
-}
-
-/* Style the contact-type-container */
 #profileContacts .contact-type-container {
     display: flex;
     height: 50px;
 }
 
-/* Style the label with icon */
 #profileContacts .contact-type-container label {
     flex-shrink: 0;
     height: 50px;
     width: 50px;
-    background-color: var(--accent-color);
+    background: var(--accent-color);
     fill: var(--base-color);
     color: var(--base-color);
     border-radius: 10px 0 0 10px;
@@ -770,59 +510,497 @@ div:has(#selCourseName) > label {
     align-items: center;
 }
 
-/* Style the select dropdown */
 #profileContacts .contact-type {
     height: 50px;
     border-radius: 0 10px 10px 0;
     border: 2px solid var(--dashboard-input-color);
-    border-left: none;
+    border-left: 0;
     min-width: 130px;
     max-width: 150px;
     padding: 0 10px;
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
     font: inherit;
-    appearance: auto; /* Ensure native select appearance */
 }
 
-/* Style the contact input field */
 #profileContacts .contact-input {
     height: 50px;
     max-width: 200px;
     border-radius: 10px;
     padding: 0 10px;
     border: 2px solid var(--dashboard-input-color);
-    background-color: var(--dashboard-input-color);
+    background: var(--dashboard-input-color);
     color: var(--text-color);
     font: inherit;
 }
 
-/* Style the add button */
 #profileContacts .btn-add-contact {
     height: 50px;
     width: 50px;
     padding: 0;
     border-radius: 50%;
-    background-color: var(--accent-color);
-    color: white;
+    background: var(--accent-color);
+    color: #fff;
     font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
+    border: 0;
     cursor: pointer;
 }
 
-/* Ensure all elements have the same line-height */
 #profileContacts .contact-row > *,
-#profileContacts .contact-type-container > * {
-    line-height: 50px;
-}
-
-/* Fix any browser-specific styling issues */
-#profileContacts select,
-#profileContacts input,
-#profileContacts button {
+#profileContacts .contact-type-container > *,
+#profileContacts .contact-input,
+#profileContacts .btn-add-contact {
+    margin: 0;
+    box-sizing: border-box;
     vertical-align: middle;
 }
 
+#profileContacts select,
+#profileContacts input {
+    vertical-align: middle;
+    margin: 0;
+}
+
+#additionalContacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#additionalContacts .contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 550px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: var(--dashboard-input-color);
+    border-radius: 10px;
+    transition: .2s;
+}
+
+#additionalContacts .contact-row:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+}
+
+#additionalContacts .contact-display {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 15px;
+    overflow: hidden;
+}
+
+#additionalContacts .contact-label {
+    font-weight: 600;
+    color: var(--accent-color);
+    min-width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(134,114,255,.1);
+    text-align: center;
+}
+
+#additionalContacts .contact-value {
+    flex: 1;
+    color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+#additionalContacts .btn-delete-contact {
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#additionalContacts .btn-delete-contact:hover {
+    background: rgba(255,77,77,.1);
+    color: #ff4d4d;
+}
+
+#additionalContacts .discord { border-left: 4px solid #7289DA; }
+#additionalContacts .phone { border-left: 4px solid #28a745; }
+#additionalContacts .email { border-left: 4px solid #007bff; }
+#additionalContacts .instagram { border-left: 4px solid #E1306C; }
+#additionalContacts .linkedin { border-left: 4px solid #0077B5; }
+#additionalContacts .custom { border-left: 4px solid #6c757d; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#additionalContacts .contact-row { animation: fadeIn .3s ease-out forwards; }
+
+#additionalContacts:empty::before {
+    content: "No contacts added yet";
+    display: block;
+    color: var(--text-color);
+    opacity: .6;
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+}
+
+.comments-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.comments-column {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comments-column-header {
+    background: var(--accent-color);
+    color: var(--base-color);
+    padding: 10px 15px;
+    border-radius: 10px 10px 0 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+.comment-card {
+    background: var(--input-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    transition: .2s;
+}
+
+.comment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.15);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 8px;
+}
+
+.comment-sender {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.comment-timestamp {
+    font-size: .8em;
+    color: var(--text-color);
+    opacity: .8;
+}
+
+.comment-group {
+    font-size: .9em;
+    color: var(--accent-color);
+    margin-bottom: 8px;
+}
+
+.comment-text {
+    color: var(--text-color);
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.received-comment { border-left: 4px solid var(--accent-color); }
+
+.sent-comment {
+    border-right: 4px solid var(--accent-color);
+    text-align: center;
+}
+
+.sent-comment .comment-header {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.sent-comment .comment-group { text-align: center; }
+
+.empty-comments {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-color);
+    opacity: .7;
+    font-style: italic;
+}
+
+.survey-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+}
+
+.survey-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.survey-modal-content {
+    background: var(--base-color);
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    transform: translateY(20px);
+    transition: .3s;
+}
+
+.survey-modal.active .survey-modal-content { transform: translateY(0); }
+
+.survey-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--accent-color);
+}
+
+.survey-modal-header h2 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.survey-modal-close {
+    background: 0;
+    border: 0;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.survey-modal-body { padding: 20px; }
+
+.survey-modal input,
+.survey-modal select,
+.survey-modal textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid var(--dashboard-input-color);
+    border-radius: 4px;
+}
+
+.survey-modal button {
+    padding: 10px 15px;
+    background: var(--accent-color);
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.survey-modal button:hover { background: var(--text-color); }
+
+#InstructorSurveys .survey-card {
+    background: var(--input-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+#InstructorSurveys .survey-input-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+#InstructorSurveys .survey-input-group label {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background: var(--accent-color);
+    fill: var(--base-color);
+    color: var(--base-color);
+    border-radius: 10px 0 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#InstructorSurveys .survey-input-group input,
+#InstructorSurveys .survey-input-group select {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 1em;
+    font: inherit;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid var(--dashboard-input-color);
+    border-left: 0;
+    background: var(--dashboard-input-color);
+    color: var(--text-color);
+    transition: .15s;
+}
+
+#InstructorSurveys .survey-input-group input:hover,
+#InstructorSurveys .survey-input-group select:hover { border-color: var(--accent-color); }
+
+#InstructorSurveys .survey-input-group input:focus,
+#InstructorSurveys .survey-input-group select:focus {
+    outline: 0;
+    border-color: var(--text-color);
+}
+
+#InstructorSurveys div:has(input:focus) > label,
+#InstructorSurveys div:has(select:focus) > label { background: var(--text-color); }
+
+#InstructorSurveys #btnAddSurveyQuestion {
+    margin-top: 10px;
+    border: 0;
+    border-radius: 1000px;
+    padding: .85em 4em;
+    background: var(--accent-color);
+    color: var(--base-color);
+    font: inherit;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: .15s;
+    width: 100%;
+}
+
+#InstructorSurveys #btnAddSurveyQuestion:hover,
+#InstructorSurveys #btnAddSurveyQuestion:focus {
+    outline: 0;
+    background: var(--text-color);
+}
+
+#InstructorSurveys hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid var(--dashboard-input-color);
+}
+
+#surveyQuestionPreviewList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.survey-question-card {
+    background: var(--dashboard-input-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.survey-question-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.survey-question-type {
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+.survey-question-text { margin-bottom: 10px; }
+
+.survey-question-group {
+    font-size: .9em;
+    color: var(--text-color);
+    opacity: .8;
+}
+
+.survey-question-visibility {
+    font-size: .8em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.survey-question-visibility svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-color);
+}
+
+.question-type-toggle-container {
+    margin: 25px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.toggle-label-text {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.question-type-toggle { position: relative; }
+
+.question-type-toggle .toggle-label {
+    display: block;
+    width: 60px;
+    height: 30px;
+    background: var(--dashboard-input-color);
+    border-radius: 30px;
+    cursor: pointer;
+    position: relative;
+    transition: .3s;
+}
+
+.question-type-toggle .toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    transition: .3s;
+    background: var(--accent-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
+}
+
+.question-type-toggle .toggle-input:checked + .toggle-label .toggle-slider { transform: translateX(0); }
+.question-type-toggle .toggle-input:not(:checked) + .toggle-label .toggle-slider { transform: translateX(50px); }
+.question-type-toggle .toggle-input:focus + .toggle-label { box-shadow: 0 0 1px var(--accent-color); }
+.question-type-toggle-container .active-option { color: var(--accent-color); font-weight: 600; }

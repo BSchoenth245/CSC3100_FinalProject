@@ -382,24 +382,28 @@
                 
                 <div id="InstructorSurveys" class="tab-content">
                     <h2>Create Survey Questions</h2>
-                
-                    <!-- Step 1: Course dropdown (always visible) -->
-                    <div class="mb-3">
-                        <label for="selSurveyCourse" class="form-label">Select Course</label>
-                        <select class="form-control" id="selSurveyCourse">
-                            <!-- Populated by JS -->
-                        </select>
+    
+                    <div class="form" id="courseSelectionSection">
+                        <div class="survey-input-group">
+                            <label for="selCourse">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                    width="24px" fill="#e8eaed">
+                                    <path
+                                        d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v640q0 33-23.5 56.5T720-80H240Zm200-440 100-60 100 60v-280H440v280Z" />
+                                </svg>
+                            </label>
+                            <select id="selCourse" aria-label="Select a course">
+                                <option value="">Select Course</option>
+                                <option value="CSC3100">CSC3100-001 - Web Development</option>
+                                <option value="CSC4150">CSC4150-003 - Database Systems</option>
+                                <option value="CSC2200">CSC2200-005 - Data Structures</option>
+                            </select>
+                        </div>
+                        <button type="button" id="btnCreateSurvey">Create Survey</button>
                     </div>
                 
                     <!-- Hidden until a course is selected -->
                     <div id="surveyBuilderSection" class="form survey-card" style="display: none;">
-                        <div class="mb-3">
-                            <label for="selSurveyGroup" class="form-label">Select Group</label>
-                            <select class="form-control" id="selSurveyGroup">
-                                <!-- Populated by JS -->
-                            </select>
-                        </div>
-                
                         <div class="survey-input-group">
                             <label for="txtSurveyQuestion">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -424,12 +428,16 @@
                 
                         <button type="button" id="btnAddSurveyQuestion">Add Survey Question</button>
                 
-                        <hr>
+                        
+                    </div>
+                    <div id="surveyQuestionPreview" class="form survey-card" style="display: none;">
                         <h4>Existing Questions</h4>
-                        <div id="surveyQuestionPreviewList"></div>
+                        <hr>
+                        <div id="surveyQuestionPreviewList">
+                            <!-- Populated Dynamically -->
+                        </div>
                     </div>
                 </div>
-                               
 
                 <!-- Profile tab -->
                 <div id="Profile" class="tab-content">
