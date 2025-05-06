@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     // Hide all tab content except the first one initially
     $('.tab-content:not(:first)').hide();
@@ -166,79 +165,6 @@ document.querySelector('#btnCreateCourse').addEventListener('click', function() 
     }
 });
 
-function createCourse(courseName, courseSection, courseTerm, startDate, endDate) {
-    fetch('http://localhost:8000/createcourse', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            CourseName: courseName,
-            CourseNumber: courseName, // You might want to separate course number and name
-            CourseSection: courseSection,
-            CourseTerm: courseTerm,
-            StartDate: startDate,
-            EndDate: endDate
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        Swal.fire({
-            title: "Success",
-            text: "Course created successfully",
-            icon: "success"
-        });
-
-        //// #TODO: delete this when the backend is ready Create a new group card UI element dynamically (demo only) need to change all of this to get it talking with the backend
-    const groupCard = document.createElement('div');
-    groupCard.className = 'group-card';
-    groupCard.innerHTML = `
-        <div class="group-header">
-            <h3>${courseName}</h3>
-            <span class="group-code">Code: TBD</span>
-        </div>
-        <div class="group-info">
-            <p><strong>Course:</strong> <span class="courseName">${courseName}</span></p>
-            <p><strong>Section:</strong> <span class="courseSection">${courseSection}</span></p>
-            <div class="members-section">
-                <button class="collapse-btn" onclick="toggleMembers(this)">
-                    <strong>Members</strong>
-                    <span class="collapse-icon">▼</span>
-                </button>
-                <ul class="member-list collapsed">
-                    <li>You (creator)</li>
-                </ul>
-            </div>
-            <div class="card-actions">
-                <button type="button">Take Survey</button>
-                <button type="button">Leave Group</button>
-            </div>
-        </div>
-    `;
-    document.querySelector('#Groups .dashboard-stats').appendChild(groupCard);
-
-        // Reset form fields
-        document.querySelector('#txtCourseName').value = '';
-        document.querySelector('#txtCourseSection').value = '';
-        document.querySelector('#selCourseSeason').value = '';
-        document.querySelector('#txtCourseYear').value = '';
-        document.querySelector('#dateEndDate').value = '';
-    })
-
-    .catch(error => {
-        Swal.fire({
-            title: "Error",
-            text: error.message,
-            icon: "error"
-        });
-    });
-}
-
 // Function to update UI based on user type
 function updateUIForUserRole(userRole) {
     // Hide all role-specific elements first
@@ -270,7 +196,8 @@ function updateUIForUserRole(userRole) {
 
 // Fetch the user's role from the server when the page loads
 function fetchUserRole() {
-    fetch('http://localhost:8000/getUserRole')
+    console.log('Fetching user role...');
+    return fetch('http://localhost:8000/getUserRole') // Return the fetch call
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -278,7 +205,9 @@ function fetchUserRole() {
             return response.json();
         })
         .then(data => {
-            updateUIForUserRole(data.userRole);
+            console.log('User role fetched:', data.userRole);
+            updateUIForUserRole(data.userRole); // Update the UI based on the role
+            return data.userRole; // Return the user role for further use
         })
         .catch(error => {
             console.error('Error fetching user role:', error);
@@ -286,6 +215,7 @@ function fetchUserRole() {
             document.querySelectorAll('.student-only, .faculty-only').forEach(element => {
                 element.style.display = '';
             });
+            return null; // Return null if an error occurs
         });
 }
 
@@ -543,14 +473,12 @@ function loadCourses() {
         return response.json();
     })
     .then(courses => {
-        console.log('Courses loaded:', courses);
-        const container = document.querySelector('#groupsList');
+        const container = document.querySelector('#courseList');
         container.innerHTML = ''; // clear any existing cards
         let strSection = ''
         
         
         courses.courses.forEach(course => {
-            console.log(course.CourseSection);
             if (course.CourseSection < 10) {
                 strSection = '00' + course.CourseSection;
             }
@@ -643,8 +571,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadCourses();
-  });
+    fetchUserRole().then(result => {
+    console.log('User role:', result); // Debugging line to check the user role
+    // Call loadCourses() only if the user role is 'Staff'
+    if (result === 'Staff') {
+        loadCourses();
+    }
+    }).catch(error => {
+        console.error('Error fetching user role:', error);
+    });
+})
 
 // Survey fully created, now we need to add the functionality to the button
 // Mock group members for demonstration
@@ -654,3 +590,53 @@ const mockGroupMembers = [
     { name: "Mike Wilson" },
     { name: "Emily Davis" }
 ];
+function loadGroups() {
+    fetch('http://localhost:8000/groups') // Adjust the endpoint if necessary
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch user groups');
+            }
+            return response.json();
+        })
+        .then(groups => {
+            console.log(groups); // Debugging line to check the structure of the response
+            const container = document.querySelector('#groupsList');
+            container.innerHTML = ''; // Clear any existing cards
+
+            groups.groups.forEach(group => {
+                const cardHTML = `
+                    <div class="group-card">
+                        <div class="group-header">
+                            <h3>${group.GroupName}</h3>
+                            <span class="group-code">Code: ${group.GroupCode}</span>
+                        </div>
+                        <div class="group-info">
+                            <p><strong>Course:</strong> ${group.CourseName}</p>
+                            <p><strong>Section:</strong> ${group.CourseSection}</p>
+                            <div class="members-section">
+                                <button class="collapse-btn" onclick="toggleMembers(this)">
+                                    <strong>Members</strong>
+                                    <span class="collapse-icon">▼</span>
+                                </button>
+
+                            </div>
+                            <div class="card-actions">
+                                <button type="button" class="btn-take-survey" data-group-id="${group.GroupID}">Take Survey</button>
+                                <button type="button" class="btn-leave-group" data-group-id="${group.GroupID}">Leave Group</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading user groups:', error);
+            Swal.fire('Error', 'Could not load user groups', 'error');
+        });
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    loadGroups();
+});
