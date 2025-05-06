@@ -390,22 +390,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="group-card">
                     <div class="group-header">
                         <h3>${groupName}</h3>
-                        <span class="group-code">Code: ${generateGroupCode()}</span>
+                        <span class="group-code">Code: ${groupCode}</span>
                     </div>
                     <div class="group-info">
-                        <p><strong>Course:</strong> <span class="courseName">${courseCode}</span></p>
+                        <p><strong>Course:</strong> <span class="courseName">${courseName}</span></p>
                         <p><strong>Section:</strong> <span class="courseSection">${courseSection}</span></p>
                         <div class="members-section">
                             <button class="collapse-btn" onclick="toggleMembers(this)">
-                                <strong>Members</strong>
+                                <strong>Members (${members.length || 1})</strong>
                                 <span class="collapse-icon">▼</span>
                             </button>
                             <ul class="member-list collapsed">
-                                <li>Group creator placeholder</li>
+                                ${membersHTML}
                             </ul>
                         </div>
                         <div class="card-actions">
-                            <button type="button" class="btn-leave-group" data-group-id="XYZ789">Delete Group</button>
+                            <button type="button" class="btn-leave-group" data-group-id="${groupCode}">Delete Group</button>
                         </div>
                     </div>
                 </div>
